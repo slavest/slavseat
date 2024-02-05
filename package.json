@@ -1,5 +1,5 @@
 {
-  "name": "seat-manager",
+  "name": "slavseat",
   "private": true,
   "scripts": {
     "build": "turbo build",
