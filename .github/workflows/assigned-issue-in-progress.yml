@@ -17,8 +17,8 @@ on:
 
 env:
   gh_project_token: ${{ secrets.PAC_TOKEN }}
-  project_id: 4
-  gh_organization: woxox
+  project_id: 2
+  gh_organization: slavest
   status_todo: "Backlog"
   status_in_progress: "In Progress"
   status_in_review: "In Review"
