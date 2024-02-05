@@ -3,5 +3,5 @@
     "jsx": "react"
   },
   "extends": "@repo/typescript-config/vite.json",
-  "include": ["src", "**/*.ts"]
+  "include": ["src", "**/*.ts", "**/*.tsx"]
 }
