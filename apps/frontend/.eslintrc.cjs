@@ -8,5 +8,6 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    'import/no-absolute-path': ['off'],
   },
 };
