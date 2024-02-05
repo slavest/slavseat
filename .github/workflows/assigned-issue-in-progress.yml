@@ -1,0 +1,128 @@
+name: Project automations (organization)
+
+on:
+  issues:
+    types: [opened, reopened, assigned, unassigned]
+  pull_request:
+    types:
+      [
+        opened,
+        closed,
+        reopened,
+        ready_for_review,
+        review_requested,
+        converted_to_draft,
+        review_request_removed,
+      ]
+
+env:
+  gh_project_token: ${{ secrets.PAC_TOKEN }}
+  project_id: 4
+  gh_organization: woxox
+  status_todo: "Backlog"
+  status_in_progress: "In Progress"
+  status_in_review: "In Review"
+#   custom_field_values: '[{\"name\": \"Priority\",\"type\": \"text\",\"value\": \"uuid1\"},{\"name\": \"Number\",\"type\": \"number\",\"value\": \"100\"},{\"name\": \"Date\",\"type\": \"date\",\"value\": \"2022-01-28T20:02:27.306+01:00\"},{\"name\": \"Single Select\",\"type\": \"single_select\",\"value\": \"Option 1\"},{\"name\": \"Iteration\",\"type\": \"iteration\",\"value\": \"Iteration 1\"}]'
+
+jobs:
+  issue_opened_or_reopened:
+    name: issue_opened_or_reopened
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'reopened')
+    steps:
+      - name: "Move issue to ${{ env.status_todo }}"
+        uses: leonsteinhaeuser/project-beta-automations@v2.1.0
+        env:
+          DEBUG_LOG: "true"
+        with:
+          gh_token: ${{ env.gh_project_token }}
+          organization: ${{ env.gh_organization }}
+          project_id: ${{ env.project_id }}
+          resource_node_id: ${{ github.event.issue.node_id }}
+          status_value: ${{ env.status_todo }}
+
+  issue_assigned:
+    name: issue_assinged
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'issues' &&
+      github.event.action == 'assigned'
+    steps:
+      - name: "Move issue to ${{ env.status_in_progress }}"
+        uses: leonsteinhaeuser/project-beta-automations@v2.1.0
+        env:
+          DEBUG_LOG: "true"
+        with:
+          gh_token: ${{ env.gh_project_token }}
+          organization: ${{ env.gh_organization }}
+          project_id: ${{ env.project_id }}
+          resource_node_id: ${{ github.event.issue.node_id }}
+          status_value: ${{ env.status_in_progress }}
+
+  issue_unassigned:
+    name: issue_unassigned
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'issues' &&
+      github.event.action == 'unassigned'
+    steps:
+      - name: "Move issue to ${{ env.status_todo }}"
+        uses: leonsteinhaeuser/project-beta-automations@v2.1.0
+        env:
+          DEBUG_LOG: "true"
+        with:
+          gh_token: ${{ env.gh_project_token }}
+          organization: ${{ env.gh_organization }}
+          project_id: ${{ env.project_id }}
+          resource_node_id: ${{ github.event.issue.node_id }}
+          status_value: ${{ env.status_todo }}
+
+  pr_request_review:
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'pull_request' &&
+      (github.event.action == 'ready_for_review' || github.event.action == 'review_requested')
+    steps:
+      - name: "Move issue to ${{ env.status_in_review }}"
+        uses: leonsteinhaeuser/project-beta-automations@v2.1.0
+        env:
+          DEBUG_LOG: "true"
+        with:
+          gh_token: ${{ env.gh_project_token }}
+          organization: ${{ env.gh_organization }}
+          project_id: ${{ env.project_id }}
+          resource_node_id: ${{ github.event.pull_request.node_id }}
+          status_value: ${{ env.status_in_review }}
+
+  pr_converted_draft:
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'pull_request' &&
+      (github.event.action == 'converted_to_draft' || github.event.action == 'review_request_removed')
+    steps:
+      - name: "Move issue to ${{ env.status_in_progress }}"
+        uses: leonsteinhaeuser/project-beta-automations@v2.1.0
+        env:
+          DEBUG_LOG: "true"
+        with:
+          gh_token: ${{ env.gh_project_token }}
+          organization: ${{ env.gh_organization }}
+          project_id: ${{ env.project_id }}
+          resource_node_id: ${{ github.event.pull_request.node_id }}
+          status_value: ${{ env.status_in_progress }}
+
+  pr_opened_or_reopened:
+    name: pr_opened_or_reopened
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened')
+    steps:
+      - name: "Move PR to ${{ env.status_in_progress }}"
+        uses: leonsteinhaeuser/project-beta-automations@v2.1.0
+        env:
+          DEBUG_LOG: "true"
+        with:
+          gh_token: ${{ env.gh_project_token }}
+          organization: ${{ env.gh_organization }}
+          project_id: ${{ env.project_id }}
+          resource_node_id: ${{ github.event.pull_request.node_id }}
+          status_value: ${{ env.status_in_progress }}
