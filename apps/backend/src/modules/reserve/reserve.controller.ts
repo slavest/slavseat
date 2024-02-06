@@ -7,6 +7,7 @@ import {
 
 import { AddReserveDto } from './dto/addReserve.dto';
 import { GetReserveByDate } from './dto/getReserveByDate.dto';
+import { GetREserveByUser } from './dto/getReserveByUser.dto';
 import { Reserve } from './entities/reserve.entity';
 import { ReserveService } from './reserve.service';
 
@@ -29,5 +30,16 @@ export class ReserveController {
     @Query() getReserveByDate: GetReserveByDate,
   ) {
     return this.reserveService.getReserveByDate(getReserveByDate);
+  }
+
+  @Get('/user/:user')
+  @ApiOperation({ summary: '유저 기준 좌석 예약 조회' })
+  @ApiCreatedResponse({ type: Reserve, isArray: true })
+  async getReserveByUser(
+    @Query() getReserveByUser: GetREserveByUser,
+  ) {
+    return this.reserveService.findReserveByUser(
+      getReserveByUser.user,
+    );
   }
 }

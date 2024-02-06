@@ -58,4 +58,8 @@ export class ReserveService {
 
     return reserves;
   }
+
+  findReserveByUser(user: string) {
+    return this.reserveRepository.find({ where: { user } });
+  }
 }
