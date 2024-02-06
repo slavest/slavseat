@@ -1,4 +1,7 @@
 module.exports = {
   root: true,
-  extends: ["slavseat"]
+  extends: ["slavseat"],
+  rules: {
+    "no-useless-constructor": "off"
+  }
 };
