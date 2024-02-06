@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "extends": "@repo/typescript-config/vite.json",
+  "include": [
+    "src",
+    "**/*.ts",
+    "**/*.tsx"
+  ]
+}
