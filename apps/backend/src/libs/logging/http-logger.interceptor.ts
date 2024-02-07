@@ -1,5 +1,10 @@
-import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common';
-
+import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  Logger,
+  NestInterceptor,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Observable, catchError, finalize, throwError } from 'rxjs';
 
@@ -25,7 +30,10 @@ export class HttpLoggerInterceptor implements NestInterceptor {
     const nextObserver = next.handle().pipe(
       finalize(() => {
         const response = ctx.getResponse<Response>();
-        !isError && this.logger.log(`${method} ${path} ==> ${response?.statusCode}`);
+        !isError &&
+          this.logger.log(
+            `${method} ${path} ==> ${response?.statusCode}`,
+          );
       }),
       catchError((err) => {
         isError = true;
@@ -38,7 +46,9 @@ export class HttpLoggerInterceptor implements NestInterceptor {
           // err = new BadRequestException(message);
         }
         this.logger.error(
-          `${method} ${path} ==> ${err?.statusCode || err?.status || err?.code} ${message}`,
+          `${method} ${path} ==> ${
+            err?.statusCode || err?.status || err?.code
+          } ${message}`,
         );
         return throwError(() => err);
       }),

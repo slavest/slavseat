@@ -1,6 +1,5 @@
 import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { DataSource } from 'typeorm';
 
 import { ConfigurationModule } from '../config/config.module';
