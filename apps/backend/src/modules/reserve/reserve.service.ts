@@ -9,7 +9,7 @@ import { Between, Repository } from 'typeorm';
 import { SeatService } from '../seat/seat.service';
 import { AddReserveDto } from './dto/addReserve.dto';
 import { GetReserveByDate } from './dto/getReserveByDate.dto';
-import { Reserve } from './entities/reserve.entity';
+import { Reserve } from './entity/reserve.entity';
 
 @Injectable()
 export class ReserveService {

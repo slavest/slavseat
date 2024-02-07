@@ -8,7 +8,7 @@ import {
 import { AddReserveDto } from './dto/addReserve.dto';
 import { GetReserveByDate } from './dto/getReserveByDate.dto';
 import { GetREserveByUser } from './dto/getReserveByUser.dto';
-import { Reserve } from './entities/reserve.entity';
+import { Reserve } from './entity/reserve.entity';
 import { ReserveService } from './reserve.service';
 
 @Controller('reserve')

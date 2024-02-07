@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 
 import { AddSeatDto } from './dto/addSeat.dto';
 import { RemoveSeatDto } from './dto/removeSeat.dto';
-import { Seat } from './entities/seat.entity';
+import { Seat } from './entity/seat.entity';
 
 @Injectable()
 export class SeatService {

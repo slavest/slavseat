@@ -1,1 +1,2 @@
-export * from "./seat";
+export * from './seat';
+export * from './floor';
