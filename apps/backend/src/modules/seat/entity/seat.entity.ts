@@ -1,7 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Model } from '@slavseat/types';
 import { IsNumber, IsString } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Floor } from 'src/modules/floor/entity/floor.entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Seat implements Model.SeatInfo {
@@ -24,4 +30,7 @@ export class Seat implements Model.SeatInfo {
   @IsString()
   @ApiProperty()
   label: string;
+
+  @ManyToOne(() => Floor, (floor) => floor.seats, { nullable: false })
+  floor: Floor;
 }
