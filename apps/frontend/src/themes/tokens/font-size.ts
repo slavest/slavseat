@@ -1,46 +1,46 @@
 export const fontSize = {
   '96': {
-    fontSize: '96px',
-    lineHeight: '128px',
+    fontSize: '6rem',
+    lineHeight: '8rem',
   },
   '80': {
-    fontSize: '80px',
-    lineHeight: '104px',
+    fontSize: '5rem',
+    lineHeight: '6.5rem',
   },
   '40': {
-    fontSize: '40px',
-    lineHeight: '56px',
+    fontSize: '2.5rem',
+    lineHeight: '3.5rem',
   },
   '36': {
-    fontSize: '36px',
-    lineHeight: '48px',
+    fontSize: '2.25rem',
+    lineHeight: '3rem',
   },
   '30': {
-    fontSize: '30px',
-    lineHeight: '40px',
+    fontSize: '1.875rem',
+    lineHeight: '2.5rem',
   },
   '24': {
-    fontSize: '24px',
-    lineHeight: '32px',
+    fontSize: '1.5rem',
+    lineHeight: '2rem',
   },
   '20': {
-    fontSize: '20px',
-    lineHeight: '28px',
+    fontSize: '1.25rem',
+    lineHeight: '1.75rem',
   },
   '18': {
-    fontSize: '18px',
-    lineHeight: '24px',
+    fontSize: '1.125rem',
+    lineHeight: '1.5rem',
   },
   '14': {
-    fontSize: '14px',
-    lineHeight: '20px',
+    fontSize: '.875rem',
+    lineHeight: '1.25rem',
   },
   '12': {
-    fontSize: '12px',
-    lineHeight: '16px',
+    fontSize: '.75rem',
+    lineHeight: '1rem',
   },
   '8': {
-    fontSize: '8px',
-    lineHeight: '12px',
+    fontSize: '.5rem',
+    lineHeight: '.75rem',
   },
 } as const;

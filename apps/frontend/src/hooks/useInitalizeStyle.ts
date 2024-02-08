@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 import { useThemeStore } from '@/stores/themeStore';
 import {
@@ -18,3 +18,9 @@ export const useInitalizeStyle = () => {
 
   return { initalized };
 };
+
+export function StyleInitalizer({ children }: PropsWithChildren) {
+  useInitalizeStyle();
+
+  return children;
+}
