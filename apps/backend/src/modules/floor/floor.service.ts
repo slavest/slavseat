@@ -7,7 +7,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { SeatService } from '../seat/seat.service';
-import { CreateFloorDto } from './dto/createFloor.dto';
+import { CreateFloorDto } from './dto/request/createFloorRequest.dto';
+import { GetAllFloorResponseDto } from './dto/response/getAllFloorResponse.dto';
 import { Floor } from './entity/floor.entity';
 
 @Injectable()
@@ -29,8 +30,15 @@ export class FloorService {
     return this.floorRepository.save(createFloorDto);
   }
 
-  async getAllFloor() {
+  async getAllFloor(): Promise<GetAllFloorResponseDto[]> {
     return this.floorRepository.find();
+  }
+
+  async findFloorById(id: number) {
+    return this.floorRepository.find({
+      where: { id },
+      relations: { seats: true },
+    });
   }
 
   async findFloorBySeatId(seatId: number) {
