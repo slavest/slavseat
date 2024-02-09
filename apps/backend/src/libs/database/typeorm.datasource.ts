@@ -17,6 +17,7 @@ export const options: DataSourceOptions = {
   entities: ['dist/**/*.entity.{js,ts}'],
   migrations: ['dist/migrations/*{.ts,.js}'],
   migrationsRun: false,
+  timezone: 'Asia/Seoul',
   // authSource: 'admin',
 };
 

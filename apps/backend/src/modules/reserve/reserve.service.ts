@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -21,6 +22,9 @@ export class ReserveService {
 
   async addReserve(addReserveRequestDto: AddReserveRequestDto) {
     const { seatId, start, end } = addReserveRequestDto;
+
+    if (start.getTime() >= end.getTime())
+      throw new BadRequestException(`date invalid`);
 
     const seat = await this.seatService.findOneSeatById(seatId);
     if (!seat)
