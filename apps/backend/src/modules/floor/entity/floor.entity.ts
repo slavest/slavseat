@@ -7,11 +7,14 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
+import { ObjectMeta } from 'src/modules/object-storage/entity/objectMeta.entity';
 import { Seat } from 'src/modules/seat/entity/seat.entity';
 import {
   Column,
   Entity,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -27,10 +30,16 @@ export class Floor implements Model.FloorInfo {
   @IsString()
   name: string;
 
-  @OneToMany(() => Seat, (seat) => seat.id)
-  @ApiProperty()
+  @OneToMany(() => Seat, (seat) => seat.floor)
+  @ApiProperty({ type: Seat, isArray: true })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => Seat)
   seats: Seat[];
+
+  @JoinColumn()
+  @OneToOne(() => ObjectMeta, { nullable: true })
+  @ApiProperty({ type: ObjectMeta })
+  @Type(() => ObjectMeta)
+  image: ObjectMeta;
 }

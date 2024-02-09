@@ -22,7 +22,7 @@ export class ReserveService {
   async addReserve(addReserveDto: AddReserveDto) {
     const { seatId, start, end } = addReserveDto;
 
-    const seat = await this.seatService.findSeatById(seatId);
+    const seat = await this.seatService.findOneSeatById(seatId);
     if (!seat)
       throw new NotFoundException(`Seat ${seatId} Not Found `);
 

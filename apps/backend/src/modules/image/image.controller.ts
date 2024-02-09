@@ -1,27 +1,15 @@
 import {
   Controller,
-  FileTypeValidator,
   Get,
   NotFoundException,
   Param,
-  ParseFilePipe,
-  Post,
   Res,
-  UploadedFile,
-  UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import {
-  ApiCreatedResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { Readable } from 'stream';
 
-import { ObjectMeta } from '../object-storage/entity/objectMeta.entity';
 import { ObjectStorageService } from '../object-storage/object-storage.service';
-import { GetImageParamDto } from './dto/getImage.dto';
+import { GetImageRequestDto } from './dto/request/getImageRequest.dto';
 
 @ApiTags('이미지 API')
 @Controller('/api/image')
@@ -30,52 +18,43 @@ export class ImageController {
     private readonly objectStorageService: ObjectStorageService,
   ) {}
 
-  @Get('/:thumbnailId')
+  @Get('/:imageId')
   async getImage(
     @Res() response: Response,
-    @Param() getImageParamDto: GetImageParamDto,
+    @Param() getImageRequestDto: GetImageRequestDto,
   ) {
-    const objectMeta =
-      await this.objectStorageService.findObjectMetaById(
-        getImageParamDto.imageId,
-      );
-    if (!objectMeta)
-      throw new NotFoundException(
-        '요청한 이미지는 존재하지 않습니다',
-      );
-
-    const data = await this.objectStorageService.getObjectUrl(
-      objectMeta.name,
+    const data = await this.objectStorageService.getObjectUrlById(
+      getImageRequestDto.imageId,
       60 * 10,
     );
 
     return response.redirect(data);
   }
 
-  @Post()
-  @UseInterceptors(FileInterceptor('file'))
-  @ApiOperation({ summary: '이미지 업로드' })
-  @ApiCreatedResponse({ type: ObjectMeta })
-  async uploadImage(
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [new FileTypeValidator({ fileType: 'image' })],
-      }),
-    )
-    file: Express.Multer.File,
-  ) {
-    const filePath = [
-      'seats',
-      `${Date.now()}-${file.originalname}`,
-    ].join('/');
+  // @Post()
+  // @UseInterceptors(FileInterceptor('file'))
+  // @ApiOperation({ summary: '이미지 업로드' })
+  // @ApiCreatedResponse({ type: ObjectMeta })
+  // async uploadImage(
+  //   @UploadedFile(
+  //     new ParseFilePipe({
+  //       validators: [new FileTypeValidator({ fileType: 'image' })],
+  //     }),
+  //   )
+  //   file: Express.Multer.File,
+  // ) {
+  //   const filePath = [
+  //     'seats',
+  //     `${Date.now()}-${file.originalname}`,
+  //   ].join('/');
 
-    const objectMeta = await this.objectStorageService.save(
-      Readable.from(file.buffer),
-      filePath,
-      'image',
-      true,
-    );
+  //   const objectMeta = await this.objectStorageService.save(
+  //     Readable.from(file.buffer),
+  //     filePath,
+  //     'image',
+  //     true,
+  //   );
 
-    return objectMeta;
-  }
+  //   return objectMeta;
+  // }
 }

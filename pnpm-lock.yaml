@@ -20,6 +20,9 @@ importers:
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^4.3.0
         version: 4.3.0(prettier@3.1.1)
+      eslint_d:
+        specifier: ^13.1.2
+        version: 13.1.2
       prettier:
         specifier: ^3.1.1
         version: 3.1.1
@@ -3377,6 +3380,12 @@ packages:
   /core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
 
+  /core_d@6.1.0:
+    resolution: {integrity: sha512-vYgenhJ8CYCj+7LPbPdyFo2u0Doavfbi/vhFpR/BsW9/iUAhuKd+sw2l4CHXhaXIo4/058p2nlsAtbL7iswm5A==}
+    dependencies:
+      supports-color: 8.1.1
+    dev: true
+
   /cors@2.8.5:
     resolution: {integrity: sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==}
     engines: {node: '>= 0.10'}
@@ -4186,6 +4195,18 @@ packages:
       text-table: 0.2.0
     transitivePeerDependencies:
       - supports-color
+
+  /eslint_d@13.1.2:
+    resolution: {integrity: sha512-kRQ6oxtY9TL+NtHaLrPPmqHmZ4bY9iE+A2LACQ9CMzzbatZbIXq55X8Tz76KaTlH2NQ1F2vccQ8UEKvL49zPOg==}
+    hasBin: true
+    dependencies:
+      core_d: 6.1.0
+      eslint: 8.56.0
+      nanolru: 1.0.0
+      optionator: 0.9.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
 
   /espree@9.6.1:
     resolution: {integrity: sha512-oruZaFkjorTpF32kDSI5/75ViwGeZginGGy2NoOSg3Q9bnwlnmDm4HLnkl0RE3n+njDXR037aY1+x58Z/zFdwQ==}
@@ -6054,6 +6075,11 @@ packages:
     resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+    dev: true
+
+  /nanolru@1.0.0:
+    resolution: {integrity: sha512-GyQkE8M32pULhQk7Sko5raoIbPalAk90ICG+An4fq6fCsFHsP6fB2K46WGXVdoJpy4SGMnZ/EKbo123fZJomWg==}
+    engines: {node: '>= 0.4.0'}
     dev: true
 
   /natural-compare@1.4.0:

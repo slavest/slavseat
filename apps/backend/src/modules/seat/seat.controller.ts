@@ -19,13 +19,13 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
 import { Readable } from 'stream';
 
 import { ObjectMeta } from '../object-storage/entity/objectMeta.entity';
 import { ObjectStorageService } from '../object-storage/object-storage.service';
-import { AddSeatDto } from './dto/addSeat.dto';
-import { RemoveSeatDto } from './dto/removeSeat.dto';
+import { AddSeatRequestDto } from './dto/request/addSeatRequest.dto';
+import { GetSeatByFloorRequestDto } from './dto/request/getSeatByFloorRequest.dto';
+import { RemoveSeatRequestDto } from './dto/request/removeSeatRequest.dto';
 import { Seat } from './entity/seat.entity';
 import { SeatService } from './seat.service';
 
@@ -58,34 +58,34 @@ export class SeatController {
   //   return response.redirect(data);
   // }
 
-  @Post('/image')
-  @UseInterceptors(FileInterceptor('file'))
-  @ApiOperation({ summary: '좌석 이미지 등록' })
-  @ApiCreatedResponse({ type: ObjectMeta })
-  async uploadSeatImage(
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [new FileTypeValidator({ fileType: 'image' })],
-      }),
-    )
-    file: Express.Multer.File,
-  ) {
-    const filePath = ['seats', 'seat-image'].join('/');
+  // @Post('/image')
+  // @UseInterceptors(FileInterceptor('file'))
+  // @ApiOperation({ summary: '좌석 이미지 등록' })
+  // @ApiCreatedResponse({ type: ObjectMeta })
+  // async uploadSeatImage(
+  //   @UploadedFile(
+  //     new ParseFilePipe({
+  //       validators: [new FileTypeValidator({ fileType: 'image' })],
+  //     }),
+  //   )
+  //   file: Express.Multer.File,
+  // ) {
+  //   const filePath = ['seats', 'seat-image'].join('/');
 
-    const objectMeta = await this.objectStorageService.save(
-      Readable.from(file.buffer),
-      filePath,
-      'image',
-      true,
-    );
+  //   const objectMeta = await this.objectStorageService.save(
+  //     Readable.from(file.buffer),
+  //     filePath,
+  //     'image',
+  //     true,
+  //   );
 
-    return objectMeta;
-  }
+  //   return objectMeta;
+  // }
 
   @Post()
   @ApiOperation({ summary: '좌석 등록' })
   @ApiCreatedResponse({ type: Seat, isArray: true })
-  async addSeats(@Body() addSeatDto: AddSeatDto) {
+  async addSeats(@Body() addSeatDto: AddSeatRequestDto) {
     return this.seatService.addSeat(addSeatDto);
   }
 
@@ -96,9 +96,20 @@ export class SeatController {
     return this.seatService.getAllSeat();
   }
 
+  // @Get('/floor/:floorId')
+  // @ApiOperation({ summary: '층별 좌석 조회' })
+  // @ApiCreatedResponse({ type: Seat, isArray: true })
+  // async getSeatByFloor(
+  //   @Param() getSeatByFloorRequestDto: GetSeatByFloorRequestDto,
+  // ) {
+  //   return this.seatService.findByFloorId(
+  //     getSeatByFloorRequestDto.floorId,
+  //   );
+  // }
+
   @Delete('/:id')
   @ApiOperation({ summary: '좌석 삭제' })
-  async removeSeat(@Param() removeSeatDto: RemoveSeatDto) {
+  async removeSeat(@Param() removeSeatDto: RemoveSeatRequestDto) {
     return this.seatService.removeSeat(removeSeatDto);
   }
 }

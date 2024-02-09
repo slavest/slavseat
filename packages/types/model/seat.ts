@@ -7,3 +7,5 @@ export interface SeatInfo {
   label: string;
   floor: Model.FloorInfo;
 }
+
+export interface SeatSummary extends Omit<SeatInfo, 'floor'> {}

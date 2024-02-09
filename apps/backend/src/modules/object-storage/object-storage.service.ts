@@ -98,6 +98,25 @@ export class ObjectStorageService {
     return this.objectMetaRepository.save(object);
   }
 
+  async getObjectUrlById(id: number, expiresInSec = 60) {
+    const objectMeta = await this.findObjectMetaById(id);
+    if (!objectMeta)
+      throw new NotFoundException('object를 찾을 수 없습니다.');
+
+    const bucketName = this.configService.getOrThrow(
+      objectMeta.isPublic
+        ? 'OCI_STORAGE_PUBLIC_BUCKET'
+        : 'OCI_STORAGE_PRIVATE_BUCKET',
+    );
+    const preAuthedUrl = await this.createPreAuthedUrl(
+      objectMeta.name,
+      bucketName,
+      expiresInSec,
+    );
+
+    return preAuthedUrl;
+  }
+
   async getObjectUrl(name: string, expiresInSec = 60) {
     const objectMeta = await this.findObjectMetaByName(name);
     if (!objectMeta)

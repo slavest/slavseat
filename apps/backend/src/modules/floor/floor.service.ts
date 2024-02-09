@@ -4,10 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Model } from '@slavseat/types';
 import { Repository } from 'typeorm';
 
+import { ObjectStorageService } from '../object-storage/object-storage.service';
 import { SeatService } from '../seat/seat.service';
-import { CreateFloorDto } from './dto/request/createFloorRequest.dto';
+import { CreateFloorRequestDto } from './dto/request/createFloorRequest.dto';
 import { GetAllFloorResponseDto } from './dto/response/getAllFloorResponse.dto';
 import { Floor } from './entity/floor.entity';
 
@@ -16,27 +18,56 @@ export class FloorService {
   constructor(
     @InjectRepository(Floor)
     private readonly floorRepository: Repository<Floor>,
+    private readonly objectStorageService: ObjectStorageService,
   ) {}
 
-  async createFloor(createFloorDto: CreateFloorDto) {
-    const existFloor =
-      await this.floorRepository.findBy(createFloorDto);
+  async createFloor(
+    createFloorRequestDto: CreateFloorRequestDto,
+  ): Promise<Floor> {
+    const existFloor = await this.floorRepository.findBy(
+      createFloorRequestDto,
+    );
     if (!existFloor)
       throw new ConflictException(
-        `${CreateFloorDto.name} is already Exist`,
+        `${CreateFloorRequestDto.name} is already Exist`,
       );
 
-    return this.floorRepository.save(createFloorDto);
+    return this.floorRepository.save(createFloorRequestDto);
   }
 
-  async getAllFloor(): Promise<GetAllFloorResponseDto[]> {
+  async addImageToFloor(
+    floorId: number,
+    objectMetaId: number,
+  ): Promise<Floor> {
+    const floor = await this.floorRepository.findOneBy({
+      id: floorId,
+    });
+    if (!floor)
+      throw new NotFoundException(`${floorId} is not exist floor`);
+
+    const objectMeta =
+      await this.objectStorageService.findObjectMetaById(
+        objectMetaId,
+      );
+    if (!objectMeta)
+      throw new NotFoundException(
+        `${objectMetaId} is not exist object`,
+      );
+
+    return this.floorRepository.save({
+      ...floor,
+      image: objectMeta,
+    });
+  }
+
+  async getAllFloor(): Promise<Model.FloorSummary[]> {
     return this.floorRepository.find();
   }
 
-  async findFloorById(id: number) {
-    return this.floorRepository.find({
+  async findById(id: number): Promise<Floor> {
+    return this.floorRepository.findOne({
       where: { id },
-      relations: { seats: true },
+      relations: { seats: true, image: true },
     });
   }
 
