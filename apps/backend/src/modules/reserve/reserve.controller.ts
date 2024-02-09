@@ -5,10 +5,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { AddReserveDto } from './dto/addReserve.dto';
-import { GetReserveByDate } from './dto/getReserveByDate.dto';
-import { GetREserveByUser } from './dto/getReserveByUser.dto';
-import { Reserve } from './entities/reserve.entity';
+import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
+import { GetReserveByDateRequestDto } from './dto/request/getReserveByDateRequest.dto';
+import { GetReserveByUserRequestDto } from './dto/request/getReserveByUserRequest.dto';
+import { Reserve } from './entity/reserve.entity';
 import { ReserveService } from './reserve.service';
 
 @Controller('reserve')
@@ -19,27 +19,31 @@ export class ReserveController {
   @Post()
   @ApiOperation({ summary: '좌석 예약' })
   @ApiCreatedResponse({ type: Reserve })
-  async addReserve(@Body() addReserveDto: AddReserveDto) {
-    return this.reserveService.addReserve(addReserveDto);
+  async addReserve(
+    @Body() addReserveRequestDto: AddReserveRequestDto,
+  ) {
+    return this.reserveService.addReserve(addReserveRequestDto);
   }
 
   @Get()
   @ApiOperation({ summary: '날짜 기준 좌석 예약 조회' })
   @ApiCreatedResponse({ type: Reserve, isArray: true })
   async getReserveByDate(
-    @Query() getReserveByDate: GetReserveByDate,
+    @Query() getReserveByDateRequestDto: GetReserveByDateRequestDto,
   ) {
-    return this.reserveService.getReserveByDate(getReserveByDate);
+    return this.reserveService.getReserveByDate(
+      getReserveByDateRequestDto,
+    );
   }
 
   @Get('/user/:user')
   @ApiOperation({ summary: '유저 기준 좌석 예약 조회' })
   @ApiCreatedResponse({ type: Reserve, isArray: true })
   async getReserveByUser(
-    @Query() getReserveByUser: GetREserveByUser,
+    @Query() getReserveByUserRequestDto: GetReserveByUserRequestDto,
   ) {
     return this.reserveService.findReserveByUser(
-      getReserveByUser.user,
+      getReserveByUserRequestDto.user,
     );
   }
 }

@@ -13,6 +13,7 @@ module.exports = {
     '.eslintrc.js',
   ],
   rules: {
+    'prettier/prettier': 'error',
     '@typescript-eslint/no-unused-vars': 'warn',
     '@stylistic/jsx-quotes': ['error', 'prefer-double'],
   },

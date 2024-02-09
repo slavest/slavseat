@@ -11,6 +11,7 @@ import { AppService } from './app.service';
 import { ConfigurationModule } from './libs/config/config.module';
 import { DatabaseModule } from './libs/database/database.module';
 import { HttpLoggerMiddleware } from './libs/logging/http-logger.middleware';
+import { FloorModule } from './modules/floor/floor.module';
 import { ReserveModule } from './modules/reserve/reserve.module';
 import { SeatModule } from './modules/seat/seat.module';
 
@@ -20,6 +21,7 @@ import { SeatModule } from './modules/seat/seat.module';
     DatabaseModule,
     SeatModule,
     ReserveModule,
+    FloorModule,
   ],
   controllers: [AppController],
   providers: [

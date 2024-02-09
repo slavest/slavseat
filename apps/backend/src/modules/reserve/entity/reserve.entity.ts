@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsNumber, IsString } from 'class-validator';
-import { Seat } from 'src/modules/seat/entities/seat.entity';
+import { Seat } from 'src/modules/seat/entity/seat.entity';
 import {
   Column,
   Entity,
