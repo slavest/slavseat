@@ -7,8 +7,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
 
 import { SeatService } from '../seat/seat.service';
-import { AddReserveDto } from './dto/addReserve.dto';
-import { GetReserveByDate } from './dto/getReserveByDate.dto';
+import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
+import { GetReserveByDateRequestDto } from './dto/request/getReserveByDateRequest.dto';
 import { Reserve } from './entity/reserve.entity';
 
 @Injectable()
@@ -19,8 +19,8 @@ export class ReserveService {
     private readonly seatService: SeatService,
   ) {}
 
-  async addReserve(addReserveDto: AddReserveDto) {
-    const { seatId, start, end } = addReserveDto;
+  async addReserve(addReserveRequestDto: AddReserveRequestDto) {
+    const { seatId, start, end } = addReserveRequestDto;
 
     const seat = await this.seatService.findOneSeatById(seatId);
     if (!seat)
@@ -35,14 +35,16 @@ export class ReserveService {
     if (existReserve) throw new ConflictException('Already Reserved');
 
     const reserve = this.reserveRepository.create({
-      ...addReserveDto,
+      ...addReserveRequestDto,
       seat,
     });
     return this.reserveRepository.save(reserve);
   }
 
-  async getReserveByDate(getReserveByDate: GetReserveByDate) {
-    const { date } = getReserveByDate;
+  async getReserveByDate(
+    getReserveByDateRequestDto: GetReserveByDateRequestDto,
+  ) {
+    const { date } = getReserveByDateRequestDto;
 
     const startDate = new Date(date);
     startDate.setHours(0, 0, 0, 0);

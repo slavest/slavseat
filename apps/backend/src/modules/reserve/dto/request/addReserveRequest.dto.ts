@@ -1,9 +1,9 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
-import { Reserve } from '../entity/reserve.entity';
+import { Reserve } from '../../entity/reserve.entity';
 
-export class AddReserveDto extends PickType(Reserve, [
+export class AddReserveRequestDto extends PickType(Reserve, [
   'start',
   'end',
 ]) {

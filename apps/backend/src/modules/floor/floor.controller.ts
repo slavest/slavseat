@@ -25,7 +25,6 @@ import {
 import { Response } from 'express';
 import { Readable } from 'stream';
 
-import { ObjectMeta } from '../object-storage/entity/objectMeta.entity';
 import { ObjectStorageService } from '../object-storage/object-storage.service';
 import { CreateFloorRequestDto } from './dto/request/createFloorRequest.dto';
 import { GetFloorByIdDto } from './dto/request/getFloorByIdRequest.dto';
