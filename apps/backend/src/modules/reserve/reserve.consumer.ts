@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Job } from 'bull';
+import { plainToClass, plainToInstance } from 'class-transformer';
 import { Between, MoreThanOrEqual, Repository } from 'typeorm';
 
 import { SeatService } from '../seat/seat.service';
@@ -26,8 +27,17 @@ export class ReserveConsumer {
 
   @Process()
   async addReserve(job: Job<AddReserveRequestDto>) {
-    this.logger.debug(job.data);
-    const { seatId, start, end = null, always } = job.data;
+    const addReserveRequestDto = plainToInstance(
+      AddReserveRequestDto,
+      job.data,
+    );
+
+    const {
+      seatId,
+      start,
+      end = null,
+      always,
+    } = addReserveRequestDto;
     const dateSearch = start && end;
 
     if (dateSearch && start.getTime() >= end.getTime())
@@ -66,7 +76,7 @@ export class ReserveConsumer {
       );
 
     const reserve = this.reserveRepository.create({
-      ...job.data,
+      ...addReserveRequestDto,
       seat,
     });
     return this.reserveRepository.save(reserve);

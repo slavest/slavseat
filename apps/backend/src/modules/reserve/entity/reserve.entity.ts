@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Model } from '@slavseat/types';
+import { Type } from 'class-transformer';
 import {
   IsDate,
   IsNumber,
@@ -33,11 +34,13 @@ export class Reserve implements Model.ReserveInfo {
 
   @Column({ nullable: false })
   @IsDate()
+  @Type(() => Date)
   @ApiProperty()
   start: Date;
 
   @Column({ nullable: true })
   @IsDate()
+  @Type(() => Date)
   @IsOptional()
   @ApiProperty()
   end: Date | null;
