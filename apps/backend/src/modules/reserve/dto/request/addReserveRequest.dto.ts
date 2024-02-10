@@ -6,6 +6,7 @@ import { Reserve } from '../../entity/reserve.entity';
 export class AddReserveRequestDto extends PickType(Reserve, [
   'start',
   'end',
+  'always',
 ]) {
   @ApiProperty()
   @IsNumber()

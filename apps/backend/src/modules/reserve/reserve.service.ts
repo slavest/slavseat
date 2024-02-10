@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Repository } from 'typeorm';
+import { Between, MoreThanOrEqual, Repository } from 'typeorm';
 
 import { SeatService } from '../seat/seat.service';
 import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
@@ -21,22 +21,48 @@ export class ReserveService {
   ) {}
 
   async addReserve(addReserveRequestDto: AddReserveRequestDto) {
-    const { seatId, start, end } = addReserveRequestDto;
+    const {
+      seatId,
+      start,
+      end = null,
+      always,
+    } = addReserveRequestDto;
+    const dateSearch = start && end;
 
-    if (start.getTime() >= end.getTime())
-      throw new BadRequestException(`date invalid`);
+    if (dateSearch && start.getTime() >= end.getTime())
+      throw new BadRequestException(
+        `시작 날짜는 종료 날짜보다 클 수 없습니다.`,
+      );
 
     const seat = await this.seatService.findOneSeatById(seatId);
     if (!seat)
-      throw new NotFoundException(`Seat ${seatId} Not Found `);
+      throw new NotFoundException(`좌석을 찾을 수 없습니다.`);
 
     const existReserve = await this.reserveRepository.findOne({
       where: [
-        { seat: { id: seat.id }, start: Between(start, end) },
-        { seat: { id: seat.id }, end: Between(start, end) },
-      ],
+        dateSearch && {
+          seat: { id: seat.id },
+          start: Between(start, end),
+        },
+        dateSearch && {
+          seat: { id: seat.id },
+          end: Between(start, end),
+        },
+        always && {
+          seat: { id: seat.id },
+          start: MoreThanOrEqual(start),
+        },
+        always && {
+          seat: { id: seat.id },
+          end: MoreThanOrEqual(start),
+        },
+        { seat: { id: seat.id }, always: true },
+      ].filter((item) => item !== undefined),
     });
-    if (existReserve) throw new ConflictException('Already Reserved');
+    if (existReserve)
+      throw new ConflictException(
+        '이미 예약된 시간입니다. 예약 시간을 다시 확인해 주세요',
+      );
 
     const reserve = this.reserveRepository.create({
       ...addReserveRequestDto,
