@@ -82,10 +82,16 @@ export class ReserveService {
     endDate.setHours(23, 59, 59, 999);
 
     const reserves = await this.reserveRepository.find({
-      where: {
-        start: Between(startDate, endDate),
-        end: Between(startDate, endDate),
-      },
+      where: [
+        {
+          start: Between(startDate, endDate),
+          end: Between(startDate, endDate),
+        },
+        {
+          start: MoreThanOrEqual(startDate),
+          always: true,
+        },
+      ],
     });
 
     return reserves;
