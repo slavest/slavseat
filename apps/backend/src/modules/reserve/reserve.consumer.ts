@@ -1,19 +1,20 @@
-import { Process, Processor } from '@nestjs/bull';
+import { OnQueueActive, Process, Processor } from '@nestjs/bull';
 import {
   BadRequestException,
   ConflictException,
+  HttpException,
+  HttpStatus,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Job } from 'bull';
-import { plainToClass, plainToInstance } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { Between, MoreThanOrEqual, Repository } from 'typeorm';
 
 import { SeatService } from '../seat/seat.service';
 import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
 import { Reserve } from './entity/reserve.entity';
-import { ReserveService } from './reserve.service';
 
 @Processor('reserve')
 export class ReserveConsumer {
@@ -25,7 +26,7 @@ export class ReserveConsumer {
     private readonly reserveRepository: Repository<Reserve>,
   ) {}
 
-  @Process()
+  @Process({ concurrency: 1 })
   async addReserve(job: Job<AddReserveRequestDto>) {
     const addReserveRequestDto = plainToInstance(
       AddReserveRequestDto,
@@ -41,8 +42,8 @@ export class ReserveConsumer {
     const dateSearch = start && end;
 
     if (dateSearch && start.getTime() >= end.getTime())
-      throw new BadRequestException(
-        `시작 날짜는 종료 날짜보다 클 수 없습니다.`,
+      throw new Error(
+        `시작 날짜는 종료 날짜보다 같거나 클 수 없습니다.`,
       );
 
     const seat = await this.seatService.findOneSeatById(seatId);
@@ -70,6 +71,7 @@ export class ReserveConsumer {
         { seat: { id: seat.id }, always: true },
       ].filter((item) => item !== undefined),
     });
+    console.log(existReserve);
     if (existReserve)
       throw new ConflictException(
         '이미 예약된 시간입니다. 예약 시간을 다시 확인해 주세요',

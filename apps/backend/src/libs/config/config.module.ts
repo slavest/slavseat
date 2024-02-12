@@ -7,7 +7,8 @@ import { Region } from 'oci-common';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      // envFilePath: process.env.NODE_ENV !== 'production' ? '.env' : '.env.production',
+      envFilePath:
+        process.env.NODE_ENV !== 'test' ? '.env' : '.env.test',
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
           .valid('development', 'production', 'test')

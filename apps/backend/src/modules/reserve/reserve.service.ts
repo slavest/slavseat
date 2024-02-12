@@ -3,6 +3,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -28,11 +29,18 @@ export class ReserveService {
     addReserveRequestDto: AddReserveRequestDto,
   ): Promise<Reserve> {
     const job = await this.reserveQueue.add(addReserveRequestDto, {
-      removeOnComplete: 5,
+      removeOnComplete: true,
+      removeOnFail: true,
     });
 
-    const result = await job.finished();
-    return result;
+    try {
+      const result = await job.finished();
+      return result;
+    } catch (err) {
+      throw new InternalServerErrorException(
+        `예약에 실패했습니다. ${err?.message}`,
+      );
+    }
   }
 
   async getReserveByDate(
