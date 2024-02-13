@@ -24,5 +24,5 @@ module.exports = {
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
   plugins: ["@trivago/prettier-plugin-sort-imports", "@stylistic/eslint-plugin", "@stylistic/eslint-plugin-jsx"],
-  importOrderParserPlugins: ["typescript", "decorators-legacy"],
+  importOrderParserPlugins: ["typescript", "decorators-legacy", "jsx"],
 }
