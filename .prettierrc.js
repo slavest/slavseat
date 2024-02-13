@@ -2,10 +2,10 @@ module.exports = {
   printWidth: 70,
   singleQuote: true,
   semi: true,
-  trailingComma: "all",
+  trailingComma: 'all',
   tabWidth: 2,
   useTabs: false,
-  endOfLine: "auto",
+  endOfLine: 'auto',
   importOrder: [
     'react',
     '<THIRD_PARTY_MODULES>',
@@ -23,6 +23,14 @@ module.exports = {
   ],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
-  plugins: ["@trivago/prettier-plugin-sort-imports", "@stylistic/eslint-plugin", "@stylistic/eslint-plugin-jsx"],
-  importOrderParserPlugins: ["typescript", "decorators-legacy", "jsx"],
-}
+  plugins: [
+    '@trivago/prettier-plugin-sort-imports',
+    '@stylistic/eslint-plugin',
+    '@stylistic/eslint-plugin-jsx',
+  ],
+  importOrderParserPlugins: [
+    'typescript',
+    'decorators-legacy',
+    'jsx',
+  ],
+};
