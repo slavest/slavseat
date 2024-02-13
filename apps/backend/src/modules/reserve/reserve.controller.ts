@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiCreatedResponse,
   ApiOperation,
@@ -22,7 +29,7 @@ export class ReserveController {
   async addReserve(
     @Body() addReserveRequestDto: AddReserveRequestDto,
   ) {
-    return this.reserveService.addReserve(addReserveRequestDto);
+    return this.reserveService.addReserveQueue(addReserveRequestDto);
   }
 
   @Get()
@@ -40,7 +47,7 @@ export class ReserveController {
   @ApiOperation({ summary: '유저 기준 좌석 예약 조회' })
   @ApiCreatedResponse({ type: Reserve, isArray: true })
   async getReserveByUser(
-    @Query() getReserveByUserRequestDto: GetReserveByUserRequestDto,
+    @Param() getReserveByUserRequestDto: GetReserveByUserRequestDto,
   ) {
     return this.reserveService.findReserveByUser(
       getReserveByUserRequestDto.user,

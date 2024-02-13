@@ -25,7 +25,7 @@ export class ReserveService {
     private readonly seatService: SeatService,
   ) {}
 
-  async addReserve(
+  async addReserveQueue(
     addReserveRequestDto: AddReserveRequestDto,
   ): Promise<Reserve> {
     const job = await this.reserveQueue.add(addReserveRequestDto, {
@@ -41,6 +41,59 @@ export class ReserveService {
         `예약에 실패했습니다. ${err?.message}`,
       );
     }
+  }
+
+  async addReserve(
+    addReserveRequestDto: AddReserveRequestDto,
+  ): Promise<Reserve> {
+    const {
+      seatId,
+      start,
+      end = null,
+      always,
+    } = addReserveRequestDto;
+    const dateSearch = start && end;
+
+    if (dateSearch && start.getTime() >= end.getTime())
+      throw new Error(
+        `시작 날짜는 종료 날짜보다 같거나 클 수 없습니다.`,
+      );
+
+    const seat = await this.seatService.findOneSeatById(seatId);
+    if (!seat)
+      throw new NotFoundException(`좌석을 찾을 수 없습니다.`);
+
+    const existReserve = await this.reserveRepository.findOne({
+      where: [
+        dateSearch && {
+          seat: { id: seat.id },
+          start: Between(start, end),
+        },
+        dateSearch && {
+          seat: { id: seat.id },
+          end: Between(start, end),
+        },
+        always && {
+          seat: { id: seat.id },
+          start: MoreThanOrEqual(start),
+        },
+        always && {
+          seat: { id: seat.id },
+          end: MoreThanOrEqual(start),
+        },
+        { seat: { id: seat.id }, always: true },
+      ].filter((item) => item !== undefined),
+    });
+    if (existReserve)
+      throw new Error(
+        '이미 예약된 시간입니다. 예약 시간을 다시 확인해 주세요',
+      );
+
+    const reserve = this.reserveRepository.create({
+      ...addReserveRequestDto,
+      seat,
+    });
+    return this.reserveRepository.save(reserve);
   }
 
   async getReserveByDate(
@@ -64,12 +117,16 @@ export class ReserveService {
           always: true,
         },
       ],
+      relations: { seat: { floor: true } },
     });
 
     return reserves;
   }
 
   findReserveByUser(user: string) {
-    return this.reserveRepository.find({ where: { user } });
+    return this.reserveRepository.find({
+      where: { user },
+      relations: { seat: { floor: true } },
+    });
   }
 }

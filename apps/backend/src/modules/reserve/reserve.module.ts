@@ -6,8 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { SeatModule } from '../seat/seat.module';
 import { Reserve } from './entity/reserve.entity';
-import { ReserveConsumer } from './reserve.consumer';
 import { ReserveController } from './reserve.controller';
+import { ReserveProcessor } from './reserve.processor';
 import { ReserveService } from './reserve.service';
 
 @Module({
@@ -23,6 +23,6 @@ import { ReserveService } from './reserve.service';
     }),
   ],
   controllers: [ReserveController],
-  providers: [ReserveService, ReserveConsumer],
+  providers: [ReserveService, ReserveProcessor],
 })
 export class ReserveModule {}
