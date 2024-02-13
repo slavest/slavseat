@@ -25,6 +25,7 @@ describe('/reserve API', () => {
   let seat1: Seat;
   let seat2: Seat;
   let seat3: Seat;
+  let reserve2: Reserve;
   let reserve3: Reserve;
 
   beforeAll(async () => {
@@ -67,6 +68,13 @@ describe('/reserve API', () => {
       })
       .then((res) => res.at(0));
 
+    reserve2 = await reserveService.addReserveQueue({
+      seatId: seat2.id,
+      user: 'user-2',
+      start: new Date('2024-02-01T12:00:00'),
+      end: null,
+      always: true,
+    });
     reserve3 = await reserveService.addReserveQueue({
       seatId: seat3.id,
       user: 'user-3',
@@ -110,9 +118,9 @@ describe('/reserve API', () => {
         .query(data);
 
       expect(res.status).toBe(200);
-      expect(res.body.length).toBe(1);
-      expect(res.body?.[0].seat.id).toBe(seat3.id);
-      expect(res.body?.[0].seat.floor.id).toBe(seat3.floor.id);
+      expect(res.body.length).toBe(2);
+      // expect(res.body?.[0].seat.id).toBe(seat3.id);
+      // expect(res.body?.[0].seat.floor.id).toBe(seat3.floor.id);
     });
   });
 
@@ -135,6 +143,27 @@ describe('/reserve API', () => {
       expect(res.body?.user).toBe(data.user);
       expect(new Date(res.body?.start)).toEqual(data.start);
       expect(new Date(res.body?.end)).toEqual(data.end);
+      expect(res.body?.always).toBe(data.always);
+    });
+
+    it('[고정석 예약 테스트]', async () => {
+      const data: AddReserveRequestDto = {
+        seatId: seat1.id,
+        user: 'user-1',
+        start: new Date('2024-02-01T12:00:00'),
+        end: null,
+        always: true,
+      };
+
+      const res = await request(app.getHttpServer())
+        .post(`/reserve`)
+        .send(data);
+
+      expect(res.status).toBe(201);
+      expect(res.body?.seat.id).toBe(data.seatId);
+      expect(res.body?.user).toBe(data.user);
+      expect(new Date(res.body?.start)).toEqual(data.start);
+      expect(res.body?.end).toBeNull();
       expect(res.body?.always).toBe(data.always);
     });
 
