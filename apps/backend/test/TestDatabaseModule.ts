@@ -1,15 +1,12 @@
 import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { testOptions } from 'src/libs/database/typeorm.datasource';
 import { DataSource } from 'typeorm';
-
-import { ConfigurationModule } from '../config/config.module';
-import { getOptions, options } from './typeorm.datasource';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      imports: [ConfigurationModule],
-      useFactory: getOptions,
+      useFactory: () => testOptions,
       dataSourceFactory: async (opt) => {
         const logger = new Logger('DataBaseModule');
         logger.log('♺ Connecting to DataBase');
@@ -20,4 +17,4 @@ import { getOptions, options } from './typeorm.datasource';
     }),
   ],
 })
-export class DatabaseModule {}
+export class TestDatabaseModule {}

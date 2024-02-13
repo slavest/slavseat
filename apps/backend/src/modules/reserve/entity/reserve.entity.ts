@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import { Model } from '@slavseat/types';
+import { Type } from 'class-transformer';
+import {
+  IsDate,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { IsBoolean } from 'src/libs/decorator/isBoolean.decorator';
 import { Seat } from 'src/modules/seat/entity/seat.entity';
 import {
   Column,
@@ -9,7 +17,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Reserve {
+export class Reserve implements Model.ReserveInfo {
   @PrimaryGeneratedColumn()
   @IsNumber()
   @ApiProperty()
@@ -26,11 +34,19 @@ export class Reserve {
 
   @Column({ nullable: false })
   @IsDate()
+  @Type(() => Date)
   @ApiProperty()
   start: Date;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   @IsDate()
+  @Type(() => Date)
+  @IsOptional()
   @ApiProperty()
-  end: Date;
+  end: Date | null;
+
+  @Column({ nullable: false })
+  @IsBoolean()
+  @ApiProperty()
+  always: boolean;
 }

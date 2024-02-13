@@ -27,7 +27,7 @@ import { Readable } from 'stream';
 
 import { ObjectStorageService } from '../object-storage/object-storage.service';
 import { CreateFloorRequestDto } from './dto/request/createFloorRequest.dto';
-import { GetFloorByIdDto } from './dto/request/getFloorByIdRequest.dto';
+import { GetFloorByIdRequestDto } from './dto/request/getFloorByIdRequest.dto';
 import { GetFloorImageRequestDto } from './dto/request/getFloorImageRequest.dto';
 import { UploadFloorImageRequestDto } from './dto/request/uploadFloorImageRequest.dto';
 import { GetAllFloorResponseDto } from './dto/response/getAllFloorResponse.dto';
@@ -54,7 +54,9 @@ export class FloorController {
   @Get('/:id')
   @ApiOperation({ summary: '단일 층 조회' })
   @ApiCreatedResponse({ type: Floor })
-  async getFloorById(@Query() getFloorByidDto: GetFloorByIdDto) {
+  async getFloorById(
+    @Param() getFloorByidDto: GetFloorByIdRequestDto,
+  ) {
     return this.floorService.findById(getFloorByidDto.id);
   }
 

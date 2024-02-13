@@ -7,7 +7,8 @@ import { Region } from 'oci-common';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      // envFilePath: process.env.NODE_ENV !== 'production' ? '.env' : '.env.production',
+      envFilePath:
+        process.env.NODE_ENV !== 'test' ? '.env' : '.env.test',
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
           .valid('development', 'production', 'test')
@@ -20,6 +21,9 @@ import { Region } from 'oci-common';
         DB_USER: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
+        REDIS_HOST: Joi.string().required(),
+        REDIS_DB: Joi.string().required(),
+        REDIS_PORT: Joi.number().required(),
         OCI_STORAGE_NAMESPACE: Joi.string().required(),
         OCI_STORAGE_PUBLIC_BUCKET: Joi.string().required(),
         OCI_STORAGE_PRIVATE_BUCKET: Joi.string().required(),
