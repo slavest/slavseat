@@ -10,6 +10,42 @@ import Footer from '@/components/molecules/Footer';
 
 import { useInitalizeStyle } from '../hooks/useInitalizeStyle';
 
+function AppFooter() {
+  return (
+    <Footer.Root>
+      <Footer.Button active>
+        <HomeIcon />
+        <p className="text-[0.6rem] leading-[0.8rem] font-semibold">
+          홈
+        </p>
+      </Footer.Button>
+      <Footer.Button>
+        <ReserveIcon />
+        <p className="text-[0.6rem] leading-[0.8rem] font-semibold">
+          예약
+        </p>
+      </Footer.Button>
+      <Footer.Button>
+        <article className="text-white bg-green-400 p-2 rounded-full mb-2">
+          <PlusIcon />
+        </article>
+      </Footer.Button>
+      <Footer.Button>
+        <FavoriteIcon />
+        <p className="text-[0.6rem] leading-[0.8rem] font-semibold">
+          즐겨찾기
+        </p>
+      </Footer.Button>
+      <Footer.Button>
+        <ProfileIcon />
+        <p className="text-[0.6rem] leading-[0.8rem] font-semibold">
+          프로필
+        </p>
+      </Footer.Button>
+    </Footer.Root>
+  );
+}
+
 function Root() {
   useInitalizeStyle();
 
@@ -20,37 +56,7 @@ function Root() {
         <Outlet />
       </main>
 
-      <Footer.Root>
-        <Footer.Button active>
-          <HomeIcon />
-          <p className="text-[0.6rem] leading-[0.8rem] font-semibold">
-            홈
-          </p>
-        </Footer.Button>
-        <Footer.Button>
-          <ReserveIcon />
-          <p className="text-[0.6rem] leading-[0.8rem] font-semibold">
-            예약
-          </p>
-        </Footer.Button>
-        <Footer.Button>
-          <article className="text-white bg-green-400 p-2 rounded-full mb-2">
-            <PlusIcon />
-          </article>
-        </Footer.Button>
-        <Footer.Button>
-          <FavoriteIcon />
-          <p className="text-[0.6rem] leading-[0.8rem] font-semibold">
-            즐겨찾기
-          </p>
-        </Footer.Button>
-        <Footer.Button>
-          <ProfileIcon />
-          <p className="text-[0.6rem] leading-[0.8rem] font-semibold">
-            프로필
-          </p>
-        </Footer.Button>
-      </Footer.Root>
+      <AppFooter />
     </div>
   );
 }

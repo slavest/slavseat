@@ -7,12 +7,19 @@ import {
 
 import './global-style.css.ts';
 import './reset.css';
+import { Reserve } from './routes/Reserve.tsx';
 import Root from './routes/Root.tsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
+    children: [
+      {
+        path: '/reserve',
+        element: <Reserve />,
+      },
+    ],
   },
 ]);
 
