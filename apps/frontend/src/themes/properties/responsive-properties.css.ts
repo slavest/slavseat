@@ -50,6 +50,10 @@ export const responseProperties = defineProperties({
     borderTopRightRadius: radius,
     borderBottomLeftRadius: radius,
     borderBottomRightRadius: radius,
+    overflow: ['hidden', 'auto', 'scroll'],
+    overflowX: ['hidden', 'auto', 'scroll'],
+    overflowY: ['hidden', 'auto', 'scroll'],
+    position: ['static', 'relative', 'absolute', 'fixed'],
     // etc.
   },
   shorthands: {

@@ -6,10 +6,12 @@ import { createWrapperAndAppendToBody } from './util';
 export interface ReactPortalProps {
   children: React.ReactNode;
   wrapperId?: string;
+  className?: string;
 }
 
 const ReactPortal = ({
   children,
+  className,
   wrapperId = 'react-portal-wrapper',
 }: ReactPortalProps) => {
   const [element, setElement] = useState<HTMLElement>();
@@ -18,11 +20,12 @@ const ReactPortal = ({
     const elem = document.getElementById(wrapperId);
 
     if (!elem) {
-      setElement(createWrapperAndAppendToBody(wrapperId));
+      setElement(createWrapperAndAppendToBody(wrapperId, className));
     } else {
+      elem.className = className ?? '';
       setElement(elem);
     }
-  }, [wrapperId]);
+  }, [className, wrapperId]);
 
   if (element) return createPortal(children, element);
   return null;

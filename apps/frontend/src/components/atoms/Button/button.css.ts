@@ -5,9 +5,6 @@ import { baseToken, colorToken } from '@/themes/theme.css';
 export const buttonVariants = recipe({
   base: {
     appearance: 'none',
-    border: 'none',
-    background: colorToken['background.primary'],
-    color: colorToken['text.button.primary'],
     cursor: 'pointer',
     ...baseToken.transition.colors,
   },

@@ -11,16 +11,16 @@ export const useThemeStore = create<ThemeStore>((set) => ({
   darkMode: false,
   toggleDarkMode: () =>
     set((state) => {
-      const newState = { darkMode: !state.darkMode };
+      // const newState = { darkMode: !state.darkMode };
 
-      if (newState.darkMode) {
-        document.body.classList.remove(lightThemeClass);
-        document.body.classList.add(darkThemeClass);
-      } else {
-        document.body.classList.remove(darkThemeClass);
-        document.body.classList.add(lightThemeClass);
-      }
+      // if (newState.darkMode) {
+      //   document.body.classList.remove(lightThemeClass);
+      //   document.body.classList.add(darkThemeClass);
+      // } else {
+      //   document.body.classList.remove(darkThemeClass);
+      //   document.body.classList.add(lightThemeClass);
+      // }
 
-      return newState;
+      return { darkMode: !state.darkMode };
     }),
 }));

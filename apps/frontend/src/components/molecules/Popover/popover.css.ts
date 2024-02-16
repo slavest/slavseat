@@ -14,6 +14,7 @@ export const popoverVariants = recipe({
     borderRadius: baseToken.radius.sm,
     marginTop: baseToken.spacing[1],
     color: colorToken['text.popover'],
+    outline: 'none',
   },
   variants: {
     open: {

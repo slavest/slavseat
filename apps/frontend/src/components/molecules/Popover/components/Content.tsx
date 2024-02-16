@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 
 import clsx from 'clsx';
@@ -17,20 +18,34 @@ export interface PopoverContentProps
 
 const Content = ({ className, ...rest }: PopoverContentProps) => {
   const { open, handleClose, anchorEl } = usePopoverContext();
+  const [pos, setPos] = useState<{ left: string; top: string }>();
   const ref = useRef<HTMLDivElement>(null);
 
-  const getAnchorPos = useCallback(() => {
+  const calculatePos = useCallback(() => {
     const pos = anchorEl?.getBoundingClientRect();
 
+    const xPos = pos?.x ?? 0;
     const yPos = (pos?.y ?? 0) + (pos?.height ?? 0);
-    return { left: `${pos?.x ?? 0}px`, top: `${yPos ?? 0}px` };
+
+    return { left: `${xPos}px`, top: `${yPos}px` };
   }, [anchorEl]);
 
-  useEffect(() => {
-    if (open) {
-      ref.current?.focus();
-    }
-  }, [open]);
+  // useEffect(() => {
+  //   calculatePos();
+  //   window.addEventListener('resize', calculatePos);
+  //   window.addEventListener('scroll', calculatePos);
+
+  //   return () => {
+  //     window.removeEventListener('resize', calculatePos);
+  //     window.removeEventListener('scroll', calculatePos);
+  //   };
+  // }, [anchorEl, calculatePos]);
+
+  // useEffect(() => {
+  //   if (open) {
+  //     ref.current?.focus();
+  //   }
+  // }, [open]);
 
   return (
     <ReactPortal wrapperId="react-popover-portal">
@@ -41,7 +56,7 @@ const Content = ({ className, ...rest }: PopoverContentProps) => {
         onBlur={() => {
           handleClose();
         }}
-        style={{ ...getAnchorPos() }}
+        style={{ ...calculatePos() }}
         {...rest}
       />
     </ReactPortal>

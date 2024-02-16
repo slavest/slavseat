@@ -16,25 +16,29 @@ export const PopoverContext =
     handleOpen: () => {},
     handleClose: () => {},
     anchorEl: null,
-    setAnchorEl: (el: HTMLElement | null) => {},
+    setAnchorEl: () => {},
   });
 
 export interface PopoverProviderProps
   extends Pick<Partial<PopoverContextState>, 'open' | 'anchorEl'> {
+  onOpen?: (open: boolean) => void;
   children?: React.ReactNode;
 }
 export const PopoverContextProvider = ({
   open: openProp,
   anchorEl: anchorElProp,
   children,
+  onOpen,
 }: PopoverProviderProps) => {
   const [open, setOpen] = useControlled(false, openProp);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleOpen = () => {
+    onOpen?.(true);
     setOpen(true);
   };
   const handleClose = () => {
+    onOpen?.(false);
     setOpen(false);
   };
 
