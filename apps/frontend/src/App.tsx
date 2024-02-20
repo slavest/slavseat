@@ -1,23 +1,25 @@
-import React, { Fragment, useCallback, useState } from 'react';
-import GridLayout from 'react-grid-layout';
-import 'react-grid-layout/css/styles.css';
-import 'react-resizable/css/styles.css';
+import React, { useCallback, useState } from 'react';
+
+import clsx from 'clsx';
 
 import './App.css';
 import { Button } from './components/atoms/Button';
 import { Text } from './components/atoms/Text';
-import SeatGrid from './components/molecules/SeatGrid';
+import SeatGridEditor, {
+  SeatInfo,
+} from './components/molecules/SeatGridEditor';
+import SeatGridViewer from './components/molecules/SeatGridViewer';
 import { dummySeatMap } from './dummy';
-// const ResponsiveGridLayout = WidthProvider(Responsive);
+import { hideScrollBar } from './global-style.css';
 import { useInitalizeStyle } from './hooks/useInitalizeStyle';
 
 function App() {
   useInitalizeStyle();
 
-  const [layout, setLayout] = useState(dummySeatMap);
+  const [seats, setSeats] = useState<SeatInfo[]>(dummySeatMap);
 
   const handleClickAddSeat = useCallback(() => {
-    setLayout((prev) => [
+    setSeats((prev) => [
       ...prev,
       {
         id: prev.length,
@@ -32,16 +34,16 @@ function App() {
 
   return (
     <div className="w-full h-full">
-      <div className="overflow-x-scroll overflow-y-scroll bg-zinc-800">
-        {/* style={{ transform: 'scale(0.5) translate(-50%, -50%)' }} */}
-        <SeatGrid seats={dummySeatMap}>
-          <div></div>
-        </SeatGrid>
+      <div className={clsx('overflow-auto', hideScrollBar)}>
+        <SeatGridEditor seats={seats} onChange={setSeats} />
+      </div>
+      <div className={clsx('overflow-auto', hideScrollBar)}>
+        <SeatGridViewer seats={seats} reserves={[1]} />
       </div>
 
       <Button onClick={handleClickAddSeat}>좌석 추가</Button>
       <Text fontSize="12">
-        <pre>{JSON.stringify(layout, null, 2)}</pre>
+        <pre>{JSON.stringify(seats, null, 2)}</pre>
       </Text>
     </div>
   );
