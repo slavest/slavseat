@@ -9,7 +9,6 @@ import {
 } from 'class-validator';
 import { Facility } from 'src/modules/facility/entity/facility.entity';
 import { ObjectMeta } from 'src/modules/object-storage/entity/objectMeta.entity';
-import { Seat } from 'src/modules/seat/entity/seat.entity';
 import {
   Column,
   Entity,

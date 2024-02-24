@@ -1,7 +1,6 @@
 import { InjectQueue } from '@nestjs/bull';
 import {
   BadRequestException,
-  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -12,7 +11,6 @@ import { Queue } from 'bull';
 import { Between, MoreThanOrEqual, Repository } from 'typeorm';
 
 import { FacilityService } from '../facility/facility.service';
-import { SeatService } from '../seat/seat.service';
 import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
 import { GetReserveByDateRequestDto } from './dto/request/getReserveByDateRequest.dto';
 import { RemoveReserveRequestDto } from './dto/request/removeReserveRequest.dto';

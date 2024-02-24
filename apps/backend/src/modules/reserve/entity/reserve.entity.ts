@@ -9,7 +9,6 @@ import {
 } from 'class-validator';
 import { IsBoolean } from 'src/libs/decorator/isBoolean.decorator';
 import { Facility } from 'src/modules/facility/entity/facility.entity';
-import { Seat } from 'src/modules/seat/entity/seat.entity';
 import {
   Column,
   Entity,

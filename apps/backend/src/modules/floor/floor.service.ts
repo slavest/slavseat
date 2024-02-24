@@ -8,9 +8,7 @@ import { Model } from '@slavseat/types';
 import { Repository } from 'typeorm';
 
 import { ObjectStorageService } from '../object-storage/object-storage.service';
-import { SeatService } from '../seat/seat.service';
 import { CreateFloorRequestDto } from './dto/request/createFloorRequest.dto';
-import { GetAllFloorResponseDto } from './dto/response/getAllFloorResponse.dto';
 import { Floor } from './entity/floor.entity';
 
 @Injectable()
