@@ -1,4 +1,4 @@
-export * from './seat';
+export * from './facility';
 export * from './floor';
-export * from './object-storage'
-export * from './reserve'
+export * from './object-storage';
+export * from './reserve';

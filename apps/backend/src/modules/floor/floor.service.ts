@@ -67,7 +67,7 @@ export class FloorService {
   async findById(id: number): Promise<Floor> {
     return this.floorRepository.findOne({
       where: { id },
-      relations: { seats: true, image: true },
+      relations: { facilities: true, image: true },
     });
   }
 

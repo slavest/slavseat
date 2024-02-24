@@ -96,16 +96,16 @@ export class SeatController {
     return this.seatService.getAllSeat();
   }
 
-  // @Get('/floor/:floorId')
-  // @ApiOperation({ summary: '층별 좌석 조회' })
-  // @ApiCreatedResponse({ type: Seat, isArray: true })
-  // async getSeatByFloor(
-  //   @Param() getSeatByFloorRequestDto: GetSeatByFloorRequestDto,
-  // ) {
-  //   return this.seatService.findByFloorId(
-  //     getSeatByFloorRequestDto.floorId,
-  //   );
-  // }
+  @Get('/floor/:floorId')
+  @ApiOperation({ summary: '층 아이디로 좌석 조회' })
+  @ApiCreatedResponse({ type: Seat, isArray: true })
+  async getSeatByFloor(
+    @Param() getSeatByFloorRequestDto: GetSeatByFloorRequestDto,
+  ) {
+    return this.seatService.findByFloorId(
+      getSeatByFloorRequestDto.floorId,
+    );
+  }
 
   @Delete('/:id')
   @ApiOperation({ summary: '좌석 삭제' })

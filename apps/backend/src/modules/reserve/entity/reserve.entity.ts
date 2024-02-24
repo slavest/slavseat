@@ -8,6 +8,7 @@ import {
   IsString,
 } from 'class-validator';
 import { IsBoolean } from 'src/libs/decorator/isBoolean.decorator';
+import { Facility } from 'src/modules/facility/entity/facility.entity';
 import { Seat } from 'src/modules/seat/entity/seat.entity';
 import {
   Column,
@@ -28,9 +29,11 @@ export class Reserve implements Model.ReserveInfo {
   @ApiProperty()
   user: string;
 
-  @ManyToOne(() => Seat, (seat) => seat.id, { nullable: false })
+  @ManyToOne(() => Facility, (facility) => facility.id, {
+    nullable: false,
+  })
   @ApiProperty()
-  seat: Seat;
+  facility: Facility;
 
   @Column({ nullable: false })
   @IsDate()

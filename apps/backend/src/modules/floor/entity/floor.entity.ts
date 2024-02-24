@@ -7,6 +7,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
+import { Facility } from 'src/modules/facility/entity/facility.entity';
 import { ObjectMeta } from 'src/modules/object-storage/entity/objectMeta.entity';
 import { Seat } from 'src/modules/seat/entity/seat.entity';
 import {
@@ -30,16 +31,16 @@ export class Floor implements Model.FloorInfo {
   @IsString()
   name: string;
 
-  @OneToMany(() => Seat, (seat) => seat.floor)
-  @ApiProperty({ type: Seat, isArray: true })
+  @OneToMany(() => Facility, (facility) => facility.floor)
+  @ApiProperty({ type: () => Facility, isArray: true })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => Seat)
-  seats: Seat[];
+  @Type(() => Facility)
+  facilities: Facility[];
 
   @JoinColumn()
   @OneToOne(() => ObjectMeta, { nullable: true })
-  @ApiProperty({ type: ObjectMeta })
+  @ApiProperty({ type: ObjectMeta, nullable: true })
   @Type(() => ObjectMeta)
   image: ObjectMeta;
 }

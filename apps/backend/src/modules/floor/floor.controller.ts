@@ -51,25 +51,7 @@ export class FloorController {
     return this.floorService.getAllFloor();
   }
 
-  @Get('/:id')
-  @ApiOperation({ summary: '단일 층 조회' })
-  @ApiCreatedResponse({ type: Floor })
-  async getFloorById(
-    @Param() getFloorByidDto: GetFloorByIdRequestDto,
-  ) {
-    return this.floorService.findById(getFloorByidDto.id);
-  }
-
-  @Post()
-  @ApiOperation({ summary: '층 생성' })
-  @ApiCreatedResponse({ type: Floor })
-  async createFloor(
-    @Body() createFloorRequestDto: CreateFloorRequestDto,
-  ) {
-    return this.floorService.createFloor(createFloorRequestDto);
-  }
-
-  @Post('/image/:floorId')
+  @Post('/:floorId/image')
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -122,12 +104,13 @@ export class FloorController {
     return savedFloor;
   }
 
-  @Get('/image/:floorId')
+  @Get('/:floorId/image')
   @ApiOperation({ summary: '층 사진 조회' })
   async getImage(
     @Res() response: Response,
     @Param() getFloorImageRequestDto: GetFloorImageRequestDto,
   ) {
+    console.log(getFloorImageRequestDto);
     const floor = await this.floorService.findById(
       getFloorImageRequestDto.floorId,
     );
@@ -141,5 +124,23 @@ export class FloorController {
     );
 
     return response.redirect(data);
+  }
+
+  @Get('/:id')
+  @ApiOperation({ summary: '단일 층 조회' })
+  @ApiCreatedResponse({ type: Floor })
+  async getFloorById(
+    @Param() getFloorByidDto: GetFloorByIdRequestDto,
+  ) {
+    return this.floorService.findById(getFloorByidDto.id);
+  }
+
+  @Post()
+  @ApiOperation({ summary: '층 생성' })
+  @ApiCreatedResponse({ type: Floor })
+  async createFloor(
+    @Body() createFloorRequestDto: CreateFloorRequestDto,
+  ) {
+    return this.floorService.createFloor(createFloorRequestDto);
   }
 }

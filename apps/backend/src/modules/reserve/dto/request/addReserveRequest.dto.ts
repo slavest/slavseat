@@ -10,7 +10,7 @@ export class AddReserveRequestDto extends PickType(Reserve, [
 ]) {
   @ApiProperty()
   @IsNumber()
-  seatId: number;
+  facilityId: number;
 
   @ApiProperty()
   @IsString()

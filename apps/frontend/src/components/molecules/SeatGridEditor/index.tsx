@@ -12,8 +12,6 @@ export type SeatInfo = {
   y: number;
   w: number;
   h: number;
-  minW?: number;
-  minH?: number;
 };
 
 interface SeatGridEditorProps {

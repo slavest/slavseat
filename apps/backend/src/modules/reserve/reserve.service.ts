@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Queue } from 'bull';
 import { Between, MoreThanOrEqual, Repository } from 'typeorm';
 
+import { FacilityService } from '../facility/facility.service';
 import { SeatService } from '../seat/seat.service';
 import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
 import { GetReserveByDateRequestDto } from './dto/request/getReserveByDateRequest.dto';
@@ -22,7 +23,7 @@ export class ReserveService {
     private readonly reserveRepository: Repository<Reserve>,
     @InjectQueue('reserve')
     private readonly reserveQueue: Queue<AddReserveRequestDto>,
-    private readonly seatService: SeatService,
+    private readonly facilityService: FacilityService,
   ) {}
 
   async addReserveQueue(
@@ -47,7 +48,7 @@ export class ReserveService {
     addReserveRequestDto: AddReserveRequestDto,
   ): Promise<Reserve> {
     const {
-      seatId,
+      facilityId,
       start,
       end = null,
       always,
@@ -59,29 +60,30 @@ export class ReserveService {
         `시작 날짜는 종료 날짜보다 같거나 클 수 없습니다.`,
       );
 
-    const seat = await this.seatService.findOneSeatById(seatId);
-    if (!seat)
-      throw new NotFoundException(`좌석을 찾을 수 없습니다.`);
+    const facility =
+      await this.facilityService.findOneById(facilityId);
+    if (!facility)
+      throw new NotFoundException(`시설을 찾을 수 없습니다.`);
 
     const existReserve = await this.reserveRepository.findOne({
       where: [
         dateSearch && {
-          seat: { id: seat.id },
+          seat: { id: facility.id },
           start: Between(start, end),
         },
         dateSearch && {
-          seat: { id: seat.id },
+          seat: { id: facility.id },
           end: Between(start, end),
         },
         always && {
-          seat: { id: seat.id },
+          seat: { id: facility.id },
           start: MoreThanOrEqual(start),
         },
         always && {
-          seat: { id: seat.id },
+          seat: { id: facility.id },
           end: MoreThanOrEqual(start),
         },
-        { seat: { id: seat.id }, always: true },
+        { facility: { id: facility.id }, always: true },
       ].filter((item) => item !== undefined),
     });
     if (existReserve)
@@ -91,7 +93,7 @@ export class ReserveService {
 
     const reserve = this.reserveRepository.create({
       ...addReserveRequestDto,
-      seat,
+      facility,
     });
     return this.reserveRepository.save(reserve);
   }
@@ -117,7 +119,7 @@ export class ReserveService {
           always: true,
         },
       ],
-      relations: { seat: { floor: true } },
+      relations: { facility: true },
     });
 
     return reserves;
@@ -126,7 +128,7 @@ export class ReserveService {
   findReserveByUser(user: string) {
     return this.reserveRepository.find({
       where: { user },
-      relations: { seat: { floor: true } },
+      relations: { facility: true },
     });
   }
 }

@@ -14,6 +14,7 @@ import { ConfigurationModule } from './libs/config/config.module';
 import { DatabaseModule } from './libs/database/database.module';
 import { HttpLoggerMiddleware } from './libs/logging/http-logger.middleware';
 import { RedisBullModule } from './libs/redis-bull/redis-bull.module';
+import { FacilityModule } from './modules/facility/facility.module';
 import { FloorModule } from './modules/floor/floor.module';
 import { ReserveModule } from './modules/reserve/reserve.module';
 import { SeatModule } from './modules/seat/seat.module';
@@ -22,9 +23,9 @@ import { SeatModule } from './modules/seat/seat.module';
   imports: [
     ConfigurationModule,
     DatabaseModule,
-    SeatModule,
     ReserveModule,
     FloorModule,
+    FacilityModule,
     RedisBullModule,
     BullBoardModule.forRoot({
       route: '/queues',

@@ -38,7 +38,13 @@ function App() {
         <SeatGridEditor seats={seats} onChange={setSeats} />
       </div>
       <div className={clsx('overflow-auto', hideScrollBar)}>
-        <SeatGridViewer seats={seats} reserves={[1]} />
+        <SeatGridViewer
+          seats={seats}
+          reserves={[1]}
+          objects={[
+            { name: 'object-1', x: 1, y: 10, h: 4, w: 4, id: 0 },
+          ]}
+        />
       </div>
 
       <Button onClick={handleClickAddSeat}>좌석 추가</Button>

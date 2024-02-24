@@ -1,9 +1,10 @@
 import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { addTransactionalDataSource } from 'typeorm-transactional';
 
 import { ConfigurationModule } from '../config/config.module';
-import { getOptions, options } from './typeorm.datasource';
+import { getOptions } from './typeorm.datasource';
 
 @Module({
   imports: [
@@ -13,7 +14,9 @@ import { getOptions, options } from './typeorm.datasource';
       dataSourceFactory: async (opt) => {
         const logger = new Logger('DataBaseModule');
         logger.log('♺ Connecting to DataBase');
-        const dataSource = await new DataSource(opt).initialize();
+        const dataSource = await addTransactionalDataSource(
+          new DataSource(opt),
+        ).initialize();
         logger.log('✔ DataBase connect Success ');
         return dataSource;
       },

@@ -107,6 +107,9 @@ importers:
       typeorm:
         specifier: ^0.3.20
         version: 0.3.20(mysql2@3.9.1)(sqlite3@5.1.7)(ts-node@10.9.1)
+      typeorm-transactional:
+        specifier: ^0.5.0
+        version: 0.5.0(reflect-metadata@0.1.14)(typeorm@0.3.20)
     devDependencies:
       '@nestjs/cli':
         specifier: ^10.0.0
@@ -174,6 +177,9 @@ importers:
 
   apps/frontend:
     dependencies:
+      '@slavseat/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@vanilla-extract/css':
         specifier: ^1.14.1
         version: 1.14.1
@@ -285,7 +291,11 @@ importers:
         specifier: ^5.1.3
         version: 5.1.3(eslint-config-prettier@9.1.0)(eslint@8.56.0)(prettier@3.1.1)
 
-  packages/types: {}
+  packages/types:
+    devDependencies:
+      eslint-config-slavseat:
+        specifier: workspace:*
+        version: link:../eslint-config-slavest
 
   packages/typescript-config: {}
 
@@ -2205,6 +2215,12 @@ packages:
       '@types/node': 20.10.6
     dev: true
 
+  /@types/cls-hooked@4.3.8:
+    resolution: {integrity: sha512-tf/7H883gFA6MPlWI15EQtfNZ+oPL0gLKkOlx9UHFrun1fC/FkuyNBpTKq1B5E3T4fbvjId6WifHUdSGsMMuPg==}
+    dependencies:
+      '@types/node': 20.10.6
+    dev: false
+
   /@types/connect@3.4.38:
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
     dependencies:
@@ -3103,6 +3119,13 @@ packages:
     resolution: {integrity: sha512-OH/2E5Fg20h2aPrbe+QL8JZQFko0YZaF+j4mnQ7BGhfavO7OpSLa8a0y9sBwomHdSbkhTS8TQNayBfnW5DwbvQ==}
     dev: true
 
+  /async-hook-jl@1.7.6:
+    resolution: {integrity: sha512-gFaHkFfSxTjvoxDMYqDuGHlcRyUuamF8s+ZTtJdDzqjws4mCt7v0vuV79/E2Wr2/riMQgtG4/yUtXWs1gZ7JMg==}
+    engines: {node: ^4.7 || >=6.9 || >=7.3}
+    dependencies:
+      stack-chain: 1.3.7
+    dev: false
+
   /async@3.2.5:
     resolution: {integrity: sha512-baNZyqaaLhyLVKm/DlvdW051MSgO6b8eVfIezl9E5PqWxFgzLm/wQntEW4zOytVburDEr0JlALEpdOFwvErLsg==}
     dev: false
@@ -3619,6 +3642,15 @@ packages:
     engines: {node: '>=0.8'}
     dev: true
 
+  /cls-hooked@4.2.2:
+    resolution: {integrity: sha512-J4Xj5f5wq/4jAvcdgoGsL3G103BtWpZrMo8NEinRltN+xpTZdI+M38pyQqhuFU/P792xkMFvnKSf+Lm81U1bxw==}
+    engines: {node: ^4.7 || >=6.9 || >=7.3 || >=8.2.1}
+    dependencies:
+      async-hook-jl: 1.7.6
+      emitter-listener: 1.1.2
+      semver: 5.7.2
+    dev: false
+
   /clsx@1.2.1:
     resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
     engines: {node: '>=6'}
@@ -4074,6 +4106,12 @@ packages:
   /electron-to-chromium@1.4.657:
     resolution: {integrity: sha512-On2ymeleg6QbRuDk7wNgDdXtNqlJLM2w4Agx1D/RiTmItiL+a9oq5p7HUa2ZtkAtGBe/kil2dq/7rPfkbe0r5w==}
     dev: true
+
+  /emitter-listener@1.1.2:
+    resolution: {integrity: sha512-Bt1sBAGFHY9DKY+4/2cV6izcKJUf5T7/gkdmkxzX/qv9CcGH8xSwVRW5mtX03SWJtRTWSOpzCuWN9rBFYZepZQ==}
+    dependencies:
+      shimmer: 1.2.1
+    dev: false
 
   /emittery@0.13.1:
     resolution: {integrity: sha512-DeWwawk6r5yR9jFgnDKYt4sLS0LmHJJi3ZOnb5/JdbYwj3nW+FxQnHIjhBKz8YLC7oRNPVM9NQ47I3CVx34eqQ==}
@@ -7968,6 +8006,11 @@ packages:
       ajv-keywords: 3.5.2(ajv@6.12.6)
     dev: true
 
+  /semver@5.7.2:
+    resolution: {integrity: sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==}
+    hasBin: true
+    dev: false
+
   /semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
     hasBin: true
@@ -8074,6 +8117,10 @@ packages:
       interpret: 1.4.0
       rechoir: 0.6.2
     dev: true
+
+  /shimmer@1.2.1:
+    resolution: {integrity: sha512-sQTKC1Re/rM6XyFM6fIAGHRPVGvyXfgzIDvzoq608vM+jeyVD0Tu1E6Np0Kc2zAIFWIj963V2800iF/9LPieQw==}
+    dev: false
 
   /side-channel@1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}
@@ -8227,6 +8274,10 @@ packages:
     dependencies:
       minipass: 3.3.6
     optional: true
+
+  /stack-chain@1.3.7:
+    resolution: {integrity: sha512-D8cWtWVdIe/jBA7v5p5Hwl5yOSOrmZPWDPe2KxQ5UAGD+nxbxU0lKXA4h85Ta6+qgdKVL3vUxsbIZjc1kBG7ug==}
+    dev: false
 
   /stack-utils@2.0.6:
     resolution: {integrity: sha512-XlkWvfIm6RmsWtNJx+uqtKLS8eqFbxUg0ZzLXqY0caEy9l7hruX8IpiDnjsLavoBgqCCR71TqWO8MaXYheJ3RQ==}
@@ -8873,6 +8924,20 @@ packages:
 
   /typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
+
+  /typeorm-transactional@0.5.0(reflect-metadata@0.1.14)(typeorm@0.3.20):
+    resolution: {integrity: sha512-53/CwnXpOIJnWU3oVCNbhHB95FwciKSGbY+m/Hw4e2dBM2c4toiOHwf4pmk83Ne7guznmDgVr/5IUfbp+JTPCg==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      reflect-metadata: '>= 0.1.12'
+      typeorm: '>= 0.2.8'
+    dependencies:
+      '@types/cls-hooked': 4.3.8
+      cls-hooked: 4.2.2
+      reflect-metadata: 0.1.14
+      semver: 7.5.4
+      typeorm: 0.3.20(mysql2@3.9.1)(sqlite3@5.1.7)(ts-node@10.9.1)
+    dev: false
 
   /typeorm@0.3.20(mysql2@3.9.1)(sqlite3@5.1.7)(ts-node@10.9.1):
     resolution: {integrity: sha512-sJ0T08dV5eoZroaq9uPKBoNcGslHBR4E4y+EBHs//SiGbblGe7IeduP/IH4ddCcj0qp3PHwDwGnuvqEAnKlq/Q==}
