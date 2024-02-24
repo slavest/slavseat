@@ -39,8 +39,9 @@ export class FloorService {
     floorId: number,
     objectMetaId: number,
   ): Promise<Floor> {
-    const floor = await this.floorRepository.findOneBy({
-      id: floorId,
+    const floor = await this.floorRepository.findOne({
+      where: { id: floorId },
+      relations: { facilities: true },
     });
     if (!floor)
       throw new NotFoundException(`${floorId} is not exist floor`);

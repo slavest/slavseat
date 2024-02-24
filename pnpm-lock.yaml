@@ -104,6 +104,9 @@ importers:
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
+      swagger-themes:
+        specifier: ^1.4.2
+        version: 1.4.2
       typeorm:
         specifier: ^0.3.20
         version: 0.3.20(mysql2@3.9.1)(sqlite3@5.1.7)(ts-node@10.9.1)
@@ -8471,6 +8474,10 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
     dev: true
+
+  /swagger-themes@1.4.2:
+    resolution: {integrity: sha512-O+T8It8cy1X6lvrqC2QA6taslLoPnQ2oRmvW1Aub6TebKmWLdONqTo/CKDvo0t9W65QKC87/jnuEHjNx91oPzQ==}
+    dev: false
 
   /swagger-ui-dist@5.11.0:
     resolution: {integrity: sha512-j0PIATqQSEFGOLmiJOJZj1X1Jt6bFIur3JpY7+ghliUnfZs0fpWDdHEkn9q7QUlBtKbkn6TepvSxTqnE8l3s0A==}

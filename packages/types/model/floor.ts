@@ -7,4 +7,5 @@ export interface FloorInfo {
   image: Model.ObjectMetaInfo | null;
 }
 
-export interface FloorSummary extends Omit<FloorInfo, 'image'> {}
+export interface FloorSummary
+  extends Omit<FloorInfo, 'facilities' | 'image'> {}

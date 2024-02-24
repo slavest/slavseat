@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -8,6 +9,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
@@ -15,6 +17,10 @@ import {
 import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
 import { GetReserveByDateRequestDto } from './dto/request/getReserveByDateRequest.dto';
 import { GetReserveByUserRequestDto } from './dto/request/getReserveByUserRequest.dto';
+import { RemoveReserveRequestDto } from './dto/request/removeReserveRequest.dto';
+import { GetReserveByDateResponseDto } from './dto/response/getReserveByDateResponse.dto';
+import { GetReserveByUserResponseDto } from './dto/response/getReserveByUserResponse.dto';
+import { RemoveReserveResponseDto } from './dto/response/removeReserveResponse.dto';
 import { Reserve } from './entity/reserve.entity';
 import { ReserveService } from './reserve.service';
 
@@ -34,7 +40,10 @@ export class ReserveController {
 
   @Get()
   @ApiOperation({ summary: '날짜 기준 좌석 예약 조회' })
-  @ApiCreatedResponse({ type: Reserve, isArray: true })
+  @ApiOkResponse({
+    type: GetReserveByDateResponseDto,
+    isArray: true,
+  })
   async getReserveByDate(
     @Query() getReserveByDateRequestDto: GetReserveByDateRequestDto,
   ) {
@@ -45,12 +54,24 @@ export class ReserveController {
 
   @Get('/user/:user')
   @ApiOperation({ summary: '유저 기준 좌석 예약 조회' })
-  @ApiCreatedResponse({ type: Reserve, isArray: true })
+  @ApiOkResponse({
+    type: GetReserveByUserResponseDto,
+    isArray: true,
+  })
   async getReserveByUser(
     @Param() getReserveByUserRequestDto: GetReserveByUserRequestDto,
   ) {
     return this.reserveService.findReserveByUser(
       getReserveByUserRequestDto.user,
     );
+  }
+
+  @Delete('/:id')
+  @ApiOperation({ summary: '예약 취소' })
+  @ApiOkResponse({ type: RemoveReserveResponseDto })
+  async removeReserve(
+    @Param() removeReserveDto: RemoveReserveRequestDto,
+  ) {
+    return this.reserveService.removeReserve(removeReserveDto);
   }
 }

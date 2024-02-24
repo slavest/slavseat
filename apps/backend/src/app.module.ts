@@ -8,8 +8,6 @@ import {
 } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigurationModule } from './libs/config/config.module';
 import { DatabaseModule } from './libs/database/database.module';
 import { HttpLoggerMiddleware } from './libs/logging/http-logger.middleware';
@@ -17,7 +15,6 @@ import { RedisBullModule } from './libs/redis-bull/redis-bull.module';
 import { FacilityModule } from './modules/facility/facility.module';
 import { FloorModule } from './modules/floor/floor.module';
 import { ReserveModule } from './modules/reserve/reserve.module';
-import { SeatModule } from './modules/seat/seat.module';
 
 @Module({
   imports: [
@@ -32,9 +29,7 @@ import { SeatModule } from './modules/seat/seat.module';
       adapter: ExpressAdapter,
     }),
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({

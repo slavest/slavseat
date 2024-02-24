@@ -19,6 +19,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
@@ -26,6 +27,7 @@ import { Response } from 'express';
 import { Readable } from 'stream';
 
 import { ObjectStorageService } from '../object-storage/object-storage.service';
+import { FloorSummaryDto } from './dto/floorSummary.dto';
 import { CreateFloorRequestDto } from './dto/request/createFloorRequest.dto';
 import { GetFloorByIdRequestDto } from './dto/request/getFloorByIdRequest.dto';
 import { GetFloorImageRequestDto } from './dto/request/getFloorImageRequest.dto';
@@ -46,7 +48,7 @@ export class FloorController {
 
   @Get()
   @ApiOperation({ summary: '모든 층 조회' })
-  @ApiCreatedResponse({ type: GetAllFloorResponseDto, isArray: true })
+  @ApiOkResponse({ type: FloorSummaryDto, isArray: true })
   async getAllFloors() {
     return this.floorService.getAllFloor();
   }
@@ -128,7 +130,7 @@ export class FloorController {
 
   @Get('/:id')
   @ApiOperation({ summary: '단일 층 조회' })
-  @ApiCreatedResponse({ type: Floor })
+  @ApiOkResponse({ type: Floor })
   async getFloorById(
     @Param() getFloorByidDto: GetFloorByIdRequestDto,
   ) {

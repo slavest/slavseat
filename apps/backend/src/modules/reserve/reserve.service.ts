@@ -7,6 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Model } from '@slavseat/types';
 import { Queue } from 'bull';
 import { Between, MoreThanOrEqual, Repository } from 'typeorm';
 
@@ -14,6 +15,9 @@ import { FacilityService } from '../facility/facility.service';
 import { SeatService } from '../seat/seat.service';
 import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
 import { GetReserveByDateRequestDto } from './dto/request/getReserveByDateRequest.dto';
+import { RemoveReserveRequestDto } from './dto/request/removeReserveRequest.dto';
+import { GetReserveByDateResponseDto } from './dto/response/getReserveByDateResponse.dto';
+import { RemoveReserveResponseDto } from './dto/response/removeReserveResponse.dto';
 import { Reserve } from './entity/reserve.entity';
 
 @Injectable()
@@ -65,22 +69,25 @@ export class ReserveService {
     if (!facility)
       throw new NotFoundException(`시설을 찾을 수 없습니다.`);
 
+    if (facility.type !== Model.FacilityType.SEAT)
+      throw new BadRequestException('예약이 불가능한 시설입니다.');
+
     const existReserve = await this.reserveRepository.findOne({
       where: [
         dateSearch && {
-          seat: { id: facility.id },
+          facility: { id: facility.id },
           start: Between(start, end),
         },
         dateSearch && {
-          seat: { id: facility.id },
+          facility: { id: facility.id },
           end: Between(start, end),
         },
         always && {
-          seat: { id: facility.id },
+          facility: { id: facility.id },
           start: MoreThanOrEqual(start),
         },
         always && {
-          seat: { id: facility.id },
+          facility: { id: facility.id },
           end: MoreThanOrEqual(start),
         },
         { facility: { id: facility.id }, always: true },
@@ -98,15 +105,28 @@ export class ReserveService {
     return this.reserveRepository.save(reserve);
   }
 
+  async removeReserve(
+    removeReserveDto: RemoveReserveRequestDto,
+  ): Promise<RemoveReserveResponseDto> {
+    const exist = await this.reserveRepository.findOneBy({
+      id: removeReserveDto.id,
+    });
+    if (!exist) throw new NotFoundException('reserve not found');
+
+    const removeResult = await this.reserveRepository.delete(exist);
+    return { removed: removeResult.affected ?? 0 };
+  }
+
   async getReserveByDate(
     getReserveByDateRequestDto: GetReserveByDateRequestDto,
-  ) {
+  ): Promise<GetReserveByDateResponseDto[]> {
     const { date } = getReserveByDateRequestDto;
 
     const startDate = new Date(date);
-    startDate.setHours(0, 0, 0, 0);
+    startDate.setUTCHours(0, 0, 0, 0);
     const endDate = new Date(date);
-    endDate.setHours(23, 59, 59, 999);
+    endDate.setUTCHours(23, 59, 59, 999);
+    console.log({ startDate, endDate });
 
     const reserves = await this.reserveRepository.find({
       where: [
@@ -119,7 +139,7 @@ export class ReserveService {
           always: true,
         },
       ],
-      relations: { facility: true },
+      relations: { facility: { floor: true } },
     });
 
     return reserves;
@@ -128,7 +148,7 @@ export class ReserveService {
   findReserveByUser(user: string) {
     return this.reserveRepository.find({
       where: { user },
-      relations: { facility: true },
+      relations: { facility: { floor: true } },
     });
   }
 }

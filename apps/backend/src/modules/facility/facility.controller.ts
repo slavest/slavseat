@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import {
   ApiCreatedResponse,
   ApiOkResponse,
@@ -8,7 +16,9 @@ import {
 
 import { FacilitySummaryDto } from './dto/facilitySummary.dto';
 import { AddFacilityRequestDto } from './dto/request/addFacilityRequest.dto';
+import { RemoveFacilityRequestDto } from './dto/request/removeFacilityRequest.dto';
 import { UpdateFacilityRequestDto } from './dto/request/updateFacilityRequest.dto';
+import { RemoveFacilityResponseDto } from './dto/response/removeFacilityResponse.dto';
 import { Facility } from './entity/facility.entity';
 import { FacilityService } from './facility.service';
 
@@ -38,5 +48,14 @@ export class FacilityController {
     @Body() updateFacilityDto: UpdateFacilityRequestDto,
   ) {
     return this.facilityService.updateFacility(updateFacilityDto);
+  }
+
+  @Delete('/:id')
+  @ApiOperation({ summary: '시설 정보 삭제' })
+  @ApiOkResponse({ type: RemoveFacilityResponseDto })
+  async removeFacility(
+    @Param() removeFacilityDto: RemoveFacilityRequestDto,
+  ) {
+    return this.facilityService.removeFacility(removeFacilityDto);
   }
 }

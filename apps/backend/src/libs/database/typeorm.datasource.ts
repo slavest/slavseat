@@ -23,7 +23,7 @@ export const options: DataSourceOptions = {
   migrations: ['dist/migrations/*{.ts,.js}'],
   migrationsRun: false,
   dropSchema: process.env.NODE_ENV === 'test',
-  timezone: 'Asia/Seoul',
+  timezone: 'Z',
   // authSource: 'admin',
 };
 
