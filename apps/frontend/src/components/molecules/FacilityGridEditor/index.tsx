@@ -125,14 +125,17 @@ function FacilityGridEditor({
         <div
           key={facility.id}
           className={clsx(
-            'flex flex-col gap-2 justify-center items-center bg-neutral-50 border border-neutral-200 rounded-md select-none p-2 box-border',
+            'flex flex-col gap-2 justify-center items-center bg-neutral-50 border rounded-md select-none p-2 box-border',
             {
               'cursor-pointer': mode === 'select',
+              'border-neutral-200':
+                mode === 'edit' ||
+                !selected.filter((item) => facility.id === item.id)
+                  .length,
               'border-blue-500':
                 mode === 'select' &&
-                selected
-                  .filter((item) => facility.id === item.id)
-                  .at(0),
+                selected.filter((item) => facility.id === item.id)
+                  .length,
             },
           )}
           onClick={() => handleClickFacility(facility)}
@@ -169,7 +172,9 @@ function FacilityGridEditor({
               </select>
             </>
           )}
-          {mode === 'select' && <Text>{facility.name}</Text>}
+          {mode === 'select' && (
+            <Text fontSize="14">{facility.name}</Text>
+          )}
         </div>
       ))}
     </GridLayout>
