@@ -1,13 +1,15 @@
-import { InjectQueue } from '@nestjs/bull';
+import { RedisService } from '@liaoliaots/nestjs-redis';
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Model } from '@slavseat/types';
-import { Queue } from 'bull';
+import { Redis } from 'ioredis';
+import { sleep } from 'src/libs/utils/common';
 import { Between, MoreThanOrEqual, Repository } from 'typeorm';
 
 import { FacilityService } from '../facility/facility.service';
@@ -17,37 +19,24 @@ import { RemoveReserveRequestDto } from './dto/request/removeReserveRequest.dto'
 import { GetReserveByDateResponseDto } from './dto/response/getReserveByDateResponse.dto';
 import { RemoveReserveResponseDto } from './dto/response/removeReserveResponse.dto';
 import { Reserve } from './entity/reserve.entity';
+import { getFacilityLockKey } from './reserve.constant';
 
 @Injectable()
 export class ReserveService {
+  private readonly redisClient: Redis;
+
   constructor(
     @InjectRepository(Reserve)
     private readonly reserveRepository: Repository<Reserve>,
-    @InjectQueue('reserve')
-    private readonly reserveQueue: Queue<AddReserveRequestDto>,
     private readonly facilityService: FacilityService,
-  ) {}
-
-  async addReserveQueue(
-    addReserveRequestDto: AddReserveRequestDto,
-  ): Promise<Reserve> {
-    const job = await this.reserveQueue.add(addReserveRequestDto, {
-      removeOnComplete: true,
-      removeOnFail: true,
-    });
-
-    try {
-      const result = await job.finished();
-      return result;
-    } catch (err) {
-      throw new InternalServerErrorException(
-        `예약에 실패했습니다. ${err?.message}`,
-      );
-    }
+    private readonly redisService: RedisService,
+  ) {
+    this.redisClient = this.redisService.getClient();
   }
 
   async addReserve(
     addReserveRequestDto: AddReserveRequestDto,
+    retry: number = 0,
   ): Promise<Reserve> {
     const {
       facilityId,
@@ -70,37 +59,56 @@ export class ReserveService {
     if (facility.type !== Model.FacilityType.SEAT)
       throw new BadRequestException('예약이 불가능한 시설입니다.');
 
-    const existReserve = await this.reserveRepository.findOne({
-      where: [
-        dateSearch && {
-          facility: { id: facility.id },
-          start: Between(start, end),
-        },
-        dateSearch && {
-          facility: { id: facility.id },
-          end: Between(start, end),
-        },
-        always && {
-          facility: { id: facility.id },
-          start: MoreThanOrEqual(start),
-        },
-        always && {
-          facility: { id: facility.id },
-          end: MoreThanOrEqual(start),
-        },
-        { facility: { id: facility.id }, always: true },
-      ].filter((item) => item !== undefined),
-    });
-    if (existReserve)
-      throw new Error(
-        '이미 예약된 시간입니다. 예약 시간을 다시 확인해 주세요',
-      );
+    const lockKey = getFacilityLockKey(facility.id);
+    const redisLock = await this.redisClient.incr(lockKey);
 
-    const reserve = this.reserveRepository.create({
-      ...addReserveRequestDto,
-      facility,
-    });
-    return this.reserveRepository.save(reserve);
+    if (redisLock > 1) {
+      if (retry >= 3) {
+        throw new ConflictException(
+          '시설 예약이 불가능합니다. 잠시 후 다시 시도해 주세요.',
+        );
+      }
+
+      await sleep(1000);
+      return this.addReserve(addReserveRequestDto, retry + 1);
+    }
+
+    try {
+      const existReserve = await this.reserveRepository.findOne({
+        where: [
+          dateSearch && {
+            facility: { id: facility.id },
+            start: Between(start, end),
+          },
+          dateSearch && {
+            facility: { id: facility.id },
+            end: Between(start, end),
+          },
+          always && {
+            facility: { id: facility.id },
+            start: MoreThanOrEqual(start),
+          },
+          always && {
+            facility: { id: facility.id },
+            end: MoreThanOrEqual(start),
+          },
+          { facility: { id: facility.id }, always: true },
+        ].filter((item) => item !== undefined),
+      });
+      if (existReserve)
+        throw new ConflictException(
+          '이미 예약된 시간입니다. 예약 시간을 다시 확인해 주세요',
+        );
+
+      const reserve = this.reserveRepository.create({
+        ...addReserveRequestDto,
+        facility,
+      });
+
+      return this.reserveRepository.save(reserve);
+    } finally {
+      await this.redisClient.del(lockKey);
+    }
   }
 
   async removeReserve(
@@ -124,7 +132,6 @@ export class ReserveService {
     startDate.setUTCHours(0, 0, 0, 0);
     const endDate = new Date(date);
     endDate.setUTCHours(23, 59, 59, 999);
-    console.log({ startDate, endDate });
 
     const reserves = await this.reserveRepository.find({
       where: [

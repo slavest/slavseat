@@ -1,22 +1,21 @@
-import { BullModule } from '@nestjs/bull';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { Module } from '@nestjs/common';
 import RedisMemoryServer from 'redis-memory-server';
 
 @Module({
   imports: [
-    BullModule.forRootAsync({
+    RedisModule.forRootAsync({
       useFactory: async () => {
         const redisServer = new RedisMemoryServer();
 
         return {
-          redis: {
+          config: {
             host: await redisServer.getHost(),
             port: await redisServer.getPort(),
-            db: 0,
           },
         };
       },
     }),
   ],
 })
-export class TestRedisBullModule {}
+export class TestRedisModule {}

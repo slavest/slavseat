@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { Model } from '@slavseat/types';
 import { AppModule } from 'src/app.module';
 import { DatabaseModule } from 'src/libs/database/database.module';
-import { RedisBullModule } from 'src/libs/redis-bull/redis-bull.module';
+import { RedisModule } from 'src/libs/redis/redis.module';
 import { Facility } from 'src/modules/facility/entity/facility.entity';
 import { FacilityService } from 'src/modules/facility/facility.service';
 import { Floor } from 'src/modules/floor/entity/floor.entity';
@@ -14,7 +14,7 @@ import { GetReserveByUserRequestDto } from 'src/modules/reserve/dto/request/getR
 import { Reserve } from 'src/modules/reserve/entity/reserve.entity';
 import { ReserveService } from 'src/modules/reserve/reserve.service';
 import * as request from 'supertest';
-import { TestRedisBullModule } from 'test/TestRedisBullModule';
+import { TestRedisModule } from 'test/TestRedisModule';
 import { Connection, EntityManager, QueryRunner } from 'typeorm';
 
 import { TestDatabaseModule } from '../TestDatabaseModule';
@@ -35,8 +35,8 @@ describe('/reserve API', () => {
     })
       .overrideModule(DatabaseModule)
       .useModule(TestDatabaseModule)
-      .overrideModule(RedisBullModule)
-      .useModule(TestRedisBullModule)
+      .overrideModule(RedisModule)
+      .useModule(TestRedisModule)
       .compile();
 
     app = moduleRef.createNestApplication();
@@ -84,14 +84,14 @@ describe('/reserve API', () => {
         ],
       });
 
-    reserve2 = await reserveService.addReserveQueue({
+    reserve2 = await reserveService.addReserve({
       facilityId: facility2.id,
       user: 'user-2',
       start: new Date('2024-02-01T12:00:00'),
       end: null,
       always: true,
     });
-    reserve3 = await reserveService.addReserveQueue({
+    reserve3 = await reserveService.addReserve({
       facilityId: facility3.id,
       user: 'user-3',
       start: new Date('2024-02-01T12:00:00'),
@@ -200,7 +200,7 @@ describe('/reserve API', () => {
         .post(`/reserve`)
         .send(data);
 
-      expect(res.status).toBe(500);
+      expect(res.status).toBe(409);
       expect(res.body.message).toBeDefined();
     });
 
@@ -217,7 +217,7 @@ describe('/reserve API', () => {
       const res = await Promise.all(
         new Array(concurrencyCount)
           .fill(0)
-          .map((_, i) =>
+          .map(() =>
             request(app.getHttpServer()).post(`/reserve`).send(data),
           ),
       );
