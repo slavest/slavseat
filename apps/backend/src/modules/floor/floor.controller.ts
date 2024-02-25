@@ -78,32 +78,10 @@ export class FloorController {
     file: Express.Multer.File,
     @Param() uploadFloorImageRequestDto: UploadFloorImageRequestDto,
   ) {
-    this.logger.log('beforeFind', uploadFloorImageRequestDto);
-    const floor = await this.floorService.findById(
-      uploadFloorImageRequestDto.floorId,
+    return this.floorService.addImageToFloor(
+      uploadFloorImageRequestDto,
+      file,
     );
-    if (!floor) throw new NotFoundException(`floor is not found`);
-
-    const filePath = [
-      'floor',
-      `${floor.name}-${floor.id}-${encodeURIComponent(
-        file.originalname,
-      )}`,
-    ].join('/');
-
-    const objectMeta = await this.objectStorageService.save(
-      Readable.from(file.buffer),
-      filePath,
-      file.mimetype,
-      true,
-    );
-
-    const savedFloor = await this.floorService.addImageToFloor(
-      floor.id,
-      objectMeta.id,
-    );
-
-    return savedFloor;
   }
 
   @Get('/:floorId/image')

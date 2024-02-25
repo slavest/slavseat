@@ -5,10 +5,12 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Model } from '@slavseat/types';
+import { Readable } from 'stream';
 import { Repository } from 'typeorm';
 
 import { ObjectStorageService } from '../object-storage/object-storage.service';
 import { CreateFloorRequestDto } from './dto/request/createFloorRequest.dto';
+import { UploadFloorImageRequestDto } from './dto/request/uploadFloorImageRequest.dto';
 import { Floor } from './entity/floor.entity';
 
 @Injectable()
@@ -34,24 +36,28 @@ export class FloorService {
   }
 
   async addImageToFloor(
-    floorId: number,
-    objectMetaId: number,
+    uploadFloorImageDto: UploadFloorImageRequestDto,
+    file: Express.Multer.File,
   ): Promise<Floor> {
     const floor = await this.floorRepository.findOne({
-      where: { id: floorId },
+      where: { id: uploadFloorImageDto.floorId },
       relations: { facilities: true },
     });
-    if (!floor)
-      throw new NotFoundException(`${floorId} is not exist floor`);
+    if (!floor) throw new NotFoundException(`floor not found`);
 
-    const objectMeta =
-      await this.objectStorageService.findObjectMetaById(
-        objectMetaId,
-      );
-    if (!objectMeta)
-      throw new NotFoundException(
-        `${objectMetaId} is not exist object`,
-      );
+    const filePath = [
+      'floor',
+      `${floor.name}-${floor.id}-${encodeURIComponent(
+        file.originalname,
+      )}`,
+    ].join('/');
+
+    const objectMeta = await this.objectStorageService.save(
+      Readable.from(file.buffer),
+      filePath,
+      file.mimetype,
+      true,
+    );
 
     return this.floorRepository.save({
       ...floor,

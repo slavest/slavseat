@@ -49,11 +49,7 @@ export class Facility implements Model.FacilityInfo {
       .join(', '),
   })
   @IsEnum(Object.values(Model.FacilityType))
-  @Column({
-    type: 'enum',
-    enum: Object.values(Model.FacilityType),
-    nullable: false,
-  })
+  @Column({ nullable: false })
   type: Model.FacilityType;
 
   @ApiProperty({ type: () => Floor })

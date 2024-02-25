@@ -1,8 +1,11 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { Model } from '@slavseat/types';
 import { AppModule } from 'src/app.module';
 import { DatabaseModule } from 'src/libs/database/database.module';
 import { RedisBullModule } from 'src/libs/redis-bull/redis-bull.module';
+import { Facility } from 'src/modules/facility/entity/facility.entity';
+import { FacilityService } from 'src/modules/facility/facility.service';
 import { Floor } from 'src/modules/floor/entity/floor.entity';
 import { FloorService } from 'src/modules/floor/floor.service';
 import { AddReserveRequestDto } from 'src/modules/reserve/dto/request/addReserveRequest.dto';
@@ -10,8 +13,6 @@ import { GetReserveByDateRequestDto } from 'src/modules/reserve/dto/request/getR
 import { GetReserveByUserRequestDto } from 'src/modules/reserve/dto/request/getReserveByUserRequest.dto';
 import { Reserve } from 'src/modules/reserve/entity/reserve.entity';
 import { ReserveService } from 'src/modules/reserve/reserve.service';
-import { Seat } from 'src/modules/seat/entity/seat.entity';
-import { SeatService } from 'src/modules/seat/seat.service';
 import * as request from 'supertest';
 import { TestRedisBullModule } from 'test/TestRedisBullModule';
 import { Connection, EntityManager, QueryRunner } from 'typeorm';
@@ -22,9 +23,9 @@ describe('/reserve API', () => {
   let app: INestApplication;
   let queryRunner: QueryRunner;
   let floor1: Floor;
-  let seat1: Seat;
-  let seat2: Seat;
-  let seat3: Seat;
+  let facility1: Facility;
+  let facility2: Facility;
+  let facility3: Facility;
   let reserve2: Reserve;
   let reserve3: Reserve;
 
@@ -42,7 +43,7 @@ describe('/reserve API', () => {
     await app.init();
 
     const floorService = moduleRef.get(FloorService);
-    const seatService = moduleRef.get(SeatService);
+    const facilityService = moduleRef.get(FacilityService);
     const reserveService = moduleRef.get(ReserveService);
     const manager = moduleRef.get(EntityManager);
     const connection = moduleRef.get(Connection);
@@ -52,31 +53,46 @@ describe('/reserve API', () => {
     queryRunner = manager.queryRunner;
 
     floor1 = await floorService.createFloor({ name: 'floor-1' });
-    seat1 = await seatService
-      .addSeat({
-        seats: [{ label: 'seat-1', x: 1, y: 1, floorId: floor1.id }],
-      })
-      .then((res) => res.at(0));
-    seat2 = await seatService
-      .addSeat({
-        seats: [{ label: 'seat-2', x: 2, y: 2, floorId: floor1.id }],
-      })
-      .then((res) => res.at(0));
-    seat3 = await seatService
-      .addSeat({
-        seats: [{ label: 'seat-3', x: 3, y: 3, floorId: floor1.id }],
-      })
-      .then((res) => res.at(0));
+    [facility1, facility2, facility3] =
+      await facilityService.addFacility({
+        floorId: floor1.id,
+        facilities: [
+          {
+            name: 'facility-1',
+            x: 1,
+            y: 1,
+            w: 1,
+            h: 1,
+            type: Model.FacilityType.SEAT,
+          },
+          {
+            name: 'facility-2',
+            x: 2,
+            y: 2,
+            w: 2,
+            h: 2,
+            type: Model.FacilityType.SEAT,
+          },
+          {
+            name: 'facility-3',
+            x: 3,
+            y: 3,
+            w: 3,
+            h: 3,
+            type: Model.FacilityType.SEAT,
+          },
+        ],
+      });
 
     reserve2 = await reserveService.addReserveQueue({
-      seatId: seat2.id,
+      facilityId: facility2.id,
       user: 'user-2',
       start: new Date('2024-02-01T12:00:00'),
       end: null,
       always: true,
     });
     reserve3 = await reserveService.addReserveQueue({
-      seatId: seat3.id,
+      facilityId: facility3.id,
       user: 'user-3',
       start: new Date('2024-02-01T12:00:00'),
       end: new Date('2024-02-01T17:00:00'),
@@ -104,8 +120,10 @@ describe('/reserve API', () => {
 
       expect(res.status).toBe(200);
       expect(res.body.length).toBe(1);
-      expect(res.body?.[0].seat.id).toBe(seat3.id);
-      expect(res.body?.[0].seat.floor.id).toBe(seat3.floor.id);
+      expect(res.body?.[0].facility.id).toBe(facility3.id);
+      expect(res.body?.[0].facility.floor.id).toBe(
+        facility3.floor.id,
+      );
     });
 
     it('[날짜 기준 예약 조회]', async () => {
@@ -127,7 +145,7 @@ describe('/reserve API', () => {
   describe('POST /reserve', () => {
     it('[예약 테스트]', async () => {
       const data: AddReserveRequestDto = {
-        seatId: seat1.id,
+        facilityId: facility1.id,
         user: 'user-1',
         start: new Date('2024-02-01T12:00:00'),
         end: new Date('2024-02-01T17:00:00'),
@@ -139,7 +157,7 @@ describe('/reserve API', () => {
         .send(data);
 
       expect(res.status).toBe(201);
-      expect(res.body?.seat.id).toBe(data.seatId);
+      expect(res.body?.facility.id).toBe(data.facilityId);
       expect(res.body?.user).toBe(data.user);
       expect(new Date(res.body?.start)).toEqual(data.start);
       expect(new Date(res.body?.end)).toEqual(data.end);
@@ -148,7 +166,7 @@ describe('/reserve API', () => {
 
     it('[고정석 예약 테스트]', async () => {
       const data: AddReserveRequestDto = {
-        seatId: seat1.id,
+        facilityId: facility1.id,
         user: 'user-1',
         start: new Date('2024-02-01T12:00:00'),
         end: null,
@@ -160,7 +178,7 @@ describe('/reserve API', () => {
         .send(data);
 
       expect(res.status).toBe(201);
-      expect(res.body?.seat.id).toBe(data.seatId);
+      expect(res.body?.facility.id).toBe(data.facilityId);
       expect(res.body?.user).toBe(data.user);
       expect(new Date(res.body?.start)).toEqual(data.start);
       expect(res.body?.end).toBeNull();
@@ -169,7 +187,7 @@ describe('/reserve API', () => {
 
     it('[중복 예약 테스트]', async () => {
       const data: AddReserveRequestDto = {
-        seatId: seat1.id,
+        facilityId: facility1.id,
         user: 'user-1',
         start: new Date('2024-02-01T12:00:00'),
         end: new Date('2024-02-01T17:00:00'),
@@ -188,7 +206,7 @@ describe('/reserve API', () => {
 
     it('[예약 동시성 테스트]', async () => {
       const data: AddReserveRequestDto = {
-        seatId: seat1.id,
+        facilityId: facility1.id,
         user: 'user-1',
         start: new Date('2024-02-01T12:00:00'),
         end: new Date('2024-02-01T17:00:00'),
