@@ -35,7 +35,7 @@ export class ReserveController {
   async addReserve(
     @Body() addReserveRequestDto: AddReserveRequestDto,
   ) {
-    return this.reserveService.addReserveQueue(addReserveRequestDto);
+    return this.reserveService.addReserve(addReserveRequestDto);
   }
 
   @Get()
