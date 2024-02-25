@@ -1,14 +1,13 @@
 import React, { useCallback, useState } from 'react';
 
+import { Model } from '@slavseat/types';
 import clsx from 'clsx';
 
 import './App.css';
 import { Button } from './components/atoms/Button';
 import { Text } from './components/atoms/Text';
-import SeatGridEditor, {
-  SeatInfo,
-} from './components/molecules/SeatGridEditor';
-import SeatGridViewer from './components/molecules/SeatGridViewer';
+import FacilityGridEditor from './components/molecules/FacilityGridEditor';
+import FacilityGridViewer from './components/molecules/FacilityGridViewer';
 import { dummySeatMap } from './dummy';
 import { hideScrollBar } from './global-style.css';
 import { useInitalizeStyle } from './hooks/useInitalizeStyle';
@@ -16,10 +15,15 @@ import { useInitalizeStyle } from './hooks/useInitalizeStyle';
 function App() {
   useInitalizeStyle();
 
-  const [seats, setSeats] = useState<SeatInfo[]>(dummySeatMap);
+  const [facilities, setFacilities] =
+    useState<Model.FacilitySummary[]>(dummySeatMap);
+  const [mode, setMode] = useState<'edit' | 'select'>('edit');
+  const [selectedFacilities, setSelectedFacilities] = useState<
+    Model.FacilitySummary[]
+  >([]);
 
   const handleClickAddSeat = useCallback(() => {
-    setSeats((prev) => [
+    setFacilities((prev) => [
       ...prev,
       {
         id: prev.length,
@@ -28,28 +32,36 @@ function App() {
         y: 0,
         w: 2,
         h: 2,
+        type: Model.FacilityType.SEAT,
       },
     ]);
   }, []);
 
   return (
     <div className="w-full h-full">
+      <Button
+        onClick={() =>
+          setMode((prev) => (prev === 'edit' ? 'select' : 'edit'))
+        }
+      >
+        모드: {mode}
+      </Button>
       <div className={clsx('overflow-auto', hideScrollBar)}>
-        <SeatGridEditor seats={seats} onChange={setSeats} />
+        <FacilityGridEditor
+          mode={mode}
+          facilities={facilities}
+          selected={selectedFacilities}
+          onSelectChange={setSelectedFacilities}
+          onChange={setFacilities}
+        />
       </div>
       <div className={clsx('overflow-auto', hideScrollBar)}>
-        <SeatGridViewer
-          seats={seats}
-          reserves={[1]}
-          objects={[
-            { name: 'object-1', x: 1, y: 10, h: 4, w: 4, id: 0 },
-          ]}
-        />
+        <FacilityGridViewer facilities={facilities} reserves={[1]} />
       </div>
 
       <Button onClick={handleClickAddSeat}>좌석 추가</Button>
       <Text fontSize="12">
-        <pre>{JSON.stringify(seats, null, 2)}</pre>
+        <pre>{JSON.stringify(facilities, null, 2)}</pre>
       </Text>
     </div>
   );
