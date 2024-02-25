@@ -2,14 +2,22 @@
   "name": "@slavseat/types",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/index.js",
-  "types": "./index.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./src/index.ts",
   "scripts": {
-    "dev": "tsc -w",
-    "build": "tsc"
+    "rollup": "rollup -c",
+    "dev": "tsc -w | rollup -cw",
+    "build": "pnpm rollup && tsc"
   },
   "devDependencies": {
-    "eslint-config-slavseat": "workspace:*"
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "eslint-config-slavseat": "workspace:*",
+    "rollup": "^4.12.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-swc3": "^0.11.0",
+    "rollup-plugin-terser": "^7.0.2"
   },
   "keywords": [],
   "author": "",
