@@ -5,7 +5,10 @@ interface UseSprinkleProps {
   sprinklesSet: Set<string>;
 }
 
-export const useSprinkleProps = (props: Record<string, unknown>, sprinklesSet: Set<string>) => {
+export const useSprinkleProps = (
+  props: Record<string, unknown>,
+  sprinklesSet: Set<string>,
+) => {
   const { sprinkleProps, nativeProps } = useMemo(() => {
     return Object.entries(props).reduce(
       (acc, [key, value]) => {

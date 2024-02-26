@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
+import React from 'react';
 import { HiCheck } from 'react-icons/hi';
 
 import { RecipeVariants } from '@vanilla-extract/recipes';
