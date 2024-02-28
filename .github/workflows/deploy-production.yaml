@@ -3,7 +3,7 @@ on:
   push:
     branches: [master]
     paths:
-      - apps/front/**
+      - apps/**
       - packages/**
       - .github/workflows/**
       - package.json
@@ -36,7 +36,7 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/docker-build-reuseable.yaml
     with:
-      type: front
+      type: frontend
       env: production
 
   backend-docker-build:

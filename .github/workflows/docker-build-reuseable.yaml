@@ -72,7 +72,7 @@ jobs:
         with:
           file: ./apps/${{ inputs.type }}/Dockerfile
           context: .
-          push: true # ghcr에 push
+          push: ${{ inputs.env == 'production' }} # ghcr에 push
           tags: ${{ env.DOCKER_IMAGE }}:${{ github.run_id }},${{ env.DOCKER_IMAGE }}:latest # 이미지 버전 [이미지 고유 아이디, latest]
           build-args: |
             NPM_TOKEN=${{ secrets.NPM_TOKEN }}

@@ -3,7 +3,7 @@ on:
   push:
     branches: [develop]
     paths:
-      - apps/front/**
+      - apps/**
       - packages/**
       - .github/workflows/**
       - package.json
