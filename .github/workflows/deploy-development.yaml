@@ -1,7 +1,9 @@
 name: Development Deploy # Github Action 페이지 좌측 리스트에 표시될 이름
 on:
   push:
-    branches: [develop]
+    branches:
+      - develop
+      - feature/*
     paths:
       - apps/**
       - packages/**

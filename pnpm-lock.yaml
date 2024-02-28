@@ -305,6 +305,9 @@ importers:
       rollup-plugin-terser:
         specifier: ^7.0.2
         version: 7.0.2(rollup@4.12.0)
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
 
   packages/typescript-config: {}
 
