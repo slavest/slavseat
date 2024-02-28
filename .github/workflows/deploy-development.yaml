@@ -38,7 +38,7 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/docker-build-reuseable.yaml
     with:
-      type: front
+      type: frontend
       env: development
 
   backend-docker-build:
