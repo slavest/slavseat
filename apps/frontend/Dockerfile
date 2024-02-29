@@ -30,7 +30,7 @@ RUN rm -rf /etc/nginx/conf.d
 
 COPY --from=sourcer /app/ .
 
-COPY /app/apps/frontend/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=base /app/apps/frontend/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=sourcer /app/apps/frontend/dist /usr/share/nginx/html
 
 EXPOSE 80

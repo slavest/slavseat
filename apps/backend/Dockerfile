@@ -8,7 +8,7 @@ RUN turbo prune --scope=backend --docker
 FROM node:18 AS installer
 
 WORKDIR /app
-RUN apk add g++ make
+RUN apt install -y build-essential
 RUN corepack enable
 COPY --from=base /app/out/json/ .
 COPY --from=base /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
