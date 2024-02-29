@@ -30,7 +30,7 @@ async function bootstrap() {
   const darkTheme: SwaggerCustomOptions = {
     customCss: theme.getBuffer(SwaggerThemeNameEnum.DARK),
   };
-  SwaggerModule.setup('docs', app, document, darkTheme);
+  SwaggerModule.setup('/api/docs', app, document, darkTheme);
 
   const configService = app.get(ConfigService);
 

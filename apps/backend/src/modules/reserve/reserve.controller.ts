@@ -24,8 +24,8 @@ import { RemoveReserveResponseDto } from './dto/response/removeReserveResponse.d
 import { Reserve } from './entity/reserve.entity';
 import { ReserveService } from './reserve.service';
 
-@Controller('reserve')
 @ApiTags('예약 API')
+@Controller('/api/reserve')
 export class ReserveController {
   constructor(private readonly reserveService: ReserveService) {}
 
