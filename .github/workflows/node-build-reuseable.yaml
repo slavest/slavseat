@@ -64,14 +64,20 @@ jobs:
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v3
+        with:
+          name: node-types-build-artifact-${{ env.REF_NAME_SHA }}
+          path: ./packages/types/dist
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
         if: ${{ inputs.type == 'frontend' }}
         with:
-          name: node-build-artifact-${{ env.REF_NAME_SHA }}
+          name: node-frontend-build-artifact-${{ env.REF_NAME_SHA }}
           path: ./apps/frontend/dist
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v3
         if: ${{ inputs.type == 'backend' }}
         with:
-          name: node-build-artifact-${{ env.REF_NAME_SHA }}
+          name: node-backend-build-artifact-${{ env.REF_NAME_SHA }}
           path: ./apps/backend/dist
