@@ -30,8 +30,8 @@ RUN rm -rf /etc/nginx/conf.d
 
 COPY --from=sourcer /app/ .
 
-COPY --from=base /app/frontend/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=sourcer /app/frontend/dist /usr/share/nginx/html
+COPY /app/apps/frontend/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=sourcer /app/apps/frontend/dist /usr/share/nginx/html
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
