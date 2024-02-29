@@ -33,7 +33,9 @@ import { Region } from 'oci-common';
         OCI_PRIVATEKEY: Joi.string()
           .required()
           .custom((value) => {
-            return (value as string).replace(/\\n/g, '\n');
+            return Buffer.from(value as string, 'base64')
+              .toString()
+              .replace(/\\n/g, '\n');
           }),
         OCI_REGION: Joi.string()
           .required()
