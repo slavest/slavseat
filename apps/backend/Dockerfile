@@ -8,6 +8,7 @@ RUN turbo prune --scope=backend --docker
 FROM node:18 AS installer
 
 WORKDIR /app
+RUN apt-get update
 RUN apt install -y build-essential
 RUN corepack enable
 COPY --from=base /app/out/json/ .
