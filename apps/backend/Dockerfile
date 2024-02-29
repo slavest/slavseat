@@ -5,7 +5,7 @@ COPY . .
 RUN turbo prune --scope=backend --docker
 
 # Add lockfile and package.json's of isolated subworkspace
-FROM node:18-alpine AS installer
+FROM node:18 AS installer
 
 WORKDIR /app
 RUN apk add g++ make
