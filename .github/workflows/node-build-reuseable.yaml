@@ -52,7 +52,7 @@ jobs:
         run: pnpm install --frozen-lock
 
       - name: Build Node.js
-        run: pnpm build --filter ${{ inputs.type }}
+        run: pnpm build --filter types --filter ${{ inputs.type }}
 
       - name: Check dist hash
         if: ${{ inputs.type == 'frontend'}}
