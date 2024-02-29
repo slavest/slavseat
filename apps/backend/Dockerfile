@@ -21,7 +21,7 @@ RUN corepack enable
 COPY --from=installer /app/ .
 COPY --from=base /app/out/full/ .
 COPY ./apps/backend/dist ./apps/backend/dist
-COPY --fron=base /app/apps/packages/types/dist ./apps/packages/types/dist
+COPY --from=base /app/apps/packages/types/dist ./apps/packages/types/dist
 
 FROM node:18-alpine as runner
 WORKDIR /app
