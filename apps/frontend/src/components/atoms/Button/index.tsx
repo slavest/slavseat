@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { RecipeVariants } from '@vanilla-extract/recipes';
 import clsx from 'clsx';
 

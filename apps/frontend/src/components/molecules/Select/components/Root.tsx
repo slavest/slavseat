@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import Popover from '../../Popover';
 import { PopoverProviderProps } from '../../Popover/context';

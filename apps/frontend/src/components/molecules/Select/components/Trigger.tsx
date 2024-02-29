@@ -1,3 +1,5 @@
+import React from 'react';
+
 import Popover from '../../Popover';
 import { PopoverTriggerProps } from '../../Popover/components/Trigger';
 

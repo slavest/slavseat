@@ -2,7 +2,7 @@ FROM node:18-alpine AS base
 WORKDIR /app
 RUN npm i -g turbo
 COPY . .
-RUN turbo prune --scope=backend --docker
+RUN turbo prune --scope=frontend --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM node:18-alpine AS installer
@@ -12,7 +12,7 @@ RUN corepack enable
 COPY --from=base /app/out/json/ .
 COPY --from=base /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=base /app/turbo.json ./turbo.json
-RUN pnpm install --production --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 
 FROM node:18-alpine AS sourcer
@@ -20,14 +20,19 @@ WORKDIR /app
 RUN corepack enable
 COPY --from=installer /app/ .
 COPY --from=base /app/out/full/ .
-COPY ./apps/backend/dist ./apps/backend/dist
+COPY ./apps/frontend/dist ./apps/frontend/dist
 COPY --from=base /app/packages/types/dist ./apps/packages/types/dist
 
 
-FROM node:18-alpine as runner
+FROM nginx:alpine as runner
 WORKDIR /app
-RUN corepack enable
+
+RUN rm -rf /etc/nginx/conf.d
+
 COPY --from=sourcer /app/ .
 
-WORKDIR /app/apps/backend
-CMD ["pnpm", "start"]
+COPY --from=base /app/apps/frontend/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=sourcer /app/apps/frontend/dist /usr/share/nginx/html
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

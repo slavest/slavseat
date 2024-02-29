@@ -1,0 +1,83 @@
+name: Node Build # Github Action 페이지 좌측 리스트에 표시될 이름
+on:
+  workflow_call:
+    inputs:
+      env:
+        type: string
+        required: false
+      type:
+        type: string
+        required: true
+
+jobs:
+  node-build:
+    name: Node Build
+    environment: ${{ inputs.env }}
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout Repository
+      - name: Check out source code
+        uses: actions/checkout@v2.1.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.X'
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Get hashed ref name
+        run: |
+          hashedString=$(echo -n "your_string_to_hash" | sha256sum | awk '{print $1}')
+          echo "REF_NAME_SHA=$hashedString" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lock
+
+      - name: Build Node.js
+        run: pnpm build --filter types --filter ${{ inputs.type }}
+
+      - name: Check dist hash
+        if: ${{ inputs.type == 'frontend'}}
+        run: echo ${{ hashFiles('./apps/frontend/dist/**/*') }}
+
+      - name: Check dist hash
+        if: ${{ inputs.type == 'backend' }}
+        run: echo ${{ hashFiles('./apps/backend/dist/**/*') }}
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: node-types-build-artifact-${{ env.REF_NAME_SHA }}
+          path: ./packages/types/dist
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        if: ${{ inputs.type == 'frontend' }}
+        with:
+          name: node-frontend-build-artifact-${{ env.REF_NAME_SHA }}
+          path: ./apps/frontend/dist
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        if: ${{ inputs.type == 'backend' }}
+        with:
+          name: node-backend-build-artifact-${{ env.REF_NAME_SHA }}
+          path: ./apps/backend/dist
