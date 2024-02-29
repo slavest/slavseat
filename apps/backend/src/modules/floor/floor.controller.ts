@@ -37,7 +37,7 @@ import { Floor } from './entity/floor.entity';
 import { FloorService } from './floor.service';
 
 @ApiTags('층 API')
-@Controller('floor')
+@Controller('/api/floor')
 export class FloorController {
   logger = new Logger(FloorController.name);
 

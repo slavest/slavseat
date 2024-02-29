@@ -23,7 +23,7 @@ import { Facility } from './entity/facility.entity';
 import { FacilityService } from './facility.service';
 
 @ApiTags('시설 API')
-@Controller('facility')
+@Controller('/api/facility')
 export class FacilityController {
   constructor(private readonly facilityService: FacilityService) {}
 
