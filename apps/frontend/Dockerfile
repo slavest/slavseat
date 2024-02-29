@@ -21,7 +21,7 @@ RUN corepack enable
 COPY --from=installer /app/ .
 COPY --from=base /app/out/full/ .
 COPY ./apps/frontend/dist ./apps/frontend/dist
-RUN pnpm build --filter types
+COPY --fron=base /app/apps/packages/types/dist ./apps/packages/types/dist
 
 FROM nginx:alpine as runner
 WORKDIR /app

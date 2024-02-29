@@ -5,16 +5,14 @@ COPY . .
 RUN turbo prune --scope=backend --docker
 
 # Add lockfile and package.json's of isolated subworkspace
-FROM node:18 AS installer
+FROM node:18-alpine AS installer
 
 WORKDIR /app
-RUN apt-get update
-RUN apt install -y build-essential
 RUN corepack enable
 COPY --from=base /app/out/json/ .
 COPY --from=base /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=base /app/turbo.json ./turbo.json
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --production --frozen-lockfile
 
 
 FROM node:18-alpine AS sourcer
@@ -23,7 +21,7 @@ RUN corepack enable
 COPY --from=installer /app/ .
 COPY --from=base /app/out/full/ .
 COPY ./apps/backend/dist ./apps/backend/dist
-RUN pnpm build --filter types
+COPY --fron=base /app/apps/packages/types/dist ./apps/packages/types/dist
 
 FROM node:18-alpine as runner
 WORKDIR /app
