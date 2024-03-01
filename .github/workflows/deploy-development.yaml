@@ -4,14 +4,6 @@ on:
     branches:
       - develop
       - 'feature/**'
-    paths:
-      - apps/**
-      - packages/**
-      - .github/workflows/**
-      - package.json
-      - pnpm-lock.yaml
-      - turbo.json
-      - tsconfig.json
 
 jobs:
   # Build Apps
