@@ -6,21 +6,21 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class ObjectMeta implements Model.ObjectMetaInfo {
   @PrimaryGeneratedColumn()
-  @ApiProperty()
+  @ApiProperty({ description: 'Object 아이디' })
   @IsNumber()
   id: number;
 
   @Column({ nullable: false })
-  @ApiProperty()
+  @ApiProperty({ description: 'Object 이름' })
   @IsString()
   name: string;
 
   @Column({ nullable: false })
-  @ApiProperty()
+  @ApiProperty({ description: 'Object MIME 유형' })
   @IsString()
   type: string;
 
   @Column({ nullable: false })
-  @ApiProperty()
+  @ApiProperty({ description: '접근 제한 여부' })
   isPublic: boolean;
 }

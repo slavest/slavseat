@@ -10,7 +10,7 @@ export class UpdateFacilityRequestDto {
   @ApiProperty({
     type: FacilityDto,
     isArray: true,
-    title: '수정할 시설물 정보',
+    description: '수정할 시설물 정보',
   })
   @ValidateNested({ each: true })
   @IsArray()

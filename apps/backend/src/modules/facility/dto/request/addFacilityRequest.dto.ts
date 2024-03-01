@@ -10,14 +10,14 @@ class FacilityDto extends OmitType(Facility, [
 ] as const) {}
 
 export class AddFacilityRequestDto {
-  @ApiProperty({ title: '시설을 추가할 층의 아이디' })
+  @ApiProperty({ description: '시설을 추가할 층의 아이디' })
   @IsNumber()
   floorId: number;
 
   @ApiProperty({
     type: FacilityDto,
     isArray: true,
-    title: '추가할 시설물 정보',
+    description: '추가할 시설물 정보',
   })
   @ValidateNested({ each: true })
   @IsArray()

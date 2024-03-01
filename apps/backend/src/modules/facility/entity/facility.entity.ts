@@ -12,42 +12,42 @@ import {
 
 @Entity()
 export class Facility implements Model.FacilityInfo {
-  @ApiProperty({ title: '시설물 아이디' })
+  @ApiProperty({ description: '시설물 아이디' })
   @IsNumber()
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty({ title: '시설물 이름' })
+  @ApiProperty({ description: '시설물 이름' })
   @IsString()
   @Column({ nullable: false })
   name: string;
 
-  @ApiProperty({ title: '그리드 평면에서의 x 좌표' })
+  @ApiProperty({ description: '그리드 평면에서의 x 좌표' })
   @IsNumber()
   @Column({ nullable: false })
   x: number;
 
-  @ApiProperty({ title: '그리드 평면에서의 y 좌표' })
+  @ApiProperty({ description: '그리드 평면에서의 y 좌표' })
   @IsNumber()
   @Column({ nullable: false })
   y: number;
 
-  @ApiProperty({ title: '그리드 평면에서의 가로 넓이' })
+  @ApiProperty({ description: '그리드 평면에서의 가로 넓이' })
   @IsNumber()
   @Column({ nullable: false })
   w: number;
 
-  @ApiProperty({ title: '그리드 평면에서의 세로 높이' })
+  @ApiProperty({ description: '그리드 평면에서의 세로 높이' })
   @IsNumber()
   @Column({ nullable: false })
   h: number;
 
   @ApiProperty({
     enum: Model.FacilityType,
-    enumName: Object.keys(Model.FacilityType)
+    title: '시설물 유형',
+    description: Object.keys(Model.FacilityType)
       .map((k) => `${k}=${Model.FacilityType[k]}`)
       .join(', '),
-    title: '시설물 유형',
   })
   @IsEnum(Object.values(Model.FacilityType))
   @Column({ nullable: false })
@@ -55,7 +55,7 @@ export class Facility implements Model.FacilityInfo {
 
   @ApiProperty({
     type: () => Floor,
-    title: '시설물이 있는 층 정보',
+    description: '시설물이 있는 층 정보',
   })
   @ManyToOne(() => Floor)
   @Type(() => Floor)

@@ -21,12 +21,12 @@ import {
 @Entity()
 export class Floor implements Model.FloorInfo {
   @PrimaryGeneratedColumn()
-  @ApiProperty({ title: '층 아이디' })
+  @ApiProperty({ description: '층 아이디' })
   @IsNumber()
   id: number;
 
   @Column({ nullable: false })
-  @ApiProperty({ title: '층 이름' })
+  @ApiProperty({ description: '층 이름' })
   @IsString()
   name: string;
 
@@ -34,7 +34,7 @@ export class Floor implements Model.FloorInfo {
   @ApiProperty({
     type: () => Facility,
     isArray: true,
-    title: '층에 포함된 시설물 정보',
+    description: '층에 포함된 시설물 정보',
   })
   @IsArray()
   @ValidateNested({ each: true })
@@ -46,7 +46,7 @@ export class Floor implements Model.FloorInfo {
   @ApiProperty({
     type: ObjectMeta,
     nullable: true,
-    title: '층 이미지 정보',
+    description: '층 이미지 정보',
   })
   @Type(() => ObjectMeta)
   image: ObjectMeta;
