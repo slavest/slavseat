@@ -8,11 +8,11 @@ export class AddReserveRequestDto extends PickType(Reserve, [
   'end',
   'always',
 ]) {
-  @ApiProperty()
+  @ApiProperty({ description: '시설물 아이디' })
   @IsNumber()
   facilityId: number;
 
-  @ApiProperty()
+  @ApiProperty({ description: '유저 아이디' })
   @IsString()
   user: string;
 }

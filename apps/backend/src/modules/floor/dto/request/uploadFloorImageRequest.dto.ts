@@ -1,6 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { PickType } from '@nestjs/swagger';
 
-export class UploadFloorImageRequestDto {
-  @ApiProperty()
-  floorId: number;
-}
+import { Floor } from '../../entity/floor.entity';
+
+export class UploadFloorImageRequestDto extends PickType(Floor, [
+  'id',
+] as const) {}

@@ -3,15 +3,7 @@ on:
   push:
     branches:
       - develop
-      - feature/*
-    paths:
-      - apps/**
-      - packages/**
-      - .github/workflows/**
-      - package.json
-      - pnpm-lock.yaml
-      - turbo.json
-      - tsconfig.json
+      - 'feature/**'
 
 jobs:
   # Build Apps

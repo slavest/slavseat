@@ -19,9 +19,9 @@ env:
   gh_project_token: ${{ secrets.PAC_TOKEN }}
   project_id: 2
   gh_organization: slavest
-  status_todo: "Backlog"
-  status_in_progress: "In Progress"
-  status_in_review: "In Review"
+  status_todo: 'Backlog'
+  status_in_progress: 'In Progress'
+  status_in_review: 'In Review'
 #   custom_field_values: '[{\"name\": \"Priority\",\"type\": \"text\",\"value\": \"uuid1\"},{\"name\": \"Number\",\"type\": \"number\",\"value\": \"100\"},{\"name\": \"Date\",\"type\": \"date\",\"value\": \"2022-01-28T20:02:27.306+01:00\"},{\"name\": \"Single Select\",\"type\": \"single_select\",\"value\": \"Option 1\"},{\"name\": \"Iteration\",\"type\": \"iteration\",\"value\": \"Iteration 1\"}]'
 
 jobs:
@@ -30,10 +30,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'reopened')
     steps:
-      - name: "Move issue to ${{ env.status_todo }}"
+      - name: 'Move issue to ${{ env.status_todo }}'
         uses: leonsteinhaeuser/project-beta-automations@v2.1.0
-        env:
-          DEBUG_LOG: "true"
         with:
           gh_token: ${{ env.gh_project_token }}
           organization: ${{ env.gh_organization }}
@@ -48,10 +46,8 @@ jobs:
       github.event_name == 'issues' &&
       github.event.action == 'assigned'
     steps:
-      - name: "Move issue to ${{ env.status_in_progress }}"
+      - name: 'Move issue to ${{ env.status_in_progress }}'
         uses: leonsteinhaeuser/project-beta-automations@v2.1.0
-        env:
-          DEBUG_LOG: "true"
         with:
           gh_token: ${{ env.gh_project_token }}
           organization: ${{ env.gh_organization }}
@@ -66,10 +62,8 @@ jobs:
       github.event_name == 'issues' &&
       github.event.action == 'unassigned'
     steps:
-      - name: "Move issue to ${{ env.status_todo }}"
+      - name: 'Move issue to ${{ env.status_todo }}'
         uses: leonsteinhaeuser/project-beta-automations@v2.1.0
-        env:
-          DEBUG_LOG: "true"
         with:
           gh_token: ${{ env.gh_project_token }}
           organization: ${{ env.gh_organization }}
@@ -83,10 +77,8 @@ jobs:
       github.event_name == 'pull_request' &&
       (github.event.action == 'ready_for_review' || github.event.action == 'review_requested')
     steps:
-      - name: "Move issue to ${{ env.status_in_review }}"
+      - name: 'Move issue to ${{ env.status_in_review }}'
         uses: leonsteinhaeuser/project-beta-automations@v2.1.0
-        env:
-          DEBUG_LOG: "true"
         with:
           gh_token: ${{ env.gh_project_token }}
           organization: ${{ env.gh_organization }}
@@ -100,10 +92,8 @@ jobs:
       github.event_name == 'pull_request' &&
       (github.event.action == 'converted_to_draft' || github.event.action == 'review_request_removed')
     steps:
-      - name: "Move issue to ${{ env.status_in_progress }}"
+      - name: 'Move issue to ${{ env.status_in_progress }}'
         uses: leonsteinhaeuser/project-beta-automations@v2.1.0
-        env:
-          DEBUG_LOG: "true"
         with:
           gh_token: ${{ env.gh_project_token }}
           organization: ${{ env.gh_organization }}
@@ -116,10 +106,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened')
     steps:
-      - name: "Move PR to ${{ env.status_in_progress }}"
+      - name: 'Move PR to ${{ env.status_in_progress }}'
         uses: leonsteinhaeuser/project-beta-automations@v2.1.0
-        env:
-          DEBUG_LOG: "true"
         with:
           gh_token: ${{ env.gh_project_token }}
           organization: ${{ env.gh_organization }}

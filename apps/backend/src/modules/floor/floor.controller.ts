@@ -3,13 +3,11 @@ import {
   Controller,
   FileTypeValidator,
   Get,
-  HttpStatus,
   Logger,
   NotFoundException,
   Param,
   ParseFilePipe,
   Post,
-  Query,
   Res,
   UploadedFile,
   UseInterceptors,
@@ -24,7 +22,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Response } from 'express';
-import { Readable } from 'stream';
 
 import { ObjectStorageService } from '../object-storage/object-storage.service';
 import { FloorSummaryDto } from './dto/floorSummary.dto';
@@ -32,7 +29,6 @@ import { CreateFloorRequestDto } from './dto/request/createFloorRequest.dto';
 import { GetFloorByIdRequestDto } from './dto/request/getFloorByIdRequest.dto';
 import { GetFloorImageRequestDto } from './dto/request/getFloorImageRequest.dto';
 import { UploadFloorImageRequestDto } from './dto/request/uploadFloorImageRequest.dto';
-import { GetAllFloorResponseDto } from './dto/response/getAllFloorResponse.dto';
 import { Floor } from './entity/floor.entity';
 import { FloorService } from './floor.service';
 
@@ -53,7 +49,7 @@ export class FloorController {
     return this.floorService.getAllFloor();
   }
 
-  @Post('/:floorId/image')
+  @Post('/:id/image')
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -84,7 +80,7 @@ export class FloorController {
     );
   }
 
-  @Get('/:floorId/image')
+  @Get('/:id/image')
   @ApiOperation({ summary: '층 사진 조회' })
   async getImage(
     @Res() response: Response,
@@ -92,7 +88,7 @@ export class FloorController {
   ) {
     console.log(getFloorImageRequestDto);
     const floor = await this.floorService.findById(
-      getFloorImageRequestDto.floorId,
+      getFloorImageRequestDto.id,
     );
     if (!floor) throw new NotFoundException(`floor not found`);
     if (!floor.image)
