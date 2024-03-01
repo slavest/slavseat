@@ -19,6 +19,7 @@ import { AddFacilityRequestDto } from './dto/request/addFacilityRequest.dto';
 import { RemoveFacilityRequestDto } from './dto/request/removeFacilityRequest.dto';
 import { UpdateFacilityRequestDto } from './dto/request/updateFacilityRequest.dto';
 import { RemoveFacilityResponseDto } from './dto/response/removeFacilityResponse.dto';
+import { UpdateFacilityResponseDto } from './dto/response/updateFacilityResponse.dto';
 import { Facility } from './entity/facility.entity';
 import { FacilityService } from './facility.service';
 
@@ -43,7 +44,7 @@ export class FacilityController {
 
   @Put()
   @ApiOperation({ summary: '시설 정보 수정' })
-  @ApiOkResponse({ type: Facility })
+  @ApiOkResponse({ type: UpdateFacilityResponseDto })
   async updateFacility(
     @Body() updateFacilityDto: UpdateFacilityRequestDto,
   ) {
