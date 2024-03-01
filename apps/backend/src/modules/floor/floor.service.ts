@@ -40,7 +40,7 @@ export class FloorService {
     file: Express.Multer.File,
   ): Promise<Floor> {
     const floor = await this.floorRepository.findOne({
-      where: { id: uploadFloorImageDto.floorId },
+      where: { id: uploadFloorImageDto.id },
       relations: { facilities: true },
     });
     if (!floor) throw new NotFoundException(`floor not found`);
