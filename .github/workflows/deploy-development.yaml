@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - develop
-      - feature/**
+      - 'feature/**'
     paths:
       - apps/**
       - packages/**
