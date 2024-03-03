@@ -29,21 +29,23 @@ const colors = {
 };
 
 const format = ({ color } = { color: false }) => [
-  winston.format.timestamp({ format: 'YYYY-MM-DD hh:mm:ss:ms' }),
+  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSSZZ' }),
   color
     ? winston.format.printf(
         (info) =>
-          `${colors.FgYellow}${info.level.toUpperCase()}${
+          `${colors.FgMagenta}[Slavseat]${colors.Reset} ${
+            colors.FgYellow
+          }${info.level.toUpperCase()}${colors.Reset} ${
+            colors.FgBlue
+          }${info.timestamp} ${colors.FgYellow}[${info.context}]${
             colors.Reset
-          } ${colors.Reset}${info.timestamp} ${colors.FgYellow}[${
-            info.context
-          }]${colors.Reset} ${colors.FgGreen}${info.message}`,
+          } ${colors.FgGreen}${info.message}`,
       )
     : winston.format.printf(
         (info) =>
-          `${info.level.toUpperCase()} [${info.context}] ${
+          `[Slavseat] ${info.level.toUpperCase()} ${
             info.timestamp
-          } ${info.message}`,
+          } [${info.context}] ${info.message}`,
       ),
 ];
 
@@ -59,8 +61,8 @@ export const winstonLogger = WinstonModule.createLogger({
     new WinstonDaily({
       maxFiles: 30,
       datePattern: 'YYYY-MM-DD',
-      dirname: process.cwd() + '/logs',
-      filename: '%DATE%.log',
+      dirname: process.cwd() + '/logs/slavseat',
+      filename: `%DATE%-${Date.now()}.log`,
       format: winston.format.combine(
         ...format({ color: false }),
         winston.format.colorize({ all: false }),

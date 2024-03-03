@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./apps/backend/Dockerfile
+    ports:
+      - 3001:3001
+    env_file: ./apps/backend/.env
+    volumes:
+      - logs:/app/apps/backend/logs:rw
+
+volumes:
+  logs:
+    external: true
