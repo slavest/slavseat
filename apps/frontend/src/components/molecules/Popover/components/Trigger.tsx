@@ -1,9 +1,8 @@
 import React from 'react';
 
-import clsx from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 import { usePopoverContext } from '../context';
-import { popoverTriggerStyle } from '../popover.css';
 
 export interface PopoverTriggerProps
   extends React.HTMLAttributes<HTMLDivElement> {}
@@ -15,7 +14,7 @@ const Trigger = ({ className, ...rest }: PopoverTriggerProps) => {
     <div
       ref={(ref) => setAnchorEl(ref)}
       onClick={handleOpen}
-      className={clsx(popoverTriggerStyle, className)}
+      className={twMerge(className)}
       {...rest}
     />
   );
