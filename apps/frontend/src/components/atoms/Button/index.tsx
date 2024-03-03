@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 
-import { RecipeVariants } from '@vanilla-extract/recipes';
 import clsx from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
-import { buttonVariants } from './button.css';
+type ButtonVariant = 'primary' | 'secondary';
 
-export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
-  RecipeVariants<typeof buttonVariants>;
+type ButtonSize = 'sm' | 'md' | 'lg' | 'full';
+
+interface ButtonProps extends ComponentProps<'button'> {
+  variant?: ButtonVariant;
+  disabled?: boolean;
+  size?: ButtonSize;
+}
 
 export const Button = ({
-  variant,
+  variant = 'primary',
   disabled,
   size,
   className,
@@ -19,8 +24,18 @@ export const Button = ({
   return (
     <button
       className={clsx(
-        buttonVariants({ variant, disabled, size }),
-        className,
+        twMerge(
+          'rounded-3xl py-3 px-5 cursor-pointer font-medium',
+          className,
+        ),
+        {
+          'bg-green-500 text-white': variant === 'primary',
+          'bg-neutral-200 text-black': variant === 'secondary',
+          'w-24': size === 'sm',
+          'w-60': size === 'md',
+          'w-80': size === 'lg',
+          'w-full': size === 'full',
+        },
       )}
       disabled={disabled}
       {...rest}
