@@ -18,13 +18,13 @@ export class ImageController {
     private readonly objectStorageService: ObjectStorageService,
   ) {}
 
-  @Get('/:imageId')
+  @Get('/:id')
   async getImage(
     @Res() response: Response,
     @Param() getImageRequestDto: GetImageRequestDto,
   ) {
     const data = await this.objectStorageService.getObjectUrlById(
-      getImageRequestDto.imageId,
+      getImageRequestDto.id,
       60 * 10,
     );
 

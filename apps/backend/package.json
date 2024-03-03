@@ -39,13 +39,16 @@
     "ioredis": "^5.3.2",
     "joi": "^17.12.1",
     "mysql2": "^3.9.1",
+    "nest-winston": "^1.9.4",
     "oci-common": "^2.78.0",
     "oci-objectstorage": "^2.78.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "swagger-themes": "^1.4.2",
     "typeorm": "^0.3.20",
-    "typeorm-transactional": "^0.5.0"
+    "typeorm-transactional": "^0.5.0",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

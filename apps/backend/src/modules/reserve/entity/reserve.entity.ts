@@ -20,35 +20,35 @@ import {
 export class Reserve implements Model.ReserveInfo {
   @PrimaryGeneratedColumn()
   @IsNumber()
-  @ApiProperty()
+  @ApiProperty({ description: '예약 아이디' })
   id: number;
 
   @Column({ nullable: false })
   @IsString()
-  @ApiProperty()
+  @ApiProperty({ description: '예약한 사용자' })
   user: string;
 
   @ManyToOne(() => Facility, (facility) => facility.id, {
     nullable: false,
   })
-  @ApiProperty()
+  @ApiProperty({ description: '예약한 시설물' })
   facility: Facility;
 
   @Column({ nullable: false })
   @IsDate()
   @Type(() => Date)
-  @ApiProperty()
+  @ApiProperty({ description: '예약 시작 날짜' })
   start: Date;
 
   @Column({ nullable: true })
   @IsDate()
   @Type(() => Date)
   @IsOptional()
-  @ApiProperty()
+  @ApiProperty({ description: '예약 종료 날짜' })
   end: Date | null;
 
   @Column({ nullable: false })
   @IsBoolean()
-  @ApiProperty()
+  @ApiProperty({ description: '고정 예약 여부' })
   always: boolean;
 }

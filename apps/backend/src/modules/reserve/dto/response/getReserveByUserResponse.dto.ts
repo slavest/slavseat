@@ -7,13 +7,16 @@ import { Reserve } from '../../entity/reserve.entity';
 class FacilitySummaryWithFloorDto extends OmitType(Facility, [
   'floor',
 ]) {
-  @ApiProperty({ type: FloorSummaryDto })
+  @ApiProperty({ type: FloorSummaryDto, description: '층 정보' })
   floor: FloorSummaryDto;
 }
 
 export class GetReserveByUserResponseDto extends OmitType(Reserve, [
   'facility',
 ]) {
-  @ApiProperty({ type: FacilitySummaryWithFloorDto })
+  @ApiProperty({
+    type: FacilitySummaryWithFloorDto,
+    description: '시설물 정보',
+  })
   facility: FacilitySummaryWithFloorDto;
 }

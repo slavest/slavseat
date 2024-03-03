@@ -12,10 +12,13 @@ import { initializeTransactionalContext } from 'typeorm-transactional';
 
 import { AppModule } from './app.module';
 import { HttpLoggerInterceptor } from './libs/logging/http-logger.interceptor';
+import { winstonLogger } from './libs/logging/logger.config';
 
 async function bootstrap() {
   initializeTransactionalContext();
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: winstonLogger,
+  });
 
   app.useGlobalInterceptors(new HttpLoggerInterceptor());
   app.use(cookieParser());
