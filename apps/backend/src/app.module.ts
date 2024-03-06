@@ -12,6 +12,7 @@ import { HttpLoggerMiddleware } from './libs/logging/http-logger.middleware';
 import { FacilityModule } from './modules/facility/facility.module';
 import { FloorModule } from './modules/floor/floor.module';
 import { ReserveModule } from './modules/reserve/reserve.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ReserveModule } from './modules/reserve/reserve.module';
     ReserveModule,
     FloorModule,
     FacilityModule,
+    AuthModule,
   ],
   providers: [
     {
