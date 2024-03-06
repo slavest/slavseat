@@ -41,14 +41,14 @@ const format = ({ color } = { color: false }) => [
             colors.Reset
           } ${
             info.level === 'error' ? colors.FgRed : colors.FgGreen
-          }${info.message}${info.stack && `\n${info.stack}`}`,
+          }${info.message}${info.stack ? `\n${info.stack}` : ''}`,
       )
     : winston.format.printf(
         (info) =>
           `[Slavseat] ${info.level.toUpperCase()} ${
             info.timestamp
           } [${info.context}] ${info.message}${
-            info.stack && `\n${info.stack}`
+            info.stack ? `\n${info.stack}` : ''
           }`,
       ),
 ];
