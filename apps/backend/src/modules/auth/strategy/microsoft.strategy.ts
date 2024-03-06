@@ -1,44 +1,50 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, VerifyCallback } from 'passport-azure-ad';
+import { Model } from '@slavseat/types';
+import { Request } from 'express';
+import {
+  AzureProfile,
+  Strategy,
+} from 'src/libs/strategy/azure.strategy';
 
 @Injectable()
 export class MicrosoftStrategy extends PassportStrategy(
   Strategy,
-  'azure-ad',
+  'microsoft',
 ) {
   constructor(private readonly configService: ConfigService) {
     super({
-      clientID: configService.get('AZURE_AD_CLIENT_ID'),
-      clientSecret: configService.get('AZURE_AD_CLIENT_SECRET'),
-      callbackURL: configService.get('AZURE_AD_CALLBACK_URL'),
-      identityMetadata: `https://login.microsoftonline.com/${configService.get(
-        'AZURE_AD_TENANT_ID',
-      )}/v2.0/.well-known/openid-configuration`,
-      responseType: 'code',
-      responseMode: 'query',
-      scope: ['openid', 'profile', 'email'],
+      clientID: configService.getOrThrow('MS_CLIENT_ID'),
+      clientSecret: configService.getOrThrow('MS_CLIENT_SECRET'),
+      callbackURL: configService.getOrThrow('MS_CALLBACK_URL'),
+      tenantID: configService.getOrThrow('MS_TENANT_ID'),
+      scope: ['openid', 'profile', 'email', 'user.Read'],
+      state: false,
     });
+  }
+
+  authenticate(req: Request, options: any) {
+    options.state = req.query.redirectBackTo;
+    super.authenticate(req, options);
   }
 
   async validate(
     accessToken: string,
     refreshToken: string,
-    params: any,
-    profile: any,
-    done: VerifyCallback,
+    profile: AzureProfile,
+    done: (err?: Error, profile?: Model.UserSummary) => void,
   ): Promise<any> {
     try {
-      const user = {
-        id: profile.id,
-        email: profile.emails[0].value,
-        displayName: profile.displayName,
-        // 필요한 사용자 정보를 추가로 가져올 수 있습니다.
+      const user: Model.UserSummary = {
+        name: profile.name,
+        email: profile.email,
+        providerId: profile.puid,
       };
+
       done(null, user);
     } catch (error) {
-      done(error, false);
+      done(error, undefined);
     }
   }
 }
