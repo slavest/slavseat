@@ -13,6 +13,7 @@ import { initializeTransactionalContext } from 'typeorm-transactional';
 import { AppModule } from './app.module';
 import { HttpLoggerInterceptor } from './libs/logging/http-logger.interceptor';
 import { winstonLogger } from './libs/logging/logger.config';
+import { REFRESH_TOKEN_COOKIE } from './modules/auth/auth.constant';
 
 async function bootstrap() {
   initializeTransactionalContext();
@@ -26,6 +27,13 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Seat Manager document')
     .setDescription('The Seat Manager API description')
+    .addCookieAuth(REFRESH_TOKEN_COOKIE)
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      name: 'accessToken',
+      in: 'header',
+    })
     .build();
   const document = SwaggerModule.createDocument(app, config);
 

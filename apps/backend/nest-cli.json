@@ -6,7 +6,6 @@
     "deleteOutDir": true
   },
   "generateOptions": {
-    "baseDir": "src",
     "spec": false
   }
 }

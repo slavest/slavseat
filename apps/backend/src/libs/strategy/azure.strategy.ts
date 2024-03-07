@@ -12,12 +12,14 @@ interface AzureStrategyOptions {
   clientID: string;
   clientSecret: string;
   callbackURL: string;
-  tenantID: string;
+  tenantID?: string;
 }
 
 export class Strategy extends OAuth2.Strategy {
   constructor(options: AzureStrategyOptions, verify: any) {
-    const AZURE_BASE_URL = `https://login.microsoftonline.com/${options.tenantID}`;
+    const AZURE_BASE_URL = `https://login.microsoftonline.com/${
+      options.tenantID ?? 'common'
+    }`;
 
     const authorizationURL = `${AZURE_BASE_URL}/oauth2/v2.0/authorize`;
     const tokenURL = `${AZURE_BASE_URL}/oauth2/v2.0/token`;

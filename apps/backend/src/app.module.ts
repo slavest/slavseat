@@ -14,6 +14,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { FacilityModule } from './modules/facility/facility.module';
 import { FloorModule } from './modules/floor/floor.module';
 import { ReserveModule } from './modules/reserve/reserve.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ReserveModule } from './modules/reserve/reserve.module';
     FloorModule,
     FacilityModule,
     AuthModule,
+    UserModule,
   ],
   providers: [
     {
