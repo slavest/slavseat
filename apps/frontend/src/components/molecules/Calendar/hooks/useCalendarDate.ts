@@ -48,8 +48,11 @@ const getDatesFromMode = (
   return [];
 };
 
-const useCalendarDate = ({ mode = 'days' }) => {
-  const selectedDate = new Date();
+const useCalendarDate = ({
+  mode = 'days',
+  selectedDate = new Date(),
+}) => {
+  // const selectedDate = new Date();
   const dates = useMemo(
     () => getDatesFromMode(mode, selectedDate),
     // eslint-disable-next-line react-hooks/exhaustive-deps
