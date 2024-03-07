@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
 import { User } from '../user/entity/user.entity';
@@ -10,6 +11,7 @@ import { MicrosoftStrategy } from './strategy/microsoft.strategy';
 export class AuthService {
   logger = new Logger(AuthService.name);
   constructor(
+    private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
     private readonly microsoftStrategy: MicrosoftStrategy,
@@ -38,22 +40,30 @@ export class AuthService {
     return this.userService.saveUser(profile);
   }
 
-  createAccessToken(user: User, expiresIn: string = '1m') {
+  createAccessToken(user: User, expiresIn?: string) {
     const payload = {
       id: user.id,
       email: user.email,
     };
 
-    return this.jwtService.sign(payload, { expiresIn });
+    return this.jwtService.sign(payload, {
+      expiresIn:
+        expiresIn ||
+        this.configService.getOrThrow('JWT_ACCESS_EXPIRES'),
+    });
   }
 
-  createRefreshToken(user: User, expiresIn = '5m') {
+  createRefreshToken(user: User, expiresIn?: string) {
     const payload = {
       id: user.id,
       email: user.email,
     };
 
-    return this.jwtService.sign(payload, { expiresIn });
+    return this.jwtService.sign(payload, {
+      expiresIn:
+        expiresIn ||
+        this.configService.getOrThrow('JWT_REFRESH_EXPIRES'),
+    });
   }
 
   validateToken(token: string) {
