@@ -45,21 +45,35 @@ export class AuthController {
   }
 
   @Get('microsoft')
-  @UseGuards(MicrosoftGuard)
   @ApiOperation({
     summary: 'Microsoft OAuth 로그인',
   })
-  async azureAdLogin(@Query() oauthState: OAuthStateDto) {}
+  async azureAdLogin(
+    @Res() res: Response,
+    @Query() oauthState: OAuthStateDto,
+  ) {
+    const authorizationURL = this.authService.getAuthorizationURL(
+      'microsoft',
+      { state: oauthState },
+    );
 
-  @Get('microsoft/callback')
-  @UseGuards(MicrosoftGuard)
+    res.redirect(authorizationURL);
+    return res.end();
+  }
+
+  @Get('/microsoft/callback')
   @ApiOperation({ summary: 'Microsoft OAuth Callback' })
   async azureAdLoginCallback(
     @Res() res: Response,
-    @AuthUser() user: User,
+    @Query('code') code: string,
     @Query('state') state: string,
   ) {
     const { redirectBackTo } = JSON.parse(state) as OAuthState;
+
+    const user = await this.authService.getOAuthUser(
+      'microsoft',
+      code,
+    );
 
     const accessToken = this.authService.createAccessToken(user);
     const refreshToken = this.authService.createRefreshToken(user);

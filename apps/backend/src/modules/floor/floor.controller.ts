@@ -10,10 +10,12 @@ import {
   Post,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
@@ -23,6 +25,7 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 
+import { JwtAccesGuard } from '../auth/guard/jwt-access.guard';
 import { ObjectStorageService } from '../object-storage/object-storage.service';
 import { FloorSummaryDto } from './dto/floorSummary.dto';
 import { CreateFloorRequestDto } from './dto/request/createFloorRequest.dto';
@@ -51,6 +54,8 @@ export class FloorController {
 
   @Post('/:id/image')
   @UseInterceptors(FileInterceptor('file'))
+  @UseGuards(JwtAccesGuard)
+  @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -112,6 +117,8 @@ export class FloorController {
   }
 
   @Post()
+  @UseGuards(JwtAccesGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: '층 생성' })
   @ApiCreatedResponse({ type: Floor })
   async createFloor(

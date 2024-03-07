@@ -5,7 +5,7 @@ import {
   Param,
   Res,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiProperty, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
 import { ObjectStorageService } from '../object-storage/object-storage.service';
@@ -19,6 +19,7 @@ export class ImageController {
   ) {}
 
   @Get('/:id')
+  @ApiProperty({ deprecated: true })
   async getImage(
     @Res() response: Response,
     @Param() getImageRequestDto: GetImageRequestDto,

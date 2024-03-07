@@ -8,3 +8,9 @@ export interface Payload {
   exp: number;
   iat: number;
 }
+
+export interface OAuthProfile {
+  email: string;
+  name: string;
+  providerId: string;
+}
