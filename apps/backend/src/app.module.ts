@@ -5,13 +5,16 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
+import { PassportModule } from '@nestjs/passport';
 
 import { ConfigurationModule } from './libs/config/config.module';
 import { DatabaseModule } from './libs/database/database.module';
 import { HttpLoggerMiddleware } from './libs/logging/http-logger.middleware';
+import { AuthModule } from './modules/auth/auth.module';
 import { FacilityModule } from './modules/facility/facility.module';
 import { FloorModule } from './modules/floor/floor.module';
 import { ReserveModule } from './modules/reserve/reserve.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -20,6 +23,8 @@ import { ReserveModule } from './modules/reserve/reserve.module';
     ReserveModule,
     FloorModule,
     FacilityModule,
+    AuthModule,
+    UserModule,
   ],
   providers: [
     {
