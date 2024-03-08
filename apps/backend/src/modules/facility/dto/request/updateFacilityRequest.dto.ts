@@ -4,16 +4,18 @@ import { IsArray, ValidateNested } from 'class-validator';
 
 import { Facility } from '../../entity/facility.entity';
 
-class FacilityDto extends OmitType(Facility, ['floor'] as const) {}
+class UpdateFacilityDto extends OmitType(Facility, [
+  'floor',
+] as const) {}
 
 export class UpdateFacilityRequestDto {
   @ApiProperty({
-    type: FacilityDto,
+    type: UpdateFacilityDto,
     isArray: true,
     description: '수정할 시설물 정보',
   })
   @ValidateNested({ each: true })
   @IsArray()
-  @Type(() => FacilityDto)
-  facilities: FacilityDto[];
+  @Type(() => UpdateFacilityDto)
+  facilities: UpdateFacilityDto[];
 }
