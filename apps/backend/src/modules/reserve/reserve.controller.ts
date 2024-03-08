@@ -16,10 +16,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
+import { AuthUser } from '../auth/decorator/auth-user.decorator';
 import { JwtAccesGuard } from '../auth/guard/jwt-access.guard';
+import { User } from '../user/entity/user.entity';
 import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
 import { GetReserveByDateRequestDto } from './dto/request/getReserveByDateRequest.dto';
-import { GetReserveByUserRequestDto } from './dto/request/getReserveByUserRequest.dto';
 import { RemoveReserveRequestDto } from './dto/request/removeReserveRequest.dto';
 import { GetReserveByDateResponseDto } from './dto/response/getReserveByDateResponse.dto';
 import { GetReserveByUserResponseDto } from './dto/response/getReserveByUserResponse.dto';
@@ -38,9 +39,10 @@ export class ReserveController {
   @ApiOperation({ summary: '좌석 예약' })
   @ApiCreatedResponse({ type: Reserve })
   async addReserve(
+    @AuthUser() user: User,
     @Body() addReserveRequestDto: AddReserveRequestDto,
   ) {
-    return this.reserveService.addReserve(addReserveRequestDto);
+    return this.reserveService.addReserve(user, addReserveRequestDto);
   }
 
   @Get()
@@ -57,18 +59,16 @@ export class ReserveController {
     );
   }
 
-  @Get('/user/:user')
+  @Get('/user')
+  @UseGuards(JwtAccesGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: '유저 기준 좌석 예약 조회' })
   @ApiOkResponse({
     type: GetReserveByUserResponseDto,
     isArray: true,
   })
-  async getReserveByUser(
-    @Param() getReserveByUserRequestDto: GetReserveByUserRequestDto,
-  ) {
-    return this.reserveService.findReserveByUser(
-      getReserveByUserRequestDto.user,
-    );
+  async getReserveByUser(@AuthUser() user: User) {
+    return this.reserveService.findReserveByUser(user);
   }
 
   @Delete('/:id')
@@ -77,8 +77,9 @@ export class ReserveController {
   @ApiOperation({ summary: '예약 취소' })
   @ApiOkResponse({ type: RemoveReserveResponseDto })
   async removeReserve(
+    @AuthUser() user: User,
     @Param() removeReserveDto: RemoveReserveRequestDto,
   ) {
-    return this.reserveService.removeReserve(removeReserveDto);
+    return this.reserveService.removeReserve(user, removeReserveDto);
   }
 }

@@ -13,6 +13,7 @@ import { sleep } from 'src/libs/utils/common';
 import { Between, MoreThanOrEqual, Repository } from 'typeorm';
 
 import { FacilityService } from '../facility/facility.service';
+import { User } from '../user/entity/user.entity';
 import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
 import { GetReserveByDateRequestDto } from './dto/request/getReserveByDateRequest.dto';
 import { RemoveReserveRequestDto } from './dto/request/removeReserveRequest.dto';
@@ -35,6 +36,7 @@ export class ReserveService {
   }
 
   async addReserve(
+    user: User,
     addReserveRequestDto: AddReserveRequestDto,
     retry: number = 0,
   ): Promise<Reserve> {
@@ -70,7 +72,7 @@ export class ReserveService {
       }
 
       await sleep(1000);
-      return this.addReserve(addReserveRequestDto, retry + 1);
+      return this.addReserve(user, addReserveRequestDto, retry + 1);
     }
 
     try {
@@ -102,6 +104,7 @@ export class ReserveService {
 
       const reserve = this.reserveRepository.create({
         ...addReserveRequestDto,
+        user,
         facility,
       });
 
@@ -112,10 +115,12 @@ export class ReserveService {
   }
 
   async removeReserve(
+    user: User,
     removeReserveDto: RemoveReserveRequestDto,
   ): Promise<RemoveReserveResponseDto> {
     const exist = await this.reserveRepository.findOneBy({
       id: removeReserveDto.id,
+      user: { id: user.id },
     });
     if (!exist) throw new NotFoundException('reserve not found');
 
@@ -144,16 +149,16 @@ export class ReserveService {
           always: true,
         },
       ],
-      relations: { facility: { floor: true } },
+      relations: { facility: { floor: true }, user: true },
     });
 
     return reserves;
   }
 
-  findReserveByUser(user: string) {
+  findReserveByUser(user: User) {
     return this.reserveRepository.find({
-      where: { user },
-      relations: { facility: { floor: true } },
+      where: { user: { id: user.id } },
+      relations: { facility: { floor: true }, user: true },
     });
   }
 }
