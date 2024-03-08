@@ -10,7 +10,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Model } from '@slavseat/types';
 import { Redis } from 'ioredis';
 import { sleep } from 'src/libs/utils/common';
-import { Between, MoreThanOrEqual, Repository } from 'typeorm';
+import {
+  Between,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  Repository,
+} from 'typeorm';
 
 import { FacilityService } from '../facility/facility.service';
 import { User } from '../user/entity/user.entity';
@@ -49,7 +54,7 @@ export class ReserveService {
     const dateSearch = start && end;
 
     if (dateSearch && start.getTime() >= end.getTime())
-      throw new Error(
+      throw new BadRequestException(
         `시작 날짜는 종료 날짜보다 같거나 클 수 없습니다.`,
       );
 
@@ -145,7 +150,7 @@ export class ReserveService {
           end: Between(startDate, endDate),
         },
         {
-          start: MoreThanOrEqual(startDate),
+          start: LessThanOrEqual(startDate),
           always: true,
         },
       ],
