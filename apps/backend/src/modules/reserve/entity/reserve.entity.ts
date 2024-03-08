@@ -9,10 +9,13 @@ import {
 } from 'class-validator';
 import { IsBoolean } from 'src/libs/decorator/isBoolean.decorator';
 import { Facility } from 'src/modules/facility/entity/facility.entity';
+import { User } from 'src/modules/user/entity/user.entity';
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -23,10 +26,11 @@ export class Reserve implements Model.ReserveInfo {
   @ApiProperty({ description: '예약 아이디' })
   id: number;
 
-  @Column({ nullable: false })
-  @IsString()
+  @JoinColumn()
+  @ManyToOne(() => User, (user) => user.id, { nullable: false })
+  @Type(() => User)
   @ApiProperty({ description: '예약한 사용자' })
-  user: string;
+  user: User;
 
   @ManyToOne(() => Facility, (facility) => facility.id, {
     nullable: false,
