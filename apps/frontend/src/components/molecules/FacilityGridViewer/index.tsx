@@ -3,7 +3,7 @@ import GridLayout from 'react-grid-layout';
 
 import { Model } from '@slavseat/types';
 
-import Tag from '@/components/atoms/Tag';
+import { Badge, Status } from '@/components/atoms/Badge';
 import { Text } from '@/components/atoms/Text';
 
 interface FacilityGridViewerProps {
@@ -39,17 +39,13 @@ function FacilityGridViewer({
               {facility.name}
             </Text>
             {facility.type === Model.FacilityType.SEAT && (
-              <Tag
-                color={
-                  reserves.includes(facility.id) ? 'red' : 'green'
+              <Badge
+                status={
+                  reserves.includes(facility.id)
+                    ? Status.USING
+                    : Status.ABLE_RESERVE
                 }
-              >
-                <Text fontSize="12" className="text-white">
-                  {reserves.includes(facility.id)
-                    ? '사용중'
-                    : '예약가능'}
-                </Text>
-              </Tag>
+              />
             )}
           </div>
         </div>

@@ -8,7 +8,7 @@ export const getAllFloorSummary = async () => {
     .then((res) => res.data);
 };
 
-export const getFloorDetatil = async (floorId: number) => {
+export const getFloorDetail = async (floorId: number) => {
   return axiosInstance
     .get<Model.FloorInfo>(`/api/floor/${floorId}`)
     .then((res) => res.data);

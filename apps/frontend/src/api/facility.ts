@@ -2,16 +2,19 @@ import { Model } from '@slavseat/types';
 
 import { axiosInstance } from './axiosInstance';
 
-export const getAllFacilities = async () => {
+export const getAllFacility = async () => {
   return axiosInstance
     .get<Model.FacilityInfo[]>('/api/facility')
     .then((res) => res.data);
 };
 
-export const addFacilities = async (
-  floorId: number,
-  facilities: Omit<Model.FacilitySummary, 'id'>[],
-) => {
+export const addFacility = async ({
+  floorId,
+  facilities,
+}: {
+  floorId: number;
+  facilities: Omit<Model.FacilitySummary, 'id'>[];
+}) => {
   return axiosInstance
     .post<Model.FacilityInfo[]>('/api/facility', {
       floorId,
