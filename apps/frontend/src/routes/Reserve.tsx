@@ -1,17 +1,18 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Model } from '@slavseat/types';
 
 import { useAddFacilityMutation } from '@/api/query/facility/add-facility';
+import { useRemoveFacilityMutation } from '@/api/query/facility/remove-facility';
 import { useUpdateFacilityMutation } from '@/api/query/facility/update-facility';
 import { useCreateFloorMutation } from '@/api/query/floor/create-floor';
 import { useGetAllFloorSummaryQuery } from '@/api/query/floor/get-all-floor-summary';
 import { useGetFLoorDetailQuery } from '@/api/query/floor/get-floor-detail';
-import { PlusIcon } from '@/assets/icons/Plus';
-import { Badge, Status } from '@/components/atoms/Badge';
 import { Box } from '@/components/atoms/Box';
 import { Button } from '@/components/atoms/Button';
-import FacilityGridEditor from '@/components/molecules/FacilityGridEditor';
+import FacilityGridEditor, {
+  FacilityGridEditorMode,
+} from '@/components/molecules/FacilityGridEditor';
 import FacilityGridViewer from '@/components/molecules/FacilityGridViewer';
 
 export function Reserve() {
@@ -19,10 +20,17 @@ export function Reserve() {
   const { mutate: addFacilityMutation } = useAddFacilityMutation();
   const { mutate: updateFacilityMutation } =
     useUpdateFacilityMutation();
+  const { mutate: removeFacilityMutation } =
+    useRemoveFacilityMutation();
 
   const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
   const { data: floorDetail } = useGetFLoorDetailQuery(1);
 
+  const [editorMode, setEditorMode] =
+    useState<FacilityGridEditorMode>('edit');
+  const [selectedFacility, setSelectedFacility] = useState<
+    Model.FacilitySummary[]
+  >([]);
   const [facilityType, setFacilityType] =
     useState<Model.FacilityType>(Model.FacilityType.NONE);
   const [facilityName, setFacilityName] = useState('');
@@ -30,6 +38,10 @@ export function Reserve() {
   const [editingFacilities, setEditingFacilities] = useState<
     Model.FacilitySummary[]
   >([]);
+
+  useEffect(() => {
+    if (floorDetail) setEditingFacilities(floorDetail.facilities);
+  }, [floorDetail]);
 
   const handleClickAddFacility = useCallback(() => {
     addFacilityMutation({
@@ -86,15 +98,38 @@ export function Reserve() {
           reserves={[]}
         />
       )}
-      <Button
-        onClick={() => updateFacilityMutation(editingFacilities)}
-      >
-        Update Facility
-      </Button>
+      <div className="space-x-2">
+        <Button
+          onClick={() =>
+            setEditorMode((prev) =>
+              prev === 'edit' ? 'select' : 'edit',
+            )
+          }
+        >
+          {editorMode} mode
+        </Button>
+        <Button
+          onClick={() => updateFacilityMutation(editingFacilities)}
+        >
+          Update Facility
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() =>
+            removeFacilityMutation(selectedFacility.map((v) => v.id))
+          }
+        >
+          Delete Selected
+        </Button>
+      </div>
       {floorDetail && (
         <FacilityGridEditor
-          facilities={floorDetail?.facilities}
+          mode={editorMode}
+          selected={selectedFacility}
+          defaultFacilities={floorDetail.facilities}
+          facilities={editingFacilities}
           onChange={setEditingFacilities}
+          onSelectChange={setSelectedFacility}
         />
       )}
     </>

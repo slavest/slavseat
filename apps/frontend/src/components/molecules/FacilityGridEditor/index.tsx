@@ -10,9 +10,12 @@ import clsx from 'clsx';
 import { Text } from '@/components/atoms/Text';
 import { useControlled } from '@/hooks/useControlled';
 
+export type FacilityGridEditorMode = 'select' | 'edit';
+
 interface FacilityGridEditorProps {
   facilities?: Model.FacilitySummary[];
-  mode?: 'select' | 'edit';
+  defaultFacilities?: Model.FacilitySummary[];
+  mode?: FacilityGridEditorMode;
   selected?: Model.FacilitySummary[];
   onChange?: (data: Model.FacilitySummary[]) => void;
   onSelectChange?: (data: Model.FacilitySummary[]) => void;
@@ -20,6 +23,7 @@ interface FacilityGridEditorProps {
 
 function FacilityGridEditor({
   facilities: facilitiesProp,
+  defaultFacilities = [],
   selected: selectedProp,
   mode = 'edit',
   onChange,
@@ -27,7 +31,7 @@ function FacilityGridEditor({
 }: FacilityGridEditorProps) {
   const [selected, setSelected] = useControlled([], selectedProp);
   const [facilities, setFacilities] = useControlled(
-    [],
+    defaultFacilities,
     facilitiesProp,
   );
 

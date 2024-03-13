@@ -31,8 +31,10 @@ export const updateFacility = async (
     .then((res) => res.data);
 };
 
-export const removeFacility = async (facilityId: number) => {
+export const removeFacility = async (facilities: number[]) => {
   return axiosInstance
-    .delete<{ removed: number }>(`/api/facility/${facilityId}`)
+    .delete<{ removed: number }>(`/api/facility`, {
+      data: { facilities },
+    })
     .then((res) => res.data);
 };
