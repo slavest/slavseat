@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -58,13 +59,13 @@ export class FacilityController {
     return this.facilityService.updateFacility(updateFacilityDto);
   }
 
-  @Delete('/:id')
+  @Delete()
   @UseGuards(JwtAccesGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: '시설 정보 삭제' })
   @ApiOkResponse({ type: RemoveFacilityResponseDto })
   async removeFacility(
-    @Param() removeFacilityDto: RemoveFacilityRequestDto,
+    @Body() removeFacilityDto: RemoveFacilityRequestDto,
   ) {
     return this.facilityService.removeFacility(removeFacilityDto);
   }
