@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { Model } from '@slavseat/types';
 
+import { login } from '@/api/auth';
 import { useAddFacilityMutation } from '@/api/query/facility/add-facility';
 import { useRemoveFacilityMutation } from '@/api/query/facility/remove-facility';
 import { useUpdateFacilityMutation } from '@/api/query/facility/update-facility';
@@ -15,7 +16,7 @@ import FacilityGridEditor, {
 } from '@/components/molecules/FacilityGridEditor';
 import FacilityGridViewer from '@/components/molecules/FacilityGridViewer';
 
-export function Reserve() {
+export function Test() {
   const { mutate: createFloorMutation } = useCreateFloorMutation();
   const { mutate: addFacilityMutation } = useAddFacilityMutation();
   const { mutate: updateFacilityMutation } =
@@ -25,6 +26,8 @@ export function Reserve() {
 
   const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
   const { data: floorDetail } = useGetFLoorDetailQuery(1);
+
+  const [floorName, setFloorName] = useState<string>('');
 
   const [editorMode, setEditorMode] =
     useState<FacilityGridEditorMode>('edit');
@@ -61,11 +64,19 @@ export function Reserve() {
 
   return (
     <>
+      <Button onClick={() => login('microsoft')}>로그인</Button>
+      <input
+        type="text"
+        onChange={(e) => setFloorName(e.target.value)}
+      />
       <Button
-        onClick={() => createFloorMutation({ name: 'floor-1' })}
+        onClick={() => createFloorMutation({ name: floorName })}
       >
         Floor 추가
       </Button>
+      <pre>
+        <code>{JSON.stringify(allFloorSummary, null, 2)}</code>
+      </pre>
       <Box>
         <input onChange={(e) => setFacilityName(e.target.value)} />
         <select
@@ -88,9 +99,6 @@ export function Reserve() {
       <pre>
         <code>{JSON.stringify(floorDetail, null, 2)}</code>
       </pre>
-      {/* <pre>
-        <code>{JSON.stringify(allFloorSummary, null, 2)}</code>
-      </pre> */}
       {/* <Badge status={Status.ABLE_RESERVE} /> */}
       {floorDetail && (
         <FacilityGridViewer

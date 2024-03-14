@@ -11,8 +11,8 @@ import {
 
 import './global-style.css.ts';
 import './reset.css';
-import { Reserve } from './routes/Reserve.tsx';
 import Root from './routes/Root.tsx';
+import { Test } from './routes/Test.tsx';
 
 const queryClient = new QueryClient();
 
@@ -22,8 +22,8 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       {
-        path: '/reserve',
-        element: <Reserve />,
+        path: '/test',
+        element: <Test />,
       },
     ],
   },
