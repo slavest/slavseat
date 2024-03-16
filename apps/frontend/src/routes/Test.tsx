@@ -12,6 +12,7 @@ import { useGetAllFloorSummaryQuery } from '@/api/query/floor/get-all-floor-summ
 import { useGetFLoorDetailQuery } from '@/api/query/floor/get-floor-detail';
 import { Box } from '@/components/atoms/Box';
 import { Button } from '@/components/atoms/Button';
+import ScrollArea from '@/components/atoms/ScrollArea';
 import FacilityGridEditor, {
   FacilityGridEditorMode,
 } from '@/components/molecules/FacilityGridEditor';
@@ -136,9 +137,9 @@ export function Test() {
         <div className="text-zinc-500 text-sm">
           Facility Grid Viewer
         </div>
-        <div
+        <ScrollArea
           className={clsx(
-            'border-dashed border-2 rounded-md border-zinc-500 overflow-scroll',
+            'w-96 h-[50rem] border-dashed border-2 rounded-md border-zinc-500 overflow-scroll',
             hideScrollBar,
           )}
         >
@@ -148,7 +149,7 @@ export function Test() {
               reserves={[]}
             />
           )}
-        </div>
+        </ScrollArea>
       </div>
 
       <div>
@@ -197,10 +198,9 @@ export function Test() {
         <div className="text-zinc-500 text-sm">
           Facility Grid Editor
         </div>
-        <div
+        <ScrollArea
           className={clsx(
-            'w-96 h-[50rem] border-dashed border-2 rounded-md border-zinc-500 overflow-scroll',
-            hideScrollBar,
+            'border-dashed border-2 rounded-md border-zinc-500 ',
           )}
         >
           {floorDetail && (
@@ -213,7 +213,7 @@ export function Test() {
               onSelectChange={setSelectedFacility}
             />
           )}
-        </div>
+        </ScrollArea>
       </div>
     </div>
   );
