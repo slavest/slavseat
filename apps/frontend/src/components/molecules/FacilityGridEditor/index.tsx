@@ -8,6 +8,7 @@ import { FacilitySummary } from '@slavseat/types/src/model';
 import clsx from 'clsx';
 
 import { Text } from '@/components/atoms/Text';
+import { hideScrollBar } from '@/global-style.css';
 import { useControlled } from '@/hooks/useControlled';
 
 export type FacilityGridEditorMode = 'select' | 'edit';
@@ -111,77 +112,88 @@ function FacilityGridEditor({
   );
 
   return (
-    <GridLayout
-      compactType={null}
-      preventCollision={true}
-      layout={facilities.map((facility) => ({
-        ...facility,
-        i: String(facility.id),
-      }))}
-      onLayoutChange={handleChangeGrid}
-      cols={100}
-      rowHeight={40}
-      width={5000}
-      isDraggable={mode === 'edit'}
-      isResizable={mode === 'edit'}
-    >
-      {facilities.map((facility) => (
-        <div
-          key={facility.id}
-          className={clsx(
-            'flex flex-col gap-2 justify-center items-center bg-neutral-50 border rounded-md select-none p-2 box-border',
-            {
-              'cursor-pointer': mode === 'select',
-              'border-neutral-200':
-                mode === 'edit' ||
-                !selected.filter((item) => facility.id === item.id)
-                  .length,
-              'border-blue-500':
-                mode === 'select' &&
-                selected.filter((item) => facility.id === item.id)
-                  .length,
-            },
-          )}
-          onClick={() => handleClickFacility(facility)}
-        >
-          {mode === 'edit' && (
-            <>
-              <input
-                className="w-full px-1 border border-neutral-200 rounded text-sm"
-                value={facility.name}
-                onChange={(e) =>
-                  handleChangeAdditionalData(
-                    facility.id,
-                    'name',
-                    e.target.value,
-                  )
-                }
-              />
-              <select
-                className="w-full border border-neutral-200 rounded text-sm"
-                value={facility.type}
-                onChange={(e) =>
-                  handleChangeAdditionalData(
-                    facility.id,
-                    'type',
-                    Number(e.target.value),
-                  )
-                }
-              >
-                <option value={Model.FacilityType.MEETING_ROOM}>
-                  회의실
-                </option>
-                <option value={Model.FacilityType.SEAT}>좌석</option>
-                <option value={Model.FacilityType.NONE}>기타</option>
-              </select>
-            </>
-          )}
-          {mode === 'select' && (
-            <Text fontSize="14">{facility.name}</Text>
-          )}
-        </div>
-      ))}
-    </GridLayout>
+    <div className={clsx('m-2 overflow-auto', hideScrollBar)}>
+      <GridLayout
+        compactType={null}
+        preventCollision={true}
+        layout={facilities.map((facility) => ({
+          ...facility,
+          i: String(facility.id),
+        }))}
+        onLayoutChange={handleChangeGrid}
+        cols={100}
+        rowHeight={40}
+        width={5000}
+        // margin={[0, 0]}
+        containerPadding={[0, 0]}
+        isDraggable={mode === 'edit'}
+        isResizable={mode === 'edit'}
+        // useCSSTransforms={false}
+        // className="w-fit"
+      >
+        {facilities.map((facility) => (
+          <div
+            key={facility.id}
+            className={clsx(
+              'inline-flex flex-col gap-2 justify-center items-center bg-neutral-50 border rounded-md select-none p-2 box-border',
+              {
+                'cursor-pointer': mode === 'select',
+                'border-neutral-200':
+                  mode === 'edit' ||
+                  !selected.filter((item) => facility.id === item.id)
+                    .length,
+                'border-blue-500':
+                  mode === 'select' &&
+                  selected.filter((item) => facility.id === item.id)
+                    .length,
+              },
+            )}
+            onClick={() => handleClickFacility(facility)}
+          >
+            {mode === 'edit' && (
+              <>
+                <input
+                  className="w-full px-1 border border-neutral-200 rounded text-sm"
+                  value={facility.name}
+                  onClickCapture={(e) => e.stopPropagation()}
+                  onChange={(e) =>
+                    handleChangeAdditionalData(
+                      facility.id,
+                      'name',
+                      e.target.value,
+                    )
+                  }
+                />
+                <select
+                  className="w-full border border-neutral-200 rounded text-sm"
+                  value={facility.type}
+                  onChange={(e) =>
+                    handleChangeAdditionalData(
+                      facility.id,
+                      'type',
+                      Number(e.target.value),
+                    )
+                  }
+                >
+                  <option value={Model.FacilityType.MEETING_ROOM}>
+                    회의실
+                  </option>
+                  <option value={Model.FacilityType.SEAT}>
+                    좌석
+                  </option>
+                  <option value={Model.FacilityType.NONE}>
+                    기타
+                  </option>
+                </select>
+              </>
+            )}
+            {mode === 'select' && (
+              <Text fontSize="14">{facility.name}</Text>
+            )}
+          </div>
+        ))}
+      </GridLayout>
+    </div>
   );
 }
 

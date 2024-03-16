@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { Model } from '@slavseat/types';
+import { clsx } from 'clsx';
 
 import { login } from '@/api/auth';
 import { useAddFacilityMutation } from '@/api/query/facility/add-facility';
@@ -15,6 +16,7 @@ import FacilityGridEditor, {
   FacilityGridEditorMode,
 } from '@/components/molecules/FacilityGridEditor';
 import FacilityGridViewer from '@/components/molecules/FacilityGridViewer';
+import { hideScrollBar } from '@/global-style.css';
 
 export function Test() {
   const { mutate: createFloorMutation } = useCreateFloorMutation();
@@ -63,83 +65,156 @@ export function Test() {
   }, [addFacilityMutation, facilityName, facilityType]);
 
   return (
-    <>
-      <Button onClick={() => login('microsoft')}>로그인</Button>
-      <input
-        type="text"
-        onChange={(e) => setFloorName(e.target.value)}
-      />
-      <Button
-        onClick={() => createFloorMutation({ name: floorName })}
-      >
-        Floor 추가
+    <div
+      className={clsx(
+        'h-full p-2 space-y-4 overflow-scroll',
+        hideScrollBar,
+      )}
+    >
+      <Button onClick={() => login('microsoft')} className="block">
+        로그인
       </Button>
-      <pre>
-        <code>{JSON.stringify(allFloorSummary, null, 2)}</code>
-      </pre>
-      <Box>
-        <input onChange={(e) => setFacilityName(e.target.value)} />
-        <select
-          className="w-full border border-neutral-200 rounded text-sm"
-          value={facilityType}
-          onChange={(e) => {
-            setFacilityType(
-              Number(e.target.value) as Model.FacilityType,
-            );
-          }}
-        >
-          <option value={Model.FacilityType.MEETING_ROOM}>
-            회의실
-          </option>
-          <option value={Model.FacilityType.SEAT}>좌석</option>
-          <option value={Model.FacilityType.NONE}>기타</option>
-        </select>
-        <Button onClick={handleClickAddFacility}>Seat 추가</Button>
-      </Box>
-      <pre>
-        <code>{JSON.stringify(floorDetail, null, 2)}</code>
-      </pre>
-      {/* <Badge status={Status.ABLE_RESERVE} /> */}
-      {floorDetail && (
-        <FacilityGridViewer
-          facilities={floorDetail?.facilities}
-          reserves={[]}
-        />
-      )}
-      <div className="space-x-2">
-        <Button
-          onClick={() =>
-            setEditorMode((prev) =>
-              prev === 'edit' ? 'select' : 'edit',
-            )
-          }
-        >
-          {editorMode} mode
-        </Button>
-        <Button
-          onClick={() => updateFacilityMutation(editingFacilities)}
-        >
-          Update Facility
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={() =>
-            removeFacilityMutation(selectedFacility.map((v) => v.id))
-          }
-        >
-          Delete Selected
-        </Button>
+      <div>
+        <div className="text-zinc-500 text-sm">Floor 추가 폼</div>
+        <div className="inline-block p-4 border-dashed border-2 rounded-md border-zinc-500 space-x-2">
+          <input
+            className="px-2 py-1 border border-zinc-500 rounded-md text-sm"
+            type="text"
+            placeholder="Floor 이름"
+            onChange={(e) => setFloorName(e.target.value)}
+          />
+          <Button
+            className="ml-auto mr-0"
+            onClick={() => createFloorMutation({ name: floorName })}
+          >
+            Floor 추가
+          </Button>
+        </div>
       </div>
-      {floorDetail && (
-        <FacilityGridEditor
-          mode={editorMode}
-          selected={selectedFacility}
-          defaultFacilities={floorDetail.facilities}
-          facilities={editingFacilities}
-          onChange={setEditingFacilities}
-          onSelectChange={setSelectedFacility}
-        />
-      )}
-    </>
+      {/* <pre>
+        <code>{JSON.stringify(allFloorSummary, null, 2)}</code>
+      </pre> */}
+      <div>
+        <div className="text-zinc-500 text-sm">Facility 추가 폼</div>
+        <div className="inline-flex gap-2 items-center p-4 border-dashed border-2 rounded-md border-zinc-500 ">
+          <div className="inline-flex flex-col my-auto">
+            <input
+              placeholder="Facility 이름"
+              onChange={(e) => setFacilityName(e.target.value)}
+              className="px-2 py-1 border border-zinc-500 rounded-md text-sm"
+            />
+            <select
+              className="border border-neutral-200 rounded text-sm"
+              value={facilityType}
+              onChange={(e) => {
+                setFacilityType(
+                  Number(e.target.value) as Model.FacilityType,
+                );
+              }}
+            >
+              <option value={Model.FacilityType.MEETING_ROOM}>
+                회의실
+              </option>
+              <option value={Model.FacilityType.SEAT}>좌석</option>
+              <option value={Model.FacilityType.NONE}>기타</option>
+            </select>
+          </div>
+          <Button
+            className="my-auto"
+            onClick={handleClickAddFacility}
+          >
+            Seat 추가
+          </Button>
+        </div>
+      </div>
+      {/* <pre>
+        <code>{JSON.stringify(floorDetail, null, 2)}</code>
+      </pre> */}
+      {/* <Badge status={Status.ABLE_RESERVE} /> */}
+
+      <div>
+        <div className="text-zinc-500 text-sm">
+          Facility Grid Viewer
+        </div>
+        <div
+          className={clsx(
+            'border-dashed border-2 rounded-md border-zinc-500 overflow-scroll',
+            hideScrollBar,
+          )}
+        >
+          {floorDetail && (
+            <FacilityGridViewer
+              facilities={floorDetail?.facilities}
+              reserves={[]}
+            />
+          )}
+        </div>
+      </div>
+
+      <div>
+        <div className="text-zinc-500 text-sm">
+          Facility Grid Editor Toolbar
+        </div>
+        <div className="p-2 border-dashed border-2 rounded-md border-zinc-500">
+          <div className="space-x-2">
+            <Button
+              className="text-sm"
+              size="sm"
+              onClick={() =>
+                setEditorMode((prev) =>
+                  prev === 'edit' ? 'select' : 'edit',
+                )
+              }
+            >
+              {editorMode} mode
+            </Button>
+            <Button
+              className="text-sm"
+              size="sm"
+              onClick={() =>
+                updateFacilityMutation(editingFacilities)
+              }
+            >
+              Update Facility
+            </Button>
+            <Button
+              className="text-sm"
+              size="sm"
+              variant="outlined"
+              onClick={() =>
+                removeFacilityMutation(
+                  selectedFacility.map((v) => v.id),
+                )
+              }
+            >
+              Delete Selected
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div className="text-zinc-500 text-sm">
+          Facility Grid Editor
+        </div>
+        <div
+          className={clsx(
+            'border-dashed border-2 rounded-md border-zinc-500',
+            hideScrollBar,
+          )}
+        >
+          {floorDetail && (
+            <FacilityGridEditor
+              mode={editorMode}
+              selected={selectedFacility}
+              defaultFacilities={floorDetail.facilities}
+              facilities={editingFacilities}
+              onChange={setEditingFacilities}
+              onSelectChange={setSelectedFacility}
+            />
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

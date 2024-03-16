@@ -1,7 +1,7 @@
 import { axiosInstance } from './axiosInstance';
 
 export const login = (provider: string = 'microsoft') => {
-  const baseURL = import.meta.env.DEV ? 'localhost:3000' : '';
+  const baseURL = import.meta.env.DEV ? 'http://localhost:3000' : '';
 
   window.location.href = `${baseURL}/api/auth/${provider}?redirectBackTo=${window.location.href}`;
 };
