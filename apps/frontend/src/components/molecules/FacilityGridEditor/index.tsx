@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import GridLayout from 'react-grid-layout';
+import GridLayout, { Responsive } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
@@ -10,6 +10,8 @@ import clsx from 'clsx';
 import { Text } from '@/components/atoms/Text';
 import { hideScrollBar } from '@/global-style.css';
 import { useControlled } from '@/hooks/useControlled';
+
+import './index.css';
 
 export type FacilityGridEditorMode = 'select' | 'edit';
 
@@ -112,30 +114,26 @@ function FacilityGridEditor({
   );
 
   return (
-    <div className={clsx('m-2 overflow-auto', hideScrollBar)}>
-      <GridLayout
-        compactType={null}
-        preventCollision={true}
-        layout={facilities.map((facility) => ({
-          ...facility,
-          i: String(facility.id),
-        }))}
-        onLayoutChange={handleChangeGrid}
-        cols={100}
-        rowHeight={40}
-        width={5000}
-        // margin={[0, 0]}
-        containerPadding={[0, 0]}
-        isDraggable={mode === 'edit'}
-        isResizable={mode === 'edit'}
-        // useCSSTransforms={false}
-        // className="w-fit"
-      >
-        {facilities.map((facility) => (
+    <GridLayout
+      compactType={null}
+      preventCollision={true}
+      layout={facilities.map((facility) => ({
+        ...facility,
+        i: String(facility.id),
+      }))}
+      onLayoutChange={handleChangeGrid}
+      cols={100}
+      rowHeight={50}
+      width={5000}
+      margin={[0, 0]}
+      isDraggable={mode === 'edit'}
+      isResizable={mode === 'edit'}
+    >
+      {facilities.map((facility) => (
+        <div key={facility.id} className="p-1">
           <div
-            key={facility.id}
             className={clsx(
-              'inline-flex flex-col gap-2 justify-center items-center bg-neutral-50 border rounded-md select-none p-2 box-border',
+              'w-full h-full inline-flex flex-col gap-2 justify-center items-center bg-neutral-50 border rounded-md select-none p-2 box-border',
               {
                 'cursor-pointer': mode === 'select',
                 'border-neutral-200':
@@ -191,9 +189,9 @@ function FacilityGridEditor({
               <Text fontSize="14">{facility.name}</Text>
             )}
           </div>
-        ))}
-      </GridLayout>
-    </div>
+        </div>
+      ))}
+    </GridLayout>
   );
 }
 

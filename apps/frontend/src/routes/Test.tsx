@@ -199,7 +199,7 @@ export function Test() {
         </div>
         <div
           className={clsx(
-            'border-dashed border-2 rounded-md border-zinc-500',
+            'w-96 h-[50rem] border-dashed border-2 rounded-md border-zinc-500 overflow-scroll',
             hideScrollBar,
           )}
         >

@@ -1,0 +1,7 @@
+.react-grid-item > .react-resizable-handle.react-resizable-handle-se {
+  bottom: 0.5rem;
+  right: 0.5rem;
+}
+
+.react-grid-item.react-grid-placeholder {
+}
