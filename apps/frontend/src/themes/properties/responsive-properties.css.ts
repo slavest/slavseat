@@ -12,7 +12,7 @@ export const responseProperties = defineProperties({
   defaultCondition: 'all',
   properties: {
     backgroundColor: colorToken,
-    display: ['none', 'flex', 'block', 'inline'],
+    display: ['none', 'flex', 'block', 'inline', 'inline-block'],
     flexDirection: ['row', 'column'],
     flex: {
       full: '1 1 0%',
@@ -45,6 +45,8 @@ export const responseProperties = defineProperties({
     height,
     minHeight: height,
     maxHeight: height,
+    borderStyle: ['solid'],
+    borderWidth: spacing,
     borderRadius: radius,
     borderTopLeftRadius: radius,
     borderTopRightRadius: radius,

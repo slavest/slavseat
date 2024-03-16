@@ -64,14 +64,12 @@ export class FacilityService {
   }
 
   async removeFacility({
-    id,
+    facilities,
   }: RemoveFacilityRequestDto): Promise<RemoveFacilityResponseDto> {
-    const exist = await this.facilityRepository.findOneBy({ id });
-    if (!exist) throw new NotFoundException('facility not found');
-
     return {
       removed:
-        (await this.facilityRepository.delete(exist)).affected ?? 0,
+        (await this.facilityRepository.delete(facilities)).affected ??
+        0,
     };
   }
 

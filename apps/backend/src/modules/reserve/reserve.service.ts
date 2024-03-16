@@ -10,9 +10,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Model } from '@slavseat/types';
 import { Redis } from 'ioredis';
 import { sleep } from 'src/libs/utils/common';
-import { Between, MoreThanOrEqual, Repository } from 'typeorm';
+import {
+  Between,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  Repository,
+} from 'typeorm';
 
 import { FacilityService } from '../facility/facility.service';
+import { User } from '../user/entity/user.entity';
 import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
 import { GetReserveByDateRequestDto } from './dto/request/getReserveByDateRequest.dto';
 import { RemoveReserveRequestDto } from './dto/request/removeReserveRequest.dto';
@@ -35,6 +41,7 @@ export class ReserveService {
   }
 
   async addReserve(
+    user: User,
     addReserveRequestDto: AddReserveRequestDto,
     retry: number = 0,
   ): Promise<Reserve> {
@@ -47,7 +54,7 @@ export class ReserveService {
     const dateSearch = start && end;
 
     if (dateSearch && start.getTime() >= end.getTime())
-      throw new Error(
+      throw new BadRequestException(
         `시작 날짜는 종료 날짜보다 같거나 클 수 없습니다.`,
       );
 
@@ -70,7 +77,7 @@ export class ReserveService {
       }
 
       await sleep(1000);
-      return this.addReserve(addReserveRequestDto, retry + 1);
+      return this.addReserve(user, addReserveRequestDto, retry + 1);
     }
 
     try {
@@ -102,6 +109,7 @@ export class ReserveService {
 
       const reserve = this.reserveRepository.create({
         ...addReserveRequestDto,
+        user,
         facility,
       });
 
@@ -112,10 +120,12 @@ export class ReserveService {
   }
 
   async removeReserve(
+    user: User,
     removeReserveDto: RemoveReserveRequestDto,
   ): Promise<RemoveReserveResponseDto> {
     const exist = await this.reserveRepository.findOneBy({
       id: removeReserveDto.id,
+      user: { id: user.id },
     });
     if (!exist) throw new NotFoundException('reserve not found');
 
@@ -140,20 +150,20 @@ export class ReserveService {
           end: Between(startDate, endDate),
         },
         {
-          start: MoreThanOrEqual(startDate),
+          start: LessThanOrEqual(startDate),
           always: true,
         },
       ],
-      relations: { facility: { floor: true } },
+      relations: { facility: { floor: true }, user: true },
     });
 
     return reserves;
   }
 
-  findReserveByUser(user: string) {
+  findReserveByUser(user: User) {
     return this.reserveRepository.find({
-      where: { user },
-      relations: { facility: { floor: true } },
+      where: { user: { id: user.id } },
+      relations: { facility: { floor: true }, user: true },
     });
   }
 }
