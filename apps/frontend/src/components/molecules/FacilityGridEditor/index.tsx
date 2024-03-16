@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import GridLayout from 'react-grid-layout';
+import GridLayout, { Responsive } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
@@ -8,11 +8,17 @@ import { FacilitySummary } from '@slavseat/types/src/model';
 import clsx from 'clsx';
 
 import { Text } from '@/components/atoms/Text';
+import { hideScrollBar } from '@/global-style.css';
 import { useControlled } from '@/hooks/useControlled';
+
+import './index.css';
+
+export type FacilityGridEditorMode = 'select' | 'edit';
 
 interface FacilityGridEditorProps {
   facilities?: Model.FacilitySummary[];
-  mode?: 'select' | 'edit';
+  defaultFacilities?: Model.FacilitySummary[];
+  mode?: FacilityGridEditorMode;
   selected?: Model.FacilitySummary[];
   onChange?: (data: Model.FacilitySummary[]) => void;
   onSelectChange?: (data: Model.FacilitySummary[]) => void;
@@ -20,6 +26,7 @@ interface FacilityGridEditorProps {
 
 function FacilityGridEditor({
   facilities: facilitiesProp,
+  defaultFacilities = [],
   selected: selectedProp,
   mode = 'edit',
   onChange,
@@ -27,7 +34,7 @@ function FacilityGridEditor({
 }: FacilityGridEditorProps) {
   const [selected, setSelected] = useControlled([], selectedProp);
   const [facilities, setFacilities] = useControlled(
-    [],
+    defaultFacilities,
     facilitiesProp,
   );
 
@@ -116,65 +123,72 @@ function FacilityGridEditor({
       }))}
       onLayoutChange={handleChangeGrid}
       cols={100}
-      rowHeight={40}
+      rowHeight={50}
       width={5000}
+      margin={[0, 0]}
       isDraggable={mode === 'edit'}
       isResizable={mode === 'edit'}
     >
       {facilities.map((facility) => (
-        <div
-          key={facility.id}
-          className={clsx(
-            'flex flex-col gap-2 justify-center items-center bg-neutral-50 border rounded-md select-none p-2 box-border',
-            {
-              'cursor-pointer': mode === 'select',
-              'border-neutral-200':
-                mode === 'edit' ||
-                !selected.filter((item) => facility.id === item.id)
-                  .length,
-              'border-blue-500':
-                mode === 'select' &&
-                selected.filter((item) => facility.id === item.id)
-                  .length,
-            },
-          )}
-          onClick={() => handleClickFacility(facility)}
-        >
-          {mode === 'edit' && (
-            <>
-              <input
-                className="w-full px-1 border border-neutral-200 rounded text-sm"
-                value={facility.name}
-                onChange={(e) =>
-                  handleChangeAdditionalData(
-                    facility.id,
-                    'name',
-                    e.target.value,
-                  )
-                }
-              />
-              <select
-                className="w-full border border-neutral-200 rounded text-sm"
-                value={facility.type}
-                onChange={(e) =>
-                  handleChangeAdditionalData(
-                    facility.id,
-                    'type',
-                    Number(e.target.value),
-                  )
-                }
-              >
-                <option value={Model.FacilityType.MEETING_ROOM}>
-                  회의실
-                </option>
-                <option value={Model.FacilityType.SEAT}>좌석</option>
-                <option value={Model.FacilityType.NONE}>기타</option>
-              </select>
-            </>
-          )}
-          {mode === 'select' && (
-            <Text fontSize="14">{facility.name}</Text>
-          )}
+        <div key={facility.id} className="p-1">
+          <div
+            className={clsx(
+              'w-full h-full inline-flex flex-col gap-2 justify-center items-center bg-neutral-50 border rounded-md select-none p-2 box-border',
+              {
+                'cursor-pointer': mode === 'select',
+                'border-neutral-200':
+                  mode === 'edit' ||
+                  !selected.filter((item) => facility.id === item.id)
+                    .length,
+                'border-blue-500':
+                  mode === 'select' &&
+                  selected.filter((item) => facility.id === item.id)
+                    .length,
+              },
+            )}
+            onClick={() => handleClickFacility(facility)}
+          >
+            {mode === 'edit' && (
+              <>
+                <input
+                  className="w-full px-1 border border-neutral-200 rounded text-sm"
+                  value={facility.name}
+                  onClickCapture={(e) => e.stopPropagation()}
+                  onChange={(e) =>
+                    handleChangeAdditionalData(
+                      facility.id,
+                      'name',
+                      e.target.value,
+                    )
+                  }
+                />
+                <select
+                  className="w-full border border-neutral-200 rounded text-sm"
+                  value={facility.type}
+                  onChange={(e) =>
+                    handleChangeAdditionalData(
+                      facility.id,
+                      'type',
+                      Number(e.target.value),
+                    )
+                  }
+                >
+                  <option value={Model.FacilityType.MEETING_ROOM}>
+                    회의실
+                  </option>
+                  <option value={Model.FacilityType.SEAT}>
+                    좌석
+                  </option>
+                  <option value={Model.FacilityType.NONE}>
+                    기타
+                  </option>
+                </select>
+              </>
+            )}
+            {mode === 'select' && (
+              <Text fontSize="14">{facility.name}</Text>
+            )}
+          </div>
         </div>
       ))}
     </GridLayout>
