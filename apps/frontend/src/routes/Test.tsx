@@ -139,7 +139,7 @@ export function Test() {
         </div>
         <ScrollArea
           className={clsx(
-            'w-96 h-[50rem] border-dashed border-2 rounded-md border-zinc-500 overflow-scroll',
+            'w-96 h-[50rem] border-dashed border-2 rounded-md border-zinc-500',
             hideScrollBar,
           )}
         >
@@ -200,7 +200,7 @@ export function Test() {
         </div>
         <ScrollArea
           className={clsx(
-            'border-dashed border-2 rounded-md border-zinc-500 ',
+            'border-dashed border-2 rounded-md border-zinc-500',
           )}
         >
           {floorDetail && (
