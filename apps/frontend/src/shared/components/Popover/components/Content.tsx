@@ -1,16 +1,10 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 
-import clsx from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 import ReactPortal from '@/shared/components/Portal';
 
 import { usePopoverContext } from '../context';
-import { popoverVariants } from '../popover.css';
 
 export interface PopoverContentProps
   extends React.HTMLAttributes<HTMLDivElement> {}
@@ -37,7 +31,7 @@ const Content = ({ className, ...rest }: PopoverContentProps) => {
       <div
         ref={ref}
         tabIndex={-1}
-        className={clsx(popoverVariants({ open }), className)}
+        className={twMerge(className, open ? 'block' : 'hidden')}
         onBlur={() => {
           handleClose();
         }}

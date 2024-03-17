@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 
-import { useControlled } from '@/hooks/useControlled';
+import { useControlled } from '@/shared/hooks/useControlled';
 
 export interface SelectItem {
   id: string;

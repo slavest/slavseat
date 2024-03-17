@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Popover from '../../../components/molecules/Popover';
-import { PopoverTriggerProps } from '../../../components/molecules/Popover/components/Trigger';
+import Popover from '../../../shared/components/Popover';
+import { PopoverTriggerProps } from '../../../shared/components/Popover/components/Trigger';
 
 export interface SelectTriggerProps extends PopoverTriggerProps {}
 

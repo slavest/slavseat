@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
-import Popover from '../../../components/molecules/Popover';
-import { PopoverProviderProps } from '../../../components/molecules/Popover/context';
+import Popover from '../../../shared/components/Popover';
+import { PopoverProviderProps } from '../../../shared/components/Popover/context';
 import {
   SelectContextProvider,
   SelectContextProviderProps,

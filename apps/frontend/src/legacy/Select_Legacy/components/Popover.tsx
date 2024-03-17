@@ -2,8 +2,8 @@ import React from 'react';
 
 import clsx from 'clsx';
 
-import PopoverComponent from '../../../components/molecules/Popover';
-import { PopoverContentProps } from '../../../components/molecules/Popover/components/Content';
+import PopoverComponent from '../../../shared/components/Popover';
+import { PopoverContentProps } from '../../../shared/components/Popover/components/Content';
 import { selectPopoverStyles } from '../select.css';
 
 export interface SelectPopoverProps extends PopoverContentProps {}

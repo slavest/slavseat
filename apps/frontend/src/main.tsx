@@ -9,10 +9,10 @@ import {
   createBrowserRouter,
 } from 'react-router-dom';
 
-import './global-style.css.ts';
-import './reset.css';
-import Root from './routes/Root.tsx';
-import { Test } from './routes/Test.tsx';
+import { Test } from './features/test/routes/Test.tsx';
+import Root from './shared/routes/Root.tsx';
+import './shared/styles/global-style.css.ts';
+import './shared/styles/reset.css';
 
 const queryClient = new QueryClient();
 
