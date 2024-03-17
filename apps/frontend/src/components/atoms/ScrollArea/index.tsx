@@ -57,7 +57,10 @@ function ScrollArea({
     >
       <div
         ref={viewportRef}
-        className={clsx('overflow-scroll', hideScrollBar)}
+        className={clsx(
+          'w-full h-full overflow-scroll',
+          hideScrollBar,
+        )}
         onScroll={updateScroll}
         {...rest}
       >
@@ -66,7 +69,12 @@ function ScrollArea({
       {hover && (
         <>
           {yThumbSize !== 100 && (
-            <div className="absolute top-0 right-0 p-1 py-2 h-full">
+            <div
+              className="absolute top-0 right-0 p-1 py-2 h-full"
+              style={{
+                height: `${viewportRef.current?.clientHeight ?? 0}px`,
+              }}
+            >
               <div
                 className={clsx(
                   'relative w-1 bg-zinc-400 rounded-full',
@@ -79,7 +87,12 @@ function ScrollArea({
             </div>
           )}
           {xThumbSize !== 100 && (
-            <div className="absolute bottom-0 p-1 px-2 w-full">
+            <div
+              className="absolute bottom-0 p-1 px-2 w-full"
+              style={{
+                width: `${viewportRef.current?.clientWidth ?? 0}px`,
+              }}
+            >
               <div
                 className={clsx(
                   'relative h-1 bg-zinc-400 rounded-full',

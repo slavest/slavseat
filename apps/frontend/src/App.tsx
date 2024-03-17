@@ -10,10 +10,10 @@ import FacilityGridEditor from './components/molecules/FacilityGridEditor';
 import FacilityGridViewer from './components/molecules/FacilityGridViewer';
 import { dummySeatMap } from './dummy';
 import { hideScrollBar } from './global-style.css';
-import { useInitalizeStyle } from './hooks/useInitalizeStyle';
+import { useInitializeStyle } from './hooks/useInitializeStyle';
 
 function App() {
-  useInitalizeStyle();
+  useInitializeStyle();
 
   const [facilities, setFacilities] =
     useState<Model.FacilitySummary[]>(dummySeatMap);

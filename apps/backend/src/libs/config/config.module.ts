@@ -45,7 +45,7 @@ import { Region } from 'oci-common';
             return value;
           }),
         JWT_SECRET: Joi.string().required(),
-        JWT_ACCESS_EXPIRES: Joi.string().default('5m'),
+        JWT_ACCESS_EXPIRES: Joi.string().default('1m'),
         JWT_REFRESH_EXPIRES: Joi.string().default('7d'),
         MS_CALLBACK_URL: Joi.string().required(),
         MS_CLIENT_ID: Joi.string().required(),

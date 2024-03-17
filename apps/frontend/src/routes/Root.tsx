@@ -7,8 +7,9 @@ import { PlusIcon } from '@/assets/icons/Plus';
 import { ProfileIcon } from '@/assets/icons/Profile';
 import { ReserveIcon } from '@/assets/icons/Reserve';
 import Footer from '@/components/molecules/Footer';
+import { useInitialize } from '@/hooks/useInitialize';
 
-import { useInitalizeStyle } from '../hooks/useInitalizeStyle';
+import { useInitializeStyle } from '../hooks/useInitializeStyle';
 
 function AppFooter() {
   return (
@@ -47,7 +48,7 @@ function AppFooter() {
 }
 
 function Root() {
-  useInitalizeStyle();
+  useInitialize();
 
   return (
     <div className="w-screen h-screen flex flex-col overflow-hidden">
