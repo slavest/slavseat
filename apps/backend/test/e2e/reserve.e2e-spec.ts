@@ -4,15 +4,17 @@ import { Model } from '@slavseat/types';
 import { AppModule } from 'src/app.module';
 import { DatabaseModule } from 'src/libs/database/database.module';
 import { RedisModule } from 'src/libs/redis/redis.module';
+import { AuthService } from 'src/modules/auth/auth.service';
 import { Facility } from 'src/modules/facility/entity/facility.entity';
 import { FacilityService } from 'src/modules/facility/facility.service';
 import { Floor } from 'src/modules/floor/entity/floor.entity';
 import { FloorService } from 'src/modules/floor/floor.service';
 import { AddReserveRequestDto } from 'src/modules/reserve/dto/request/addReserveRequest.dto';
 import { GetReserveByDateRequestDto } from 'src/modules/reserve/dto/request/getReserveByDateRequest.dto';
-import { GetReserveByUserRequestDto } from 'src/modules/reserve/dto/request/getReserveByUserRequest.dto';
 import { Reserve } from 'src/modules/reserve/entity/reserve.entity';
 import { ReserveService } from 'src/modules/reserve/reserve.service';
+import { User } from 'src/modules/user/entity/user.entity';
+import { UserService } from 'src/modules/user/user.service';
 import * as request from 'supertest';
 import { TestRedisModule } from 'test/TestRedisModule';
 import { Connection, EntityManager, QueryRunner } from 'typeorm';
@@ -22,6 +24,12 @@ import { TestDatabaseModule } from '../TestDatabaseModule';
 describe('/reserve API', () => {
   let app: INestApplication;
   let queryRunner: QueryRunner;
+  let user1AccessToken: string;
+  let user2AccessToken: string;
+  let user3AccessToken: string;
+  let user1: User;
+  let user2: User;
+  let user3: User;
   let floor1: Floor;
   let facility1: Facility;
   let facility2: Facility;
@@ -42,6 +50,8 @@ describe('/reserve API', () => {
     app = moduleRef.createNestApplication();
     await app.init();
 
+    const userService = moduleRef.get(UserService);
+    const authService = moduleRef.get(AuthService);
     const floorService = moduleRef.get(FloorService);
     const facilityService = moduleRef.get(FacilityService);
     const reserveService = moduleRef.get(ReserveService);
@@ -51,6 +61,25 @@ describe('/reserve API', () => {
     // @ts-ignore
     manager.queryRunner = connection.createQueryRunner('master');
     queryRunner = manager.queryRunner;
+
+    user1 = await userService.saveUser({
+      name: 'user-1',
+      email: 'user-1@example.com',
+      providerId: 'providerid-1',
+    });
+    user2 = await userService.saveUser({
+      name: 'user-2',
+      email: 'user-2@example.com',
+      providerId: 'providerid-2',
+    });
+    user3 = await userService.saveUser({
+      name: 'user-3',
+      email: 'user-3@example.com',
+      providerId: 'providerid-3',
+    });
+    user1AccessToken = authService.createAccessToken(user1);
+    user2AccessToken = authService.createAccessToken(user2);
+    user3AccessToken = authService.createAccessToken(user3);
 
     floor1 = await floorService.createFloor({ name: 'floor-1' });
     [facility1, facility2, facility3] =
@@ -84,16 +113,14 @@ describe('/reserve API', () => {
         ],
       });
 
-    reserve2 = await reserveService.addReserve({
+    reserve2 = await reserveService.addReserve(user2, {
       facilityId: facility2.id,
-      user: 'user-2',
       start: new Date('2024-02-01T12:00:00'),
       end: null,
       always: true,
     });
-    reserve3 = await reserveService.addReserve({
+    reserve3 = await reserveService.addReserve(user3, {
       facilityId: facility3.id,
-      user: 'user-3',
       start: new Date('2024-02-01T12:00:00'),
       end: new Date('2024-02-01T17:00:00'),
       always: false,
@@ -110,13 +137,9 @@ describe('/reserve API', () => {
 
   describe('GET /reserve', () => {
     it('[유저 기준 예약 조회]', async () => {
-      const data: GetReserveByUserRequestDto = {
-        user: reserve3.user,
-      };
-
-      const res = await request(app.getHttpServer()).get(
-        `/reserve/user/${data.user}`,
-      );
+      const res = await request(app.getHttpServer())
+        .get(`/api/reserve/user`)
+        .set({ Authorization: `bearer ${user3AccessToken}` });
 
       expect(res.status).toBe(200);
       expect(res.body.length).toBe(1);
@@ -132,7 +155,7 @@ describe('/reserve API', () => {
       };
 
       const res = await request(app.getHttpServer())
-        .get(`/reserve`)
+        .get(`/api/reserve`)
         .query(data);
 
       expect(res.status).toBe(200);
@@ -146,19 +169,19 @@ describe('/reserve API', () => {
     it('[예약 테스트]', async () => {
       const data: AddReserveRequestDto = {
         facilityId: facility1.id,
-        user: 'user-1',
         start: new Date('2024-02-01T12:00:00'),
         end: new Date('2024-02-01T17:00:00'),
         always: false,
       };
 
       const res = await request(app.getHttpServer())
-        .post(`/reserve`)
+        .post(`/api/reserve`)
+        .set({ Authorization: `bearer ${user1AccessToken}` })
         .send(data);
 
       expect(res.status).toBe(201);
       expect(res.body?.facility.id).toBe(data.facilityId);
-      expect(res.body?.user).toBe(data.user);
+      expect(res.body?.user?.id).toBe(user1.id);
       expect(new Date(res.body?.start)).toEqual(data.start);
       expect(new Date(res.body?.end)).toEqual(data.end);
       expect(res.body?.always).toBe(data.always);
@@ -167,19 +190,19 @@ describe('/reserve API', () => {
     it('[고정석 예약 테스트]', async () => {
       const data: AddReserveRequestDto = {
         facilityId: facility1.id,
-        user: 'user-1',
         start: new Date('2024-02-01T12:00:00'),
         end: null,
         always: true,
       };
 
       const res = await request(app.getHttpServer())
-        .post(`/reserve`)
+        .post(`/api/reserve`)
+        .set({ Authorization: `bearer ${user1AccessToken}` })
         .send(data);
 
       expect(res.status).toBe(201);
       expect(res.body?.facility.id).toBe(data.facilityId);
-      expect(res.body?.user).toBe(data.user);
+      expect(res.body?.user?.id).toBe(user1.id);
       expect(new Date(res.body?.start)).toEqual(data.start);
       expect(res.body?.end).toBeNull();
       expect(res.body?.always).toBe(data.always);
@@ -188,16 +211,19 @@ describe('/reserve API', () => {
     it('[중복 예약 테스트]', async () => {
       const data: AddReserveRequestDto = {
         facilityId: facility1.id,
-        user: 'user-1',
         start: new Date('2024-02-01T12:00:00'),
         end: new Date('2024-02-01T17:00:00'),
         always: false,
       };
 
-      await request(app.getHttpServer()).post(`/reserve`).send(data);
+      await request(app.getHttpServer())
+        .post(`/api/reserve`)
+        .set({ Authorization: `bearer ${user1AccessToken}` })
+        .send(data);
 
       const res = await request(app.getHttpServer())
-        .post(`/reserve`)
+        .post(`/api/reserve`)
+        .set({ Authorization: `bearer ${user2AccessToken}` })
         .send(data);
 
       expect(res.status).toBe(409);
@@ -207,7 +233,6 @@ describe('/reserve API', () => {
     it('[예약 동시성 테스트]', async () => {
       const data: AddReserveRequestDto = {
         facilityId: facility1.id,
-        user: 'user-1',
         start: new Date('2024-02-01T12:00:00'),
         end: new Date('2024-02-01T17:00:00'),
         always: false,
@@ -215,11 +240,12 @@ describe('/reserve API', () => {
 
       const concurrencyCount = 100;
       const res = await Promise.all(
-        new Array(concurrencyCount)
-          .fill(0)
-          .map(() =>
-            request(app.getHttpServer()).post(`/reserve`).send(data),
-          ),
+        new Array(concurrencyCount).fill(0).map(() =>
+          request(app.getHttpServer())
+            .post(`/api/reserve`)
+            .set({ Authorization: `bearer ${user1AccessToken}` })
+            .send(data),
+        ),
       );
 
       const failedCount = res.filter(

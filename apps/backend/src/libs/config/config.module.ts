@@ -14,8 +14,6 @@ import { Region } from 'oci-common';
           .valid('development', 'production', 'test')
           .required(),
         PORT: Joi.number().default(3001),
-        COOKIE_DOMAIN: Joi.string().required(),
-        AUTH_HOST: Joi.string().required(),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.number().required(),
         DB_USER: Joi.string().required(),
@@ -46,6 +44,13 @@ import { Region } from 'oci-common';
               });
             return value;
           }),
+        JWT_SECRET: Joi.string().required(),
+        JWT_ACCESS_EXPIRES: Joi.string().default('1m'),
+        JWT_REFRESH_EXPIRES: Joi.string().default('7d'),
+        MS_CALLBACK_URL: Joi.string().required(),
+        MS_CLIENT_ID: Joi.string().required(),
+        MS_CLIENT_SECRET: Joi.string().required(),
+        MS_TENANT_ID: Joi.string().required(),
       }),
     }),
   ],

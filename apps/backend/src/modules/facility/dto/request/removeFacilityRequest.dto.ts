@@ -1,7 +1,13 @@
-import { PickType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsArray, IsNumber } from 'class-validator';
 
-import { Facility } from '../../entity/facility.entity';
-
-export class RemoveFacilityRequestDto extends PickType(Facility, [
-  'id',
-] as const) {}
+export class RemoveFacilityRequestDto {
+  @ApiProperty({
+    type: Number,
+    isArray: true,
+    description: '삭제할 시설물 아이디',
+  })
+  @IsArray()
+  @IsNumber({}, { each: true })
+  facilities: number[];
+}

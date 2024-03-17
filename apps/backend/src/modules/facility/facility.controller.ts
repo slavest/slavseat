@@ -6,14 +6,18 @@ import {
   Param,
   Post,
   Put,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 
+import { JwtAccesGuard } from '../auth/guard/jwt-access.guard';
 import { FacilitySummaryDto } from './dto/facilitySummary.dto';
 import { AddFacilityRequestDto } from './dto/request/addFacilityRequest.dto';
 import { RemoveFacilityRequestDto } from './dto/request/removeFacilityRequest.dto';
@@ -36,6 +40,8 @@ export class FacilityController {
   }
 
   @Post()
+  @UseGuards(JwtAccesGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: '시설 등록' })
   @ApiCreatedResponse({ type: Facility, isArray: true })
   async addFacility(@Body() addFacilityDto: AddFacilityRequestDto) {
@@ -43,6 +49,8 @@ export class FacilityController {
   }
 
   @Put()
+  @UseGuards(JwtAccesGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: '시설 정보 수정' })
   @ApiOkResponse({ type: UpdateFacilityResponseDto })
   async updateFacility(
@@ -51,11 +59,13 @@ export class FacilityController {
     return this.facilityService.updateFacility(updateFacilityDto);
   }
 
-  @Delete('/:id')
+  @Delete()
+  @UseGuards(JwtAccesGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: '시설 정보 삭제' })
   @ApiOkResponse({ type: RemoveFacilityResponseDto })
   async removeFacility(
-    @Param() removeFacilityDto: RemoveFacilityRequestDto,
+    @Body() removeFacilityDto: RemoveFacilityRequestDto,
   ) {
     return this.facilityService.removeFacility(removeFacilityDto);
   }
