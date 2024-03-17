@@ -18,8 +18,11 @@ import FacilityGridEditor, {
 } from '@/components/molecules/FacilityGridEditor';
 import FacilityGridViewer from '@/components/molecules/FacilityGridViewer';
 import { hideScrollBar } from '@/global-style.css';
+import { useUserStore } from '@/stores/userStore';
 
 export function Test() {
+  const { user } = useUserStore();
+
   const { mutate: createFloorMutation } = useCreateFloorMutation();
   const { mutate: addFacilityMutation } = useAddFacilityMutation();
   const { mutate: updateFacilityMutation } =
@@ -75,6 +78,18 @@ export function Test() {
       <Button onClick={() => login('microsoft')} className="block">
         로그인
       </Button>
+      <div>
+        <div className="text-zinc-500 text-sm">
+          로그인된 사용자 정보
+        </div>
+        <div className="inline-block p-4 border-dashed border-2 rounded-md border-zinc-500 space-x-2">
+          <pre>
+            <code className="text-sm">
+              {JSON.stringify(user, null, 2)}
+            </code>
+          </pre>
+        </div>
+      </div>
       <div>
         <div className="text-zinc-500 text-sm">Floor 추가 폼</div>
         <div className="inline-block p-4 border-dashed border-2 rounded-md border-zinc-500 space-x-2">
