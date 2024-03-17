@@ -9,7 +9,7 @@ import { useRemoveFacilityMutation } from '@/api/query/facility/remove-facility'
 import { useUpdateFacilityMutation } from '@/api/query/facility/update-facility';
 import { useCreateFloorMutation } from '@/api/query/floor/create-floor';
 import { useGetAllFloorSummaryQuery } from '@/api/query/floor/get-all-floor-summary';
-import { useGetFLoorDetailQuery } from '@/api/query/floor/get-floor-detail';
+import { useGetFloorDetailQuery } from '@/api/query/floor/get-floor-detail';
 import { Box } from '@/components/atoms/Box';
 import { Button } from '@/components/atoms/Button';
 import ScrollArea from '@/components/atoms/ScrollArea';
@@ -31,7 +31,7 @@ export function Test() {
     useRemoveFacilityMutation();
 
   const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
-  const { data: floorDetail } = useGetFLoorDetailQuery(1);
+  const { data: floorDetail } = useGetFloorDetailQuery(1);
 
   const [floorName, setFloorName] = useState<string>('');
 

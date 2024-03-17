@@ -9,5 +9,6 @@ module.exports = {
       { allowConstantExport: true },
     ],
     'import/no-absolute-path': ['off'],
+    '@next/next/no-img-element': 'off',
   },
 };

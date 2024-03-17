@@ -11,7 +11,7 @@ export const getAuthedUser = () => {
 export const login = (provider: string = 'microsoft') => {
   const baseURL = import.meta.env.DEV ? 'http://localhost:3000' : '';
 
-  window.location.href = `${baseURL}/api/auth/${provider}?redirectBackTo=${window.location.href}`;
+  window.location.href = `${baseURL}/api/auth/${provider}?redirectBackTo=${window.location.origin}`;
 };
 
 export const refreshAccessToken = () => {

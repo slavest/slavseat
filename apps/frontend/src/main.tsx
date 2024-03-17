@@ -9,8 +9,14 @@ import {
   createBrowserRouter,
 } from 'react-router-dom';
 
+import { Locations } from './constants/location.constant.ts';
 import './global-style.css.ts';
 import './reset.css';
+import Favorite from './routes/Favorite.tsx';
+import Home from './routes/Home.tsx';
+import Login from './routes/Login.tsx';
+import Profile from './routes/Profile.tsx';
+import Reserve from './routes/Reserve.tsx';
 import Root from './routes/Root.tsx';
 import { Test } from './routes/Test.tsx';
 
@@ -25,8 +31,13 @@ const router = createBrowserRouter([
         path: '/test',
         element: <Test />,
       },
+      { path: Locations.HOME, element: <Home /> },
+      { path: Locations.RESERVE, element: <Reserve /> },
+      { path: Locations.FAVORITE, element: <Favorite /> },
+      { path: Locations.PROFILE, element: <Profile /> },
     ],
   },
+  { path: '/login', element: <Login /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
