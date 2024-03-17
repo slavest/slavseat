@@ -140,7 +140,6 @@ export function Test() {
         <ScrollArea
           className={clsx(
             'w-96 h-[50rem] border-dashed border-2 rounded-md border-zinc-500',
-            hideScrollBar,
           )}
         >
           {floorDetail && (
