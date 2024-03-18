@@ -1,56 +1,144 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import { useGetAllFloorSummaryQuery } from '@/shared/api/query/floor/get-all-floor-summary';
 import { useGetFloorDetailQuery } from '@/shared/api/query/floor/get-floor-detail';
+import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
 import ScrollArea from '@/shared/components/ScrollArea';
 import { useControlled } from '@/shared/hooks/useControlled';
 import { hideScrollBar } from '@/shared/styles/global-style.css';
 import { cn } from '@/shared/utils/class.util';
 
-function DatePicker() {
+const DayString = ['일', '월', '화', '수', '목', '금', '토'];
+const getWeek = (date: Date) => {
+  const onejan = new Date(date.getFullYear(), 0, 1);
+  return Math.ceil(
+    ((date.getTime() - onejan.getTime()) / 86400000 +
+      onejan.getDay() +
+      1) /
+      7,
+  );
+};
+const getStartOfWeek = (week: number) => {
+  const onejan = new Date(new Date().getFullYear(), 0, 1);
+  return new Date(onejan.getTime() + 86400000 * 7 * (week - 1));
+};
+
+interface DateItemProps extends React.HTMLAttributes<HTMLDivElement> {
+  date: Date;
+  selected?: boolean;
+}
+function DateItem({
+  date,
+  selected = false,
+  className,
+  ...rest
+}: DateItemProps) {
   return (
-    <div className="mx-4 py-2 bg-neutral-100 rounded-2xl flex justify-center gap-1">
-      <div className="w-10 h-10 text-center flex flex-col items-center justify-center rounded-[10px]">
-        <div className="text-[0.5rem] font-normal text-neutral-400">
-          일
-        </div>
-        <div className="text-sm font-medium">1</div>
+    <div
+      className={cn(
+        'w-10 h-10 text-center flex flex-col items-center justify-center rounded-[10px]',
+        { 'bg-primary text-white': selected },
+        className,
+      )}
+      {...rest}
+    >
+      <div
+        className={cn('text-[0.5rem] font-normal text-neutral-400', {
+          'text-white': selected,
+        })}
+      >
+        {DayString[date.getDay()]}
       </div>
-      <div className="w-10 h-10 text-center flex flex-col items-center justify-center rounded-[10px]">
-        <div className="text-[0.5rem] font-normal text-neutral-400">
-          월
-        </div>
-        <div className="text-sm font-medium">2</div>
-      </div>
-      <div className="w-10 h-10 text-center flex flex-col items-center justify-center rounded-[10px]">
-        <div className="text-[0.5rem] font-normal text-neutral-400">
-          화
-        </div>
-        <div className="text-sm font-medium">3</div>
-      </div>
-      <div className="w-10 h-10 text-center flex flex-col items-center justify-center rounded-[10px]">
-        <div className="text-[0.5rem] font-normal text-neutral-400">
-          수
-        </div>
-        <div className="text-sm font-medium">4</div>
-      </div>
-      <div className="w-10 h-10 text-center flex flex-col items-center justify-center rounded-[10px]">
-        <div className="text-[0.5rem] font-normal text-neutral-400">
-          목
-        </div>
-        <div className="text-sm font-medium">5</div>
-      </div>
-      <div className="w-10 h-10 text-center flex flex-col items-center justify-center rounded-[10px]">
-        <div className="text-[0.5rem] font-normal text-neutral-400">
-          금
-        </div>
-        <div className="text-sm font-medium">6</div>
-      </div>
-      <div className="w-10 h-10 text-center flex flex-col items-center justify-center rounded-[10px] bg-primary text-white">
-        <div className="text-[0.5rem] font-normal">토</div>
-        <div className="text-sm font-medium">7</div>
-      </div>
+      <div className="text-sm font-medium">{date.getDate()}</div>
+    </div>
+  );
+}
+
+interface DatePickerProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
+  selected?: Date;
+  onSelect?: (date: Date) => void;
+}
+function DatePicker({
+  className,
+  selected: selectedProps,
+  onSelect,
+  ...rest
+}: DatePickerProps) {
+  const [selected, setSelected] = useControlled(
+    new Date(),
+    selectedProps,
+  );
+  const [week, setWeek] = useState(getWeek(new Date()));
+
+  const handleClickDate = useCallback(
+    (date: Date) => {
+      setSelected(date);
+      onSelect?.(date);
+    },
+    [onSelect, setSelected],
+  );
+
+  const dates = useMemo(() => {
+    const startDate = new Date(
+      getStartOfWeek(week).getTime() - 86400000,
+    );
+
+    return [
+      startDate,
+      ...new Array(6).fill(0).reduce((acc, _, i) => {
+        return [
+          ...acc,
+          new Date(getStartOfWeek(week).getTime() + 86400000 * i),
+        ];
+      }, []),
+    ] as Date[];
+  }, [week]);
+
+  // const [prevDate, nextDate] = useMemo(() => {
+  //   return [
+  //     dates.map((date) => new Date(date.getTime() - 86400000 * 7)),
+  //     dates.map((date) => new Date(date.getTime() + 86400000 * 7)),
+  //   ];
+  // }, [dates]);
+
+  const isSameDate = (d1: Date, d2: Date) =>
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate();
+
+  return (
+    <div
+      className={cn(
+        'py-2 bg-neutral-100 rounded-2xl flex justify-center gap-1',
+        className,
+      )}
+      {...rest}
+    >
+      {/* <div>
+        {prevDate.map((date) => (
+          <DateItem key={date.getTime()} date={date} />
+        ))}
+      </div> */}
+      {dates.map((date) => (
+        <DateItem
+          key={date.getTime()}
+          date={date}
+          selected={isSameDate(date, selected)}
+          onClick={() => handleClickDate(date)}
+        />
+      ))}
+      {/* <div>
+        {nextDate.map((date) => (
+          <DateItem key={date.getTime()} date={date} />
+        ))}
+      </div> */}
     </div>
   );
 }
@@ -103,8 +191,8 @@ function Tab({ items, selected: selectedProp, onChange }: TabProps) {
     </div>
   );
 }
-
 function Home() {
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedFloor, setSelectedFloor] = useState<number | null>(
     null,
   );
@@ -116,6 +204,7 @@ function Home() {
       enabled: selectedFloor !== null,
     },
   );
+  const { data: reservesByDate } = useGetReserveByDate(selectedDate);
 
   useEffect(() => {
     if (allFloorSummary) {
@@ -127,7 +216,11 @@ function Home() {
     <div className="h-full flex flex-col">
       <div>
         <div className="px-6 py-6 text-xl font-bold">좌석 배치도</div>
-        <DatePicker />
+        <DatePicker
+          className="mx-4"
+          selected={selectedDate}
+          onSelect={setSelectedDate}
+        />
         {allFloorSummary && (
           <Tab
             selected={selectedFloor?.toString() ?? null}
@@ -143,7 +236,7 @@ function Home() {
         <ScrollArea>
           <FacilityGridViewer
             facilities={floorDetail.facilities}
-            reserves={[]}
+            reserves={reservesByDate?.map((v) => v.id) ?? []}
           />
         </ScrollArea>
       )}
