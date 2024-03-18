@@ -9,16 +9,16 @@ import {
   createBrowserRouter,
 } from 'react-router-dom';
 
-import { Locations } from './constants/location.constant.ts';
-import './global-style.css.ts';
-import './reset.css';
-import Favorite from './routes/Favorite.tsx';
-import Home from './routes/Home.tsx';
-import Login from './routes/Login.tsx';
-import Profile from './routes/Profile.tsx';
-import Reserve from './routes/Reserve.tsx';
-import Root from './routes/Root.tsx';
-import { Test } from './routes/Test.tsx';
+import Favorite from './features/favorite/routes/Favorite.tsx';
+import Home from './features/home/routes/Home.tsx';
+import Login from './features/login/routes/Login.tsx';
+import Profile from './features/profile/routes/Profile.tsx';
+import Reserve from './features/reserve/routes/Reserve.tsx';
+import { Test } from './features/test/routes/Test.tsx';
+import { Locations } from './shared/constants/location.constant.ts';
+import Root from './shared/routes/Root.tsx';
+import './shared/styles/global-style.css.ts';
+import './shared/styles/reset.css';
 
 const queryClient = new QueryClient();
 
