@@ -1,6 +1,6 @@
 import React from 'react';
 
-import clsx from 'clsx';
+import { cn } from '@/shared/utils/class.util';
 
 import { usePopoverContext } from '../context';
 import { popoverTriggerStyle } from '../popover.css';
@@ -15,7 +15,7 @@ const Trigger = ({ className, ...rest }: PopoverTriggerProps) => {
     <div
       ref={(ref) => setAnchorEl(ref)}
       onClick={handleOpen}
-      className={clsx(popoverTriggerStyle, className)}
+      className={cn(popoverTriggerStyle, className)}
       {...rest}
     />
   );

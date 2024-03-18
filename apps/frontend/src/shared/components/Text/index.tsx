@@ -1,8 +1,7 @@
 import React from 'react';
 
-import clsx from 'clsx';
-
 import { useSprinkleProps } from '@/shared/hooks/useSprinkleProps';
+import { cn } from '@/shared/utils/class.util';
 
 import { TextSprinkles, textSprinkles, textStyles } from './text.css';
 
@@ -17,7 +16,7 @@ export const Text: React.FC<TextProps> = ({ className, ...rest }) => {
 
   return (
     <span
-      className={clsx(
+      className={cn(
         textSprinkles(sprinkleProps),
         textStyles,
         className,

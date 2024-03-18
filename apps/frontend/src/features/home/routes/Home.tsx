@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import clsx from 'clsx';
-
 import { useGetAllFloorSummaryQuery } from '@/shared/api/query/floor/get-all-floor-summary';
 import { useGetFloorDetailQuery } from '@/shared/api/query/floor/get-floor-detail';
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
 import ScrollArea from '@/shared/components/ScrollArea';
 import { useControlled } from '@/shared/hooks/useControlled';
 import { hideScrollBar } from '@/shared/styles/global-style.css';
+import { cn } from '@/shared/utils/class.util';
 
 function DatePicker() {
   return (
@@ -83,7 +82,7 @@ function Tab({ items, selected: selectedProp, onChange }: TabProps) {
 
   return (
     <div
-      className={clsx(
+      className={cn(
         'flex overflow-x-scroll gap-4 px-8 border-b border-neutral-200',
         hideScrollBar,
       )}
@@ -91,7 +90,7 @@ function Tab({ items, selected: selectedProp, onChange }: TabProps) {
       {items.map((item) => (
         <div
           key={item.value}
-          className={clsx('px-2 py-3 text-nowrap', {
+          className={cn('px-2 py-3 text-nowrap', {
             'text-neutral-400': item.value !== selected,
             'text-black border-b-2 border-black':
               item.value === selected,

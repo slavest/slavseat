@@ -1,6 +1,6 @@
 import React from 'react';
 
-import clsx from 'clsx';
+import { cn } from '@/shared/utils/class.util';
 
 import PopoverComponent from '../../../shared/components/Popover';
 import { PopoverContentProps } from '../../../shared/components/Popover/components/Content';
@@ -11,7 +11,7 @@ export interface SelectPopoverProps extends PopoverContentProps {}
 const Popover = ({ className, ...rest }: SelectPopoverProps) => {
   return (
     <PopoverComponent.Content
-      className={clsx(selectPopoverStyles, className)}
+      className={cn(selectPopoverStyles, className)}
       {...rest}
     />
   );

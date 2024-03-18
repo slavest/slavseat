@@ -1,7 +1,7 @@
 import * as RadixScrollArea from '@radix-ui/react-scroll-area';
 import React from 'react';
 
-import clsx from 'clsx';
+import { cn } from '@/shared/utils/class.util';
 
 interface ScrollAreaProps {
   children?: React.ReactNode;
@@ -11,7 +11,7 @@ interface ScrollAreaProps {
 function ScrollArea({ children, className }: ScrollAreaProps) {
   return (
     <RadixScrollArea.Root
-      className={clsx('w-full h-full overflow-hidden', className)}
+      className={cn('w-full h-full overflow-hidden', className)}
     >
       <RadixScrollArea.Viewport className="w-full h-full">
         {children}

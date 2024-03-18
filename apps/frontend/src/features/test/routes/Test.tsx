@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { Model } from '@slavseat/types';
-import { clsx } from 'clsx';
 
 import { Button } from '@/legacy/Button_Legacy';
 import { login } from '@/shared/api/auth';
@@ -18,6 +17,7 @@ import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
 import ScrollArea from '@/shared/components/ScrollArea';
 import { useUserStore } from '@/shared/stores/userStore';
 import { hideScrollBar } from '@/shared/styles/global-style.css';
+import { cn } from '@/shared/utils/class.util';
 
 export function Test() {
   const { user } = useUserStore();
@@ -69,7 +69,7 @@ export function Test() {
 
   return (
     <div
-      className={clsx(
+      className={cn(
         'h-full p-2 space-y-4 overflow-scroll',
         hideScrollBar,
       )}
@@ -152,7 +152,7 @@ export function Test() {
           Facility Grid Viewer
         </div>
         <ScrollArea
-          className={clsx(
+          className={cn(
             'w-96 h-[50rem] border-dashed border-2 rounded-md border-zinc-500',
           )}
         >
@@ -212,7 +212,7 @@ export function Test() {
           Facility Grid Editor
         </div>
         <ScrollArea
-          className={clsx(
+          className={cn(
             'border-dashed border-2 rounded-md border-zinc-500',
           )}
         >

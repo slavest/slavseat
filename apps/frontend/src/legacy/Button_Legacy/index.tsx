@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { RecipeVariants } from '@vanilla-extract/recipes';
-import clsx from 'clsx';
+
+import { cn } from '@/shared/utils/class.util';
 
 import { buttonVariants } from './button.css';
 
@@ -18,7 +19,7 @@ export const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={clsx(
+      className={cn(
         buttonVariants({ variant, disabled, size }),
         className,
       )}
