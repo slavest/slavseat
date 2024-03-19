@@ -9,6 +9,7 @@ import {
   createBrowserRouter,
 } from 'react-router-dom';
 
+import { ReservePage } from './features/reserve/routes/ReservePage.tsx';
 import { Test } from './features/test/routes/Test.tsx';
 import Root from './shared/routes/Root.tsx';
 import './shared/styles/global-style.css.ts';
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: '/test',
         element: <Test />,
+      },
+      {
+        path: '/reserve',
+        element: <ReservePage />,
       },
     ],
   },

@@ -53,7 +53,7 @@ function Root() {
   return (
     <div className="w-screen h-screen flex flex-col overflow-hidden">
       <header className="hidden">Header</header>
-      <main className="h-[calc(100%_-_var(--var-footer-height))] shadow-inner bg-neutral-100">
+      <main className="w-full h-[calc(100%_-_var(--var-footer-height))] flex flex-col shadow-inner bg-neutral-100">
         <Outlet />
       </main>
 

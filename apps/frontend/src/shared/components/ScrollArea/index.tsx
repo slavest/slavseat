@@ -7,7 +7,7 @@ import React, {
 
 import clsx from 'clsx';
 
-import { hideScrollBar } from '@/global-style.css';
+import { hideScrollBar } from '@/shared/styles/global-style.css';
 
 interface ScrollAreaProps
   extends React.HTMLAttributes<HTMLDivElement> {}
