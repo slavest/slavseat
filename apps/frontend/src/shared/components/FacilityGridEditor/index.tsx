@@ -5,10 +5,9 @@ import 'react-resizable/css/styles.css';
 
 import { Model } from '@slavseat/types';
 import { FacilitySummary } from '@slavseat/types/src/model';
-import clsx from 'clsx';
 
-import { hideScrollBar } from '@/global-style.css';
 import { useControlled } from '@/shared/hooks/useControlled';
+import { cn } from '@/shared/utils/class.util';
 
 import { Text } from '../Text';
 import './index.css';
@@ -132,7 +131,7 @@ function FacilityGridEditor({
       {facilities.map((facility) => (
         <div key={facility.id} className="p-1">
           <div
-            className={clsx(
+            className={cn(
               'w-full h-full inline-flex flex-col gap-2 justify-center items-center bg-neutral-50 border rounded-md select-none p-2 box-border',
               {
                 'cursor-pointer': mode === 'select',

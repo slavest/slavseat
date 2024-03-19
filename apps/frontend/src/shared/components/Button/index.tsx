@@ -1,7 +1,8 @@
 import React, { ComponentProps } from 'react';
 
-import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
+
+import { cn } from '@/shared/utils/class.util';
 
 type ButtonVariant = 'primary' | 'secondary';
 
@@ -23,7 +24,7 @@ export const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={clsx(
+      className={cn(
         twMerge(
           'rounded-3xl py-3 px-5 cursor-pointer font-medium',
           className,

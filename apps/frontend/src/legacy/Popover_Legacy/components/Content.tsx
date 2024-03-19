@@ -5,9 +5,8 @@ import React, {
   useRef,
 } from 'react';
 
-import clsx from 'clsx';
-
 import ReactPortal from '@/shared/components/Portal';
+import { cn } from '@/shared/utils/class.util';
 
 import { usePopoverContext } from '../context';
 import { popoverVariants } from '../popover.css';
@@ -37,7 +36,7 @@ const Content = ({ className, ...rest }: PopoverContentProps) => {
       <div
         ref={ref}
         tabIndex={-1}
-        className={clsx(popoverVariants({ open }), className)}
+        className={cn(popoverVariants({ open }), className)}
         onBlur={() => {
           handleClose();
         }}

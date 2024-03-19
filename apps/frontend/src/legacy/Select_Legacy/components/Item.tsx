@@ -3,7 +3,8 @@ import React from 'react';
 import { HiCheck } from 'react-icons/hi';
 
 import { RecipeVariants } from '@vanilla-extract/recipes';
-import clsx from 'clsx';
+
+import { cn } from '@/shared/utils/class.util';
 
 import { SelectItem, useSelectContext } from '../context';
 import {
@@ -43,7 +44,7 @@ const Item = ({
 
   return (
     <div
-      className={clsx(selectItemVariants({ disabled }), className)}
+      className={cn(selectItemVariants({ disabled }), className)}
       onClick={handleClickItem}
       {...rest}
     >

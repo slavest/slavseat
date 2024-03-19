@@ -2,11 +2,10 @@ import React from 'react';
 import GridLayout from 'react-grid-layout';
 
 import { Model } from '@slavseat/types';
-import clsx from 'clsx';
 
-import { hideScrollBar } from '@/global-style.css';
 import { Badge, Status } from '@/shared/components/Badge';
 import { Text } from '@/shared/components/Text';
+import { cn } from '@/shared/utils/class.util';
 
 interface FacilityGridViewerProps {
   facilities: Model.FacilitySummary[];
@@ -28,7 +27,9 @@ function FacilityGridViewer({
       cols={100}
       rowHeight={50}
       width={5000}
+      // style={{ width: '5000px' }}
       margin={[0, 0]}
+      containerPadding={[25, 25]}
       isResizable={false}
       isDraggable={false}
     >

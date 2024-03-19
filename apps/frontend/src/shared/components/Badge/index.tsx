@@ -13,7 +13,7 @@ interface BadgeProps {
 
 const badgeStyle: { [key in Status]: ClassNameValue } = {
   [Status.USING]: 'bg-red-600',
-  [Status.ABLE_RESERVE]: 'bg-green-500',
+  [Status.ABLE_RESERVE]: 'bg-primary',
 };
 
 const badgeText = {
