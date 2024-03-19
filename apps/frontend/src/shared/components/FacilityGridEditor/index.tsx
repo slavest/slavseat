@@ -6,7 +6,6 @@ import 'react-resizable/css/styles.css';
 import { Model } from '@slavseat/types';
 import { FacilitySummary } from '@slavseat/types/src/model';
 
-import { hideScrollBar } from '@/global-style.css';
 import { useControlled } from '@/shared/hooks/useControlled';
 import { cn } from '@/shared/utils/class.util';
 
