@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getAuthedUser } from '@/shared/api/auth';
 import { useUserStore } from '@/shared/stores/userStore';
@@ -9,6 +10,9 @@ export const useInitialize = () => {
   const [initialized, setInitialized] = useState(false);
   const { initialized: styleInitialized } = useInitializeStyle();
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const { setUser } = useUserStore();
 
   useEffect(() => {
@@ -16,14 +20,15 @@ export const useInitialize = () => {
       .then((user) => {
         setUser(user);
       })
-      .catch((err) => {
+      .catch(() => {
         console.error('로그인된 유저 정보를 불러올 수 없습니다.');
-        console.error(err);
+        if (location.pathname !== '/login') navigate('/login');
       })
       .finally(() => {
         setInitialized(true);
       });
-  }, [setUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return { initialized: initialized && styleInitialized };
 };
