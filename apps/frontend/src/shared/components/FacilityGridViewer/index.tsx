@@ -10,11 +10,13 @@ import { cn } from '@/shared/utils/class.util';
 interface FacilityGridViewerProps {
   facilities: Model.FacilitySummary[];
   reserves: number[];
+  onClickFacility?: (facility: Model.FacilitySummary) => void;
 }
 
 function FacilityGridViewer({
   facilities,
   reserves,
+  onClickFacility,
 }: FacilityGridViewerProps) {
   return (
     <GridLayout
@@ -34,7 +36,11 @@ function FacilityGridViewer({
       isDraggable={false}
     >
       {facilities.map((facility) => (
-        <div key={facility.id} className="p-1">
+        <div
+          key={facility.id}
+          className="p-1"
+          onClick={() => onClickFacility?.(facility)}
+        >
           <div className="w-full h-full flex justify-center items-center p-2 bg-neutral-50 border border-neutral-200 rounded-md select-none box-border">
             <div className="flex flex-col gap-2 justify-center items-center">
               <Text fontSize="14" fontWeight="medium">

@@ -5,14 +5,20 @@ import React, {
   useState,
 } from 'react';
 
+import { Model } from '@slavseat/types';
+import { Drawer } from 'vaul';
+
 import { useGetAllFloorSummaryQuery } from '@/shared/api/query/floor/get-all-floor-summary';
 import { useGetFloorDetailQuery } from '@/shared/api/query/floor/get-floor-detail';
 import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
+import { Badge, Status } from '@/shared/components/Badge';
+import { Button } from '@/shared/components/Button';
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
 import ScrollArea from '@/shared/components/ScrollArea';
 import { useControlled } from '@/shared/hooks/useControlled';
 import { hideScrollBar } from '@/shared/styles/global-style.css';
 import { cn } from '@/shared/utils/class.util';
+import { getHHMM } from '@/shared/utils/date.util';
 
 const DayString = ['일', '월', '화', '수', '목', '금', '토'];
 const getWeek = (date: Date) => {
@@ -191,7 +197,99 @@ function Tab({ items, selected: selectedProp, onChange }: TabProps) {
     </div>
   );
 }
+
+interface ReserveDrawerProps {
+  open: boolean;
+  onClose?: () => void;
+  reserves?: Model.ReserveInfo[];
+  facility?: Model.FacilitySummary;
+}
+function ReserveDrawer({
+  open,
+  reserves,
+  facility,
+  onClose,
+}: ReserveDrawerProps) {
+  const [step, setStep] = useState<'info' | 'reserve'>('info');
+
+  return (
+    <Drawer.Root open={open} onClose={onClose}>
+      <Drawer.Portal>
+        <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-2xl bg-white shadow-blur">
+          <div className="p-8">
+            <Badge
+              status={
+                reserves?.length ? Status.USING : Status.ABLE_RESERVE
+              }
+            />
+            <div className="text-2xl font-medium">
+              {facility?.name} {step === 'info' && '예약 현황'}
+            </div>
+            <div className="text-sm font-medium text-neutral-400">
+              {reserves?.length ? '' : '사용중이지 않은 좌석입니다.'}
+            </div>
+            {step === 'info' && (
+              <>
+                <div>
+                  {reserves?.map((reserve) => (
+                    <div key={reserve.id}>
+                      <span>{reserve.user.name}</span>
+                      <span>
+                        {reserve.end ? (
+                          <>
+                            {getHHMM(reserve.start)}~
+                            {getHHMM(reserve.end)}
+                          </>
+                        ) : (
+                          '고정석'
+                        )}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  className="w-full mt-8 py-3.5 rounded-2xl bg-neutral-200 text-black font-medium text-xs active:bg-neutral-300 transition-colors"
+                  onClick={() => setStep('reserve')}
+                >
+                  예약 화면으로
+                </button>
+              </>
+            )}
+            {step === 'reserve' && (
+              <form>
+                <div className="flex my-8 gap-2 items-center justify-center">
+                  <input
+                    type="time"
+                    className="px-2 border-2 rounded-md border-neutral-200"
+                  />
+                  <span className="text-sm">부터</span>
+                  <input
+                    type="time"
+                    className="px-2 border-2 rounded-md border-neutral-200"
+                  />
+                </div>
+                <div className="flex gap-3">
+                  <button className="px-4 py-3 rounded-2xl bg-neutral-200 text-black font-medium text-sm active:bg-neutral-300 transition-colors">
+                    고정석 예약
+                  </button>
+                  <button className="flex-1 px-4 py-3 rounded-2xl bg-primary text-white font-medium text-sm transition-colors">
+                    좌석 예약
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </Drawer.Content>
+        <Drawer.Overlay />
+      </Drawer.Portal>
+    </Drawer.Root>
+  );
+}
+
 function Home() {
+  const [selectedFacility, setSelectedFacility] =
+    useState<Model.FacilitySummary>();
+
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedFloor, setSelectedFloor] = useState<number | null>(
     null,
@@ -237,9 +335,18 @@ function Home() {
           <FacilityGridViewer
             facilities={floorDetail.facilities}
             reserves={reservesByDate?.map((v) => v.id) ?? []}
+            onClickFacility={setSelectedFacility}
           />
         </ScrollArea>
       )}
+      <ReserveDrawer
+        open={!!selectedFacility && !!reservesByDate}
+        onClose={() => setSelectedFacility(undefined)}
+        facility={selectedFacility}
+        reserves={reservesByDate?.filter(
+          (reserve) => reserve.id === selectedFacility?.id,
+        )}
+      />
     </div>
   );
 }

@@ -24,10 +24,7 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     if (!isAxiosError(error)) return error;
 
-    if (
-      error.response?.status === 401 &&
-      error.config?.url !== '/api/auth/me'
-    ) {
+    if (error.response?.status === 401) {
       const accessToken = getParsedCookies()[ACCESS_TOKEN_KEY];
       const { config } = error;
       if (!accessToken || !config) return error;

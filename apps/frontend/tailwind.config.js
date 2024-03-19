@@ -10,6 +10,9 @@ export default {
       fontFamily: {
         sans: ['Noto Sans KR', 'sans-serif'],
       },
+      boxShadow: {
+        blur: '0 0px 5px rgb(0 0 0 / 0.25)',
+      },
     },
   },
   plugins: [],
