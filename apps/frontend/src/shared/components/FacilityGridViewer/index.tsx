@@ -18,6 +18,7 @@ function FacilityGridViewer({
   reserves,
   onClickFacility,
 }: FacilityGridViewerProps) {
+  console.log(reserves.includes(1));
   return (
     <GridLayout
       compactType={null}
@@ -43,7 +44,7 @@ function FacilityGridViewer({
         >
           <div className="w-full h-full flex justify-center items-center p-2 bg-neutral-50 border border-neutral-200 rounded-md select-none box-border">
             <div className="flex flex-col gap-2 justify-center items-center">
-              <Text fontSize="14" fontWeight="medium">
+              <Text className="text-sm font-medium">
                 {facility.name}
               </Text>
               {facility.type === Model.FacilityType.SEAT && (

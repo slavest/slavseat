@@ -15,11 +15,13 @@ import FacilityGridEditor, {
 } from '@/shared/components/FacilityGridEditor';
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
 import ScrollArea from '@/shared/components/ScrollArea';
+import { useInitialize } from '@/shared/hooks/useInitialize';
 import { useUserStore } from '@/shared/stores/userStore';
 import { hideScrollBar } from '@/shared/styles/global-style.css';
 import { cn } from '@/shared/utils/class.util';
 
 export function Test() {
+  useInitialize();
   const { user } = useUserStore();
 
   const { mutate: createFloorMutation } = useCreateFloorMutation();
@@ -142,29 +144,6 @@ export function Test() {
           </Button>
         </div>
       </div>
-      {/* <pre>
-        <code>{JSON.stringify(floorDetail, null, 2)}</code>
-      </pre> */}
-      {/* <Badge status={Status.ABLE_RESERVE} /> */}
-
-      <div>
-        <div className="text-zinc-500 text-sm">
-          Facility Grid Viewer
-        </div>
-        <ScrollArea
-          className={cn(
-            'w-96 h-[50rem] border-dashed border-2 rounded-md border-zinc-500',
-          )}
-        >
-          {floorDetail && (
-            <FacilityGridViewer
-              facilities={floorDetail?.facilities}
-              reserves={[]}
-            />
-          )}
-        </ScrollArea>
-      </div>
-
       <div>
         <div className="text-zinc-500 text-sm">
           Facility Grid Editor Toolbar
@@ -206,6 +185,10 @@ export function Test() {
           </div>
         </div>
       </div>
+      {/* <pre>
+        <code>{JSON.stringify(floorDetail, null, 2)}</code>
+      </pre> */}
+      {/* <Badge status={Status.ABLE_RESERVE} /> */}
 
       <div>
         <div className="text-zinc-500 text-sm">
@@ -224,6 +207,23 @@ export function Test() {
               facilities={editingFacilities}
               onChange={setEditingFacilities}
               onSelectChange={setSelectedFacility}
+            />
+          )}
+        </ScrollArea>
+      </div>
+      <div>
+        <div className="text-zinc-500 text-sm">
+          Facility Grid Viewer
+        </div>
+        <ScrollArea
+          className={cn(
+            'w-96 h-[50rem] border-dashed border-2 rounded-md border-zinc-500',
+          )}
+        >
+          {floorDetail && (
+            <FacilityGridViewer
+              facilities={floorDetail?.facilities}
+              reserves={[]}
             />
           )}
         </ScrollArea>

@@ -1,4 +1,5 @@
 import { Model } from '@slavseat/types';
+import { format } from 'date-fns';
 
 import { axiosInstance } from './axiosInstance';
 
@@ -6,7 +7,7 @@ export const getReserveListByDate = async (date: Date) => {
   return axiosInstance
     .get<Model.ReserveInfo[]>('/api/reserve', {
       params: {
-        date,
+        date: format(date, 'yyyy-MM-dd'),
       },
     })
     .then((res) => res.data);

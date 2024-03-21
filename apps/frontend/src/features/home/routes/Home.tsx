@@ -6,10 +6,12 @@ import React, {
 } from 'react';
 
 import { Model } from '@slavseat/types';
+import { parse } from 'date-fns';
 import { Drawer } from 'vaul';
 
 import { useGetAllFloorSummaryQuery } from '@/shared/api/query/floor/get-all-floor-summary';
 import { useGetFloorDetailQuery } from '@/shared/api/query/floor/get-floor-detail';
+import { useAddReserveMutation } from '@/shared/api/query/reserve/add-reserve';
 import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
 import { Badge, Status } from '@/shared/components/Badge';
 import { Button } from '@/shared/components/Button';
@@ -35,6 +37,10 @@ const getStartOfWeek = (week: number) => {
   const onejan = new Date(new Date().getFullYear(), 0, 1);
   return new Date(onejan.getTime() + 86400000 * 7 * (week - 1));
 };
+const isCurrentReserve = (reserve: Model.ReserveInfo) =>
+  new Date(reserve.start).getTime() <= Date.now() &&
+  (reserve.end === undefined ||
+    (reserve.end && new Date(reserve.end).getTime() >= Date.now()));
 
 interface DateItemProps extends React.HTMLAttributes<HTMLDivElement> {
   date: Date;
@@ -185,7 +191,7 @@ function Tab({ items, selected: selectedProp, onChange }: TabProps) {
       {items.map((item) => (
         <div
           key={item.value}
-          className={cn('px-2 py-3 text-nowrap', {
+          className={cn('px-2 py-3 text-nowrap font-medium', {
             'text-neutral-400': item.value !== selected,
             'text-black border-b-2 border-black':
               item.value === selected,
@@ -199,19 +205,56 @@ function Tab({ items, selected: selectedProp, onChange }: TabProps) {
   );
 }
 
+interface ReserveData {
+  start: Date;
+  end?: Date;
+  always: boolean;
+  facilityId: number;
+}
 interface ReserveDrawerProps {
   open: boolean;
-  onClose?: () => void;
   reserves?: Model.ReserveInfo[];
   facility?: Model.FacilitySummary;
+  onClose?: () => void;
+  onSubmit?: (data: ReserveData) => void;
 }
 function ReserveDrawer({
   open,
   reserves,
   facility,
   onClose,
+  onSubmit,
 }: ReserveDrawerProps) {
   const [step, setStep] = useState<'info' | 'reserve'>('info');
+  const [reserveType, setReserveType] = useState<'always' | 'period'>(
+    'period',
+  );
+
+  const [start, setStart] = useState<Date>();
+  const [end, setEnd] = useState<Date>();
+
+  const handleSubmitForm = useCallback<
+    React.FormEventHandler<HTMLFormElement>
+  >(
+    (e) => {
+      e.preventDefault();
+      if (!facility || !start) return;
+
+      onSubmit?.({
+        start,
+        end,
+        always: reserveType === 'always',
+        facilityId: facility.id,
+      });
+    },
+    [end, facility, onSubmit, reserveType, start],
+  );
+
+  const currentReserve = useMemo(() => {
+    const current = reserves?.filter(isCurrentReserve).at(0);
+
+    return current;
+  }, [reserves]);
 
   return (
     <Drawer.Root open={open} onClose={onClose}>
@@ -222,37 +265,51 @@ function ReserveDrawer({
               <div>
                 <Badge
                   status={
-                    reserves?.length
+                    currentReserve
                       ? Status.USING
                       : Status.ABLE_RESERVE
                   }
                 />
                 <div className="text-2xl font-medium">
-                  {facility?.name} {step === 'info' && '예약 현황'}
+                  {facility?.name}
+                  {step === 'info' && ' 예약 현황'}
+                  {step === 'reserve' && ' 예약'}
                 </div>
                 <div className="text-sm font-medium text-neutral-400">
-                  {reserves?.length
-                    ? ''
+                  {currentReserve
+                    ? `${currentReserve.user.name} 님이 현재 사용중입니다.`
                     : '사용중이지 않은 좌석입니다.'}
                 </div>
               </div>
-              <Toggle.Root className="m-auto mr-0">
-                <Toggle.Item value="always">고정석</Toggle.Item>
-                <Toggle.Item value="period">시간차</Toggle.Item>
-              </Toggle.Root>
+              {step === 'reserve' && (
+                <Toggle.Root
+                  className="m-auto mr-0"
+                  value={reserveType}
+                  onChange={(v) =>
+                    setReserveType(v as typeof reserveType)
+                  }
+                >
+                  <Toggle.Item value="always">고정석</Toggle.Item>
+                  <Toggle.Item value="period">시간차</Toggle.Item>
+                </Toggle.Root>
+              )}
             </div>
             {step === 'info' && (
               <>
-                <div>
+                <div className="my-4">
                   {reserves?.map((reserve) => (
-                    <div key={reserve.id}>
+                    <div
+                      key={reserve.id}
+                      className="flex justify-between px-6 py-3.5 rounded-lg shadow-blur text-sm font-medium"
+                    >
                       <span>{reserve.user.name}</span>
                       <span>
                         {reserve.end ? (
-                          <>
-                            {getHHMM(reserve.start)}~
-                            {getHHMM(reserve.end)}
-                          </>
+                          <span className="flex gap-1">
+                            {getHHMM(new Date(reserve.start))}
+                            <span>~</span>
+                            {getHHMM(new Date(reserve.end))}
+                          </span>
                         ) : (
                           '고정석'
                         )}
@@ -261,7 +318,7 @@ function ReserveDrawer({
                   ))}
                 </div>
                 <button
-                  className="w-full mt-8 py-3.5 rounded-2xl bg-neutral-200 text-black font-medium text-xs active:bg-neutral-300 transition-colors"
+                  className="w-full mt-8 py-3.5 rounded-2xl bg-neutral-200 text-black font-medium text-sm active:bg-neutral-300 transition-colors"
                   onClick={() => setStep('reserve')}
                 >
                   예약 화면으로
@@ -269,23 +326,48 @@ function ReserveDrawer({
               </>
             )}
             {step === 'reserve' && (
-              <form>
-                <div className="flex my-8 gap-2 items-center justify-center">
+              <form onSubmit={handleSubmitForm}>
+                <div className="flex my-10 gap-2 items-center justify-center">
                   <input
                     type="time"
                     className="px-2 border-2 rounded-md border-neutral-200"
+                    onChange={(e) =>
+                      setStart(
+                        parse(e.target.value, 'HH:mm', new Date()),
+                      )
+                    }
+                    required
                   />
                   <span className="text-sm">부터</span>
                   <input
                     type="time"
-                    className="px-2 border-2 rounded-md border-neutral-200"
+                    className={cn(
+                      'px-2 border-2 rounded-md border-neutral-200',
+                      { 'opacity-50': reserveType === 'always' },
+                    )}
+                    onChange={(e) =>
+                      setEnd(
+                        parse(e.target.value, 'HH:mm', new Date()),
+                      )
+                    }
+                    disabled={reserveType === 'always'}
+                    required={reserveType === 'period'}
                   />
                 </div>
                 <div className="flex gap-3">
-                  <button className="px-4 py-3 rounded-2xl bg-neutral-200 text-black font-medium text-sm active:bg-neutral-300 transition-colors">
-                    고정석 예약
+                  <button
+                    className="px-4 py-3 rounded-2xl bg-neutral-200 text-black font-medium text-sm active:bg-neutral-300 transition-colors"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setStep('info');
+                    }}
+                  >
+                    예약 현황
                   </button>
-                  <button className="flex-1 px-4 py-3 rounded-2xl bg-primary text-white font-medium text-sm transition-colors">
+                  <button
+                    type="submit"
+                    className="flex-1 px-4 py-3 rounded-2xl bg-primary text-white font-medium text-sm transition-colors"
+                  >
                     좌석 예약
                   </button>
                 </div>
@@ -317,6 +399,10 @@ function Home() {
   );
   const { data: reservesByDate } = useGetReserveByDate(selectedDate);
 
+  const { mutate: addReserveMutation } = useAddReserveMutation({
+    onSuccess: () => setSelectedFloor(null),
+  });
+
   useEffect(() => {
     if (allFloorSummary) {
       setSelectedFloor(allFloorSummary.at(0)?.id ?? null);
@@ -347,7 +433,11 @@ function Home() {
         <ScrollArea>
           <FacilityGridViewer
             facilities={floorDetail.facilities}
-            reserves={reservesByDate?.map((v) => v.id) ?? []}
+            reserves={
+              reservesByDate
+                ?.filter(isCurrentReserve)
+                .map((v) => v.facility.id) ?? []
+            }
             onClickFacility={setSelectedFacility}
           />
         </ScrollArea>
@@ -357,8 +447,9 @@ function Home() {
         onClose={() => setSelectedFacility(undefined)}
         facility={selectedFacility}
         reserves={reservesByDate?.filter(
-          (reserve) => reserve.id === selectedFacility?.id,
+          (reserve) => reserve.facility.id === selectedFacility?.id,
         )}
+        onSubmit={addReserveMutation}
       />
     </div>
   );
