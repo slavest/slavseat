@@ -15,6 +15,7 @@ import { Badge, Status } from '@/shared/components/Badge';
 import { Button } from '@/shared/components/Button';
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
 import ScrollArea from '@/shared/components/ScrollArea';
+import { Toggle } from '@/shared/components/Toggle';
 import { useControlled } from '@/shared/hooks/useControlled';
 import { hideScrollBar } from '@/shared/styles/global-style.css';
 import { cn } from '@/shared/utils/class.util';
@@ -217,16 +218,28 @@ function ReserveDrawer({
       <Drawer.Portal>
         <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-2xl bg-white shadow-blur">
           <div className="p-8">
-            <Badge
-              status={
-                reserves?.length ? Status.USING : Status.ABLE_RESERVE
-              }
-            />
-            <div className="text-2xl font-medium">
-              {facility?.name} {step === 'info' && '예약 현황'}
-            </div>
-            <div className="text-sm font-medium text-neutral-400">
-              {reserves?.length ? '' : '사용중이지 않은 좌석입니다.'}
+            <div className="flex justify-between">
+              <div>
+                <Badge
+                  status={
+                    reserves?.length
+                      ? Status.USING
+                      : Status.ABLE_RESERVE
+                  }
+                />
+                <div className="text-2xl font-medium">
+                  {facility?.name} {step === 'info' && '예약 현황'}
+                </div>
+                <div className="text-sm font-medium text-neutral-400">
+                  {reserves?.length
+                    ? ''
+                    : '사용중이지 않은 좌석입니다.'}
+                </div>
+              </div>
+              <Toggle.Root className="m-auto mr-0">
+                <Toggle.Item value="always">고정석</Toggle.Item>
+                <Toggle.Item value="period">시간차</Toggle.Item>
+              </Toggle.Root>
             </div>
             {step === 'info' && (
               <>
