@@ -20,7 +20,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Reserve implements Model.ReserveInfo {
+export class Reserve implements Model.ReserveInfoBase {
   @PrimaryGeneratedColumn()
   @IsNumber()
   @ApiProperty({ description: '예약 아이디' })
