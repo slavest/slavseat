@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import GridLayout from 'react-grid-layout';
 
 import { Model } from '@slavseat/types';
@@ -9,7 +9,7 @@ import { cn } from '@/shared/utils/class.util';
 
 interface FacilityGridViewerProps {
   facilities: Model.FacilitySummary[];
-  reserves: number[];
+  reserves: Model.ReserveInfo[];
   onClickFacility?: (facility: Model.FacilitySummary) => void;
 }
 
@@ -18,7 +18,30 @@ function FacilityGridViewer({
   reserves,
   onClickFacility,
 }: FacilityGridViewerProps) {
-  console.log(reserves.includes(1));
+  const getReserveStatus = useCallback(
+    (facility: Model.FacilitySummary) => {
+      const filteredReserves = reserves.filter(
+        (r) => r.facility.id === facility.id,
+      );
+
+      const now = new Date();
+      const isUsing = filteredReserves.some(
+        (r) =>
+          new Date(r.start) <= now &&
+          (r.always || !r.end || now <= new Date(r.end)),
+      );
+      if (isUsing) return Status.USING;
+
+      const isReserved = filteredReserves.some(
+        (r) => new Date(r.start) >= now,
+      );
+      if (isReserved) return Status.RESERVED;
+
+      return Status.ABLE_RESERVE;
+    },
+    [reserves],
+  );
+
   return (
     <GridLayout
       compactType={null}
@@ -48,13 +71,7 @@ function FacilityGridViewer({
                 {facility.name}
               </Text>
               {facility.type === Model.FacilityType.SEAT && (
-                <Badge
-                  status={
-                    reserves.includes(facility.id)
-                      ? Status.USING
-                      : Status.ABLE_RESERVE
-                  }
-                />
+                <Badge status={getReserveStatus(facility)} />
               )}
             </div>
           </div>

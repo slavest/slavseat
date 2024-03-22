@@ -22,16 +22,15 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (!isAxiosError(error)) return error;
+    if (!isAxiosError(error)) throw error;
 
     if (error.response?.status === 401) {
-      const accessToken = getParsedCookies()[ACCESS_TOKEN_KEY];
       const { config } = error;
-      if (!accessToken || !config) return error;
+      if (!config || config.url === '/api/auth/refresh') throw error;
 
-      return await refreshAccessToken()
-        .then(() => axiosInstance.request(config))
-        .catch(() => error);
+      return await refreshAccessToken().then(() =>
+        axiosInstance.request(config),
+      );
     }
   },
 );

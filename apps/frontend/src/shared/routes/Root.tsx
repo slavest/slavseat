@@ -63,16 +63,22 @@ function AppFooter() {
 }
 
 function Root() {
-  useInitialize();
+  const { initialized } = useInitialize();
 
   return (
     <div className="w-screen h-screen flex flex-col overflow-hidden">
       <header className="hidden">Header</header>
-      <main className="h-[calc(100%_-_var(--var-footer-height))] shadow-inner">
-        <Outlet />
-      </main>
+      {initialized ? (
+        <>
+          <main className="h-[calc(100%_-_var(--var-footer-height))] shadow-inner">
+            <Outlet />
+          </main>
 
-      <AppFooter />
+          <AppFooter />
+        </>
+      ) : (
+        <div>Loading</div>
+      )}
     </div>
   );
 }

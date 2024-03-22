@@ -27,10 +27,7 @@ const DayString = ['일', '월', '화', '수', '목', '금', '토'];
 const getWeek = (date: Date) => {
   const onejan = new Date(date.getFullYear(), 0, 1);
   return Math.ceil(
-    ((date.getTime() - onejan.getTime()) / 86400000 +
-      onejan.getDay() +
-      1) /
-      7,
+    (date.getTime() - onejan.getTime()) / 86400000 / 7,
   );
 };
 const getStartOfWeek = (week: number) => {
@@ -39,26 +36,34 @@ const getStartOfWeek = (week: number) => {
 };
 const isCurrentReserve = (reserve: Model.ReserveInfo) =>
   new Date(reserve.start).getTime() <= Date.now() &&
-  (reserve.end === undefined ||
+  (reserve.always ||
+    reserve.end === undefined ||
     (reserve.end && new Date(reserve.end).getTime() >= Date.now()));
 
 interface DateItemProps extends React.HTMLAttributes<HTMLDivElement> {
   date: Date;
   selected?: boolean;
+  disabled?: boolean;
 }
 function DateItem({
   date,
   selected = false,
+  disabled = false,
   className,
+  onClick,
   ...rest
 }: DateItemProps) {
   return (
     <div
       className={cn(
         'w-10 h-10 text-center flex flex-col items-center justify-center rounded-[10px]',
-        { 'bg-primary text-white': selected },
+        {
+          'bg-primary text-white': selected,
+          'opacity-50': disabled,
+        },
         className,
       )}
+      onClick={(e) => !disabled && onClick?.(e)}
       {...rest}
     >
       <div
@@ -144,6 +149,10 @@ function DatePicker({
           key={date.getTime()}
           date={date}
           selected={isSameDate(date, selected)}
+          disabled={
+            !isSameDate(date, new Date()) &&
+            Date.now() >= date.getTime()
+          }
           onClick={() => handleClickDate(date)}
         />
       ))}
@@ -250,37 +259,62 @@ function ReserveDrawer({
     [end, facility, onSubmit, reserveType, start],
   );
 
+  const handleClose = useCallback(() => {
+    setStep('info');
+    setReserveType('period');
+    setStart(undefined);
+    setEnd(undefined);
+    onClose?.();
+  }, [onClose]);
+
   const currentReserve = useMemo(() => {
     const current = reserves?.filter(isCurrentReserve).at(0);
 
     return current;
   }, [reserves]);
 
+  const isFutureReserved = useMemo(
+    () =>
+      Boolean(
+        reserves?.filter(
+          (reserve) =>
+            new Date(reserve.start).getTime() >= Date.now(),
+        ).length,
+      ),
+    [reserves],
+  );
+
   return (
-    <Drawer.Root open={open} onClose={onClose}>
+    <Drawer.Root open={open} onClose={handleClose}>
       <Drawer.Portal>
         <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-2xl bg-white shadow-blur">
           <div className="p-8">
             <div className="flex justify-between">
               <div>
+                {/* 현재 보는 좌석의 Status 표시 */}
                 <Badge
                   status={
                     currentReserve
                       ? Status.USING
-                      : Status.ABLE_RESERVE
+                      : isFutureReserved
+                        ? Status.RESERVED
+                        : Status.ABLE_RESERVE
                   }
                 />
                 <div className="text-2xl font-medium">
                   {facility?.name}
+                  {/* 현재 step에 따라 다른 텍스트 표시 */}
                   {step === 'info' && ' 예약 현황'}
                   {step === 'reserve' && ' 예약'}
                 </div>
                 <div className="text-sm font-medium text-neutral-400">
+                  {/* 지금 시간을 기준으로 예약이 있는지 표시 */}
                   {currentReserve
                     ? `${currentReserve.user.name} 님이 현재 사용중입니다.`
                     : '사용중이지 않은 좌석입니다.'}
                 </div>
               </div>
+              {/* 예약 유형 변경 토글 */}
               {step === 'reserve' && (
                 <Toggle.Root
                   className="m-auto mr-0"
@@ -289,25 +323,28 @@ function ReserveDrawer({
                     setReserveType(v as typeof reserveType)
                   }
                 >
-                  <Toggle.Item value="always">고정석</Toggle.Item>
                   <Toggle.Item value="period">시간차</Toggle.Item>
+                  <Toggle.Item value="always">고정석</Toggle.Item>
                 </Toggle.Root>
               )}
             </div>
+
+            {/* info 스텝일때 표시할 내용 */}
             {step === 'info' && (
               <>
-                <div className="my-4">
+                <div className="my-4 space-y-2">
+                  {/* 현재 좌석에 대한 예약들 표시 */}
                   {reserves?.map((reserve) => (
                     <div
                       key={reserve.id}
-                      className="flex justify-between px-6 py-3.5 rounded-lg shadow-blur text-sm font-medium"
+                      className="flex justify-between px-6 py-3.5 border border-neutral-150 rounded-[10px] shadow-blur-sm text-sm font-medium"
                     >
                       <span>{reserve.user.name}</span>
                       <span>
                         {reserve.end ? (
                           <span className="flex gap-1">
                             {getHHMM(new Date(reserve.start))}
-                            <span>~</span>
+                            <span>-</span>
                             {getHHMM(new Date(reserve.end))}
                           </span>
                         ) : (
@@ -318,13 +355,15 @@ function ReserveDrawer({
                   ))}
                 </div>
                 <button
-                  className="w-full mt-8 py-3.5 rounded-2xl bg-neutral-200 text-black font-medium text-sm active:bg-neutral-300 transition-colors"
+                  className="w-full mt-8 py-3 rounded-2xl bg-neutral-200 text-black font-medium text-sm active:bg-neutral-300 transition-colors"
                   onClick={() => setStep('reserve')}
                 >
                   예약 화면으로
                 </button>
               </>
             )}
+
+            {/* reserve 스텝일때 표시할 내용 */}
             {step === 'reserve' && (
               <form onSubmit={handleSubmitForm}>
                 <div className="flex my-10 gap-2 items-center justify-center">
@@ -400,7 +439,7 @@ function Home() {
   const { data: reservesByDate } = useGetReserveByDate(selectedDate);
 
   const { mutate: addReserveMutation } = useAddReserveMutation({
-    onSuccess: () => setSelectedFloor(null),
+    onSuccess: () => setSelectedFacility(undefined),
   });
 
   useEffect(() => {
@@ -433,11 +472,7 @@ function Home() {
         <ScrollArea>
           <FacilityGridViewer
             facilities={floorDetail.facilities}
-            reserves={
-              reservesByDate
-                ?.filter(isCurrentReserve)
-                .map((v) => v.facility.id) ?? []
-            }
+            reserves={reservesByDate ?? []}
             onClickFacility={setSelectedFacility}
           />
         </ScrollArea>

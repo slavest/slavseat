@@ -6,12 +6,14 @@ export default {
     extend: {
       colors: {
         primary: '#3CE800',
+        'neutral-150': 'F0F0F0',
       },
       fontFamily: {
         sans: ['Noto Sans KR', 'sans-serif'],
       },
       boxShadow: {
         blur: '0 0px 5px rgb(0 0 0 / 0.25)',
+        'blur-sm': '0 0px 4px rgb(0 0 0 / 0.05)',
       },
     },
   },
