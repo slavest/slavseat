@@ -125,6 +125,7 @@ function FacilityGridEditor({
       rowHeight={50}
       width={5000}
       margin={[0, 0]}
+      containerPadding={[25, 25]}
       isDraggable={mode === 'edit'}
       isResizable={mode === 'edit'}
     >
