@@ -28,9 +28,10 @@ axiosInstance.interceptors.response.use(
       const { config } = error;
       if (!config || config.url === '/api/auth/refresh') throw error;
 
-      return await refreshAccessToken().then(() =>
+      return refreshAccessToken().then(() =>
         axiosInstance.request(config),
       );
     }
+    throw error;
   },
 );
