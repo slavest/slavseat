@@ -4,8 +4,10 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { CgSpinner } from 'react-icons/cg';
 
 import { Model } from '@slavseat/types';
+import { FacilityType } from '@slavseat/types/src/model';
 import { parse } from 'date-fns';
 import { Drawer } from 'vaul';
 
@@ -287,7 +289,7 @@ function ReserveDrawer({
   return (
     <Drawer.Root open={open} onClose={handleClose}>
       <Drawer.Portal>
-        <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-2xl bg-white shadow-blur">
+        <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-2xl bg-white shadow-blur outline-none">
           <div className="p-8">
             <div className="flex justify-between">
               <div>
@@ -430,13 +432,12 @@ function Home() {
   );
 
   const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
-  const { data: floorDetail } = useGetFloorDetailQuery(
-    selectedFloor!,
-    {
+  const { data: floorDetail, isLoading: isFloorDetailLoading } =
+    useGetFloorDetailQuery(selectedFloor!, {
       enabled: selectedFloor !== null,
-    },
-  );
-  const { data: reservesByDate } = useGetReserveByDate(selectedDate);
+    });
+  const { data: reservesByDate, isLoading: isReserveLoading } =
+    useGetReserveByDate(selectedDate);
 
   const { mutate: addReserveMutation } = useAddReserveMutation({
     onSuccess: () => setSelectedFacility(undefined),
@@ -468,14 +469,20 @@ function Home() {
           />
         )}
       </div>
-      {floorDetail && (
+      {floorDetail && !isFloorDetailLoading && !isReserveLoading ? (
         <ScrollArea>
           <FacilityGridViewer
             facilities={floorDetail.facilities}
             reserves={reservesByDate ?? []}
-            onClickFacility={setSelectedFacility}
+            onClickFacility={(d) =>
+              d.type === FacilityType.SEAT && setSelectedFacility(d)
+            }
           />
         </ScrollArea>
+      ) : (
+        <div className="w-full h-full flex justify-center items-center ">
+          <CgSpinner className="animate-spin w-5 h-5" />
+        </div>
       )}
       <ReserveDrawer
         open={!!selectedFacility && !!reservesByDate}
