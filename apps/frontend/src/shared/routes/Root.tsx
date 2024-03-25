@@ -67,11 +67,11 @@ function Root() {
   const { initialized } = useInitialize();
 
   return (
-    <div className="w-screen h-screen max-w-[50rem] m-auto flex flex-col overflow-hidden">
+    <div className="w-screen h-[calc(100dvh)] max-w-[50rem] m-auto flex flex-col overflow-hidden">
       <header className="hidden">Header</header>
       {initialized ? (
         <>
-          <main className="h-[calc(100%_-_var(--var-footer-height))] shadow-inner">
+          <main className="h-[calc(100%_-_var(--var-footer-height)_-_var(--var-footer-padding-bottom))]">
             <Outlet />
           </main>
 

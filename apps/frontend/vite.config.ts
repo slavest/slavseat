@@ -42,6 +42,9 @@ export default defineConfig({
         type: 'classic',
         navigateFallback: 'index.html',
       },
+      workbox: {
+        navigateFallbackDenylist: [/^\/api/],
+      },
     }),
   ],
   resolve: {
