@@ -1,11 +1,15 @@
 import React, { useCallback } from 'react';
 import GridLayout from 'react-grid-layout';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 
 import { Model } from '@slavseat/types';
 
 import { Badge, Status } from '@/shared/components/Badge';
 import { Text } from '@/shared/components/Text';
 import { cn } from '@/shared/utils/class.util';
+
+import './index.css';
 
 interface FacilityGridViewerProps {
   facilities: Model.FacilitySummary[];
@@ -62,7 +66,7 @@ function FacilityGridViewer({
       {facilities.map((facility) => (
         <div
           key={facility.id}
-          className="p-1"
+          className="p-1 transition-none"
           onClick={() => onClickFacility?.(facility)}
         >
           <div className="w-full h-full flex justify-center items-center p-2 bg-neutral-50 border border-neutral-200 rounded-md select-none box-border">

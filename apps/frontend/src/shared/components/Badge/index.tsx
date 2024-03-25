@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { ClassNameValue, twMerge } from 'tailwind-merge';
+import { ClassNameValue } from 'tailwind-merge';
+
+import { cn } from '@/shared/utils/class.util';
 
 export enum Status {
   USING = 'USING',
@@ -8,7 +10,7 @@ export enum Status {
   RESERVED = 'RESERVED',
 }
 
-interface BadgeProps {
+interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   status: Status;
 }
 
@@ -24,13 +26,15 @@ const badgeText = {
   [Status.RESERVED]: '에약됨',
 };
 
-export function Badge({ status }: BadgeProps) {
+export function Badge({ status, className, ...rest }: BadgeProps) {
   return (
     <div
-      className={twMerge(
-        'inline-block text-xs font-light rounded-2xl px-2.5 py-1 text-white',
+      className={cn(
+        'inline-block text-xs font-base rounded-2xl px-2.5 py-1 text-white',
         badgeStyle[status],
+        className,
       )}
+      {...rest}
     >
       {badgeText[status]}
     </div>

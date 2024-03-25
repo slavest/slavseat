@@ -4,8 +4,10 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { CgSpinner } from 'react-icons/cg';
 
 import { Model } from '@slavseat/types';
+import { FacilityType } from '@slavseat/types/src/model';
 import { parse } from 'date-fns';
 import { Drawer } from 'vaul';
 
@@ -287,7 +289,7 @@ function ReserveDrawer({
   return (
     <Drawer.Root open={open} onClose={handleClose}>
       <Drawer.Portal>
-        <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-2xl bg-white shadow-blur">
+        <Drawer.Content className="max-w-[50rem] mx-auto fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-2xl bg-white shadow-blur outline-none">
           <div className="p-8">
             <div className="flex justify-between">
               <div>
@@ -337,18 +339,27 @@ function ReserveDrawer({
                   {reserves?.map((reserve) => (
                     <div
                       key={reserve.id}
-                      className="flex justify-between px-6 py-3.5 border border-neutral-150 rounded-[10px] shadow-blur-sm text-sm font-medium"
+                      className={cn(
+                        'flex justify-between px-6 py-3.5 border border-neutral-150 rounded-[10px] shadow-blur-sm text-sm font-medium',
+                        {
+                          'opacity-50':
+                            reserve.end &&
+                            new Date(reserve.end) <= new Date() &&
+                            !reserve.always,
+                        },
+                      )}
                     >
                       <span>{reserve.user.name}</span>
                       <span>
-                        {reserve.end ? (
+                        {reserve.always ? (
+                          '고정석'
+                        ) : (
                           <span className="flex gap-1">
                             {getHHMM(new Date(reserve.start))}
                             <span>-</span>
-                            {getHHMM(new Date(reserve.end))}
+                            {reserve.end &&
+                              getHHMM(new Date(reserve.end))}
                           </span>
-                        ) : (
-                          '고정석'
                         )}
                       </span>
                     </div>
@@ -430,17 +441,29 @@ function Home() {
   );
 
   const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
-  const { data: floorDetail } = useGetFloorDetailQuery(
-    selectedFloor!,
-    {
+  const { data: floorDetail, isLoading: isFloorDetailLoading } =
+    useGetFloorDetailQuery(selectedFloor!, {
       enabled: selectedFloor !== null,
-    },
-  );
-  const { data: reservesByDate } = useGetReserveByDate(selectedDate);
+    });
+  const { data: reservesByDate, isLoading: isReserveLoading } =
+    useGetReserveByDate(selectedDate);
 
   const { mutate: addReserveMutation } = useAddReserveMutation({
     onSuccess: () => setSelectedFacility(undefined),
   });
+
+  const handleSubmitReserve = useCallback(
+    (data: ReserveData) => {
+      data.start.setMonth(selectedDate.getMonth());
+      data.start.setDate(selectedDate.getDate());
+
+      data.end?.setMonth(selectedDate.getMonth());
+      data.end?.setDate(selectedDate.getDate());
+
+      addReserveMutation(data);
+    },
+    [addReserveMutation, selectedDate],
+  );
 
   useEffect(() => {
     if (allFloorSummary) {
@@ -468,14 +491,20 @@ function Home() {
           />
         )}
       </div>
-      {floorDetail && (
+      {floorDetail && !isFloorDetailLoading && !isReserveLoading ? (
         <ScrollArea>
           <FacilityGridViewer
             facilities={floorDetail.facilities}
             reserves={reservesByDate ?? []}
-            onClickFacility={setSelectedFacility}
+            onClickFacility={(d) =>
+              d.type === FacilityType.SEAT && setSelectedFacility(d)
+            }
           />
         </ScrollArea>
+      ) : (
+        <div className="w-full h-full flex justify-center items-center ">
+          <CgSpinner className="animate-spin w-5 h-5" />
+        </div>
       )}
       <ReserveDrawer
         open={!!selectedFacility && !!reservesByDate}
@@ -484,7 +513,7 @@ function Home() {
         reserves={reservesByDate?.filter(
           (reserve) => reserve.facility.id === selectedFacility?.id,
         )}
-        onSubmit={addReserveMutation}
+        onSubmit={handleSubmitReserve}
       />
     </div>
   );

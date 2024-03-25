@@ -5,3 +5,7 @@
 
 .react-grid-item.react-grid-placeholder {
 }
+
+.react-grid-item.cssTransforms {
+  transition-property: none;
+}

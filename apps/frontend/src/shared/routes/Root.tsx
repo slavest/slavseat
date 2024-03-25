@@ -1,4 +1,5 @@
 import React from 'react';
+import { CgSpinner } from 'react-icons/cg';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { FavoriteIcon } from '@/assets/icons/Favorite';
@@ -66,7 +67,7 @@ function Root() {
   const { initialized } = useInitialize();
 
   return (
-    <div className="w-screen h-screen flex flex-col overflow-hidden">
+    <div className="w-screen h-screen max-w-[50rem] m-auto flex flex-col overflow-hidden">
       <header className="hidden">Header</header>
       {initialized ? (
         <>
@@ -77,7 +78,9 @@ function Root() {
           <AppFooter />
         </>
       ) : (
-        <div>Loading</div>
+        <div className="h-full w-full flex justify-center items-center">
+          <CgSpinner className="animate-spin w-5 h-5" />
+        </div>
       )}
     </div>
   );
