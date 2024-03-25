@@ -71,7 +71,7 @@ function Root() {
       <header className="hidden">Header</header>
       {initialized ? (
         <>
-          <main className="h-[calc(100%_-_var(--var-footer-height))] shadow-inner">
+          <main className="h-[calc(100%_-_var(--var-footer-height)_-_var(--var-footer-padding-bottom))]">
             <Outlet />
           </main>
 
