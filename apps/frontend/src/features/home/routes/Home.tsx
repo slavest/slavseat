@@ -289,7 +289,7 @@ function ReserveDrawer({
   return (
     <Drawer.Root open={open} onClose={handleClose}>
       <Drawer.Portal>
-        <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-2xl bg-white shadow-blur outline-none">
+        <Drawer.Content className="max-w-[50rem] mx-auto fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-2xl bg-white shadow-blur outline-none">
           <div className="p-8">
             <div className="flex justify-between">
               <div>
