@@ -67,7 +67,7 @@ function Root() {
   const { initialized } = useInitialize();
 
   return (
-    <div className="w-screen h-screen max-w-[50rem] m-auto flex flex-col overflow-hidden">
+    <div className="w-screen h-[calc(100dvh)] max-w-[50rem] m-auto flex flex-col overflow-hidden">
       <header className="hidden">Header</header>
       {initialized ? (
         <>
