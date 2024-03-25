@@ -7,12 +7,10 @@
   --var-footer-padding-bottom: 2rem;
 }
 
-body {
+body,
+#root {
   font-family: 'Noto Sans KR', sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
-}
-
-* {
   touch-action: none;
 }
