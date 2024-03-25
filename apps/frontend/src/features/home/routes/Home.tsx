@@ -339,7 +339,15 @@ function ReserveDrawer({
                   {reserves?.map((reserve) => (
                     <div
                       key={reserve.id}
-                      className="flex justify-between px-6 py-3.5 border border-neutral-150 rounded-[10px] shadow-blur-sm text-sm font-medium"
+                      className={cn(
+                        'flex justify-between px-6 py-3.5 border border-neutral-150 rounded-[10px] shadow-blur-sm text-sm font-medium',
+                        {
+                          'opacity-50':
+                            reserve.end &&
+                            new Date(reserve.end) <= new Date() &&
+                            !reserve.always,
+                        },
+                      )}
                     >
                       <span>{reserve.user.name}</span>
                       <span>
@@ -443,6 +451,19 @@ function Home() {
     onSuccess: () => setSelectedFacility(undefined),
   });
 
+  const handleSubmitReserve = useCallback(
+    (data: ReserveData) => {
+      data.start.setMonth(selectedDate.getMonth());
+      data.start.setDate(selectedDate.getDate());
+
+      data.end?.setMonth(selectedDate.getMonth());
+      data.end?.setDate(selectedDate.getDate());
+
+      addReserveMutation(data);
+    },
+    [addReserveMutation, selectedDate],
+  );
+
   useEffect(() => {
     if (allFloorSummary) {
       setSelectedFloor(allFloorSummary.at(0)?.id ?? null);
@@ -491,7 +512,7 @@ function Home() {
         reserves={reservesByDate?.filter(
           (reserve) => reserve.facility.id === selectedFacility?.id,
         )}
-        onSubmit={addReserveMutation}
+        onSubmit={handleSubmitReserve}
       />
     </div>
   );
