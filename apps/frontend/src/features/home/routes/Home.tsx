@@ -351,14 +351,15 @@ function ReserveDrawer({
                     >
                       <span>{reserve.user.name}</span>
                       <span>
-                        {reserve.end ? (
+                        {reserve.always ? (
+                          '고정석'
+                        ) : (
                           <span className="flex gap-1">
                             {getHHMM(new Date(reserve.start))}
                             <span>-</span>
-                            {getHHMM(new Date(reserve.end))}
+                            {reserve.end &&
+                              getHHMM(new Date(reserve.end))}
                           </span>
-                        ) : (
-                          '고정석'
                         )}
                       </span>
                     </div>
