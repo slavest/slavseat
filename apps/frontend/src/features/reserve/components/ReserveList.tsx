@@ -26,7 +26,7 @@ function ReserveListItem({ reserve }: ReserveListItemProps) {
       </span>
 
       <span>
-        {getHHMM(start)}-{!always ? getHHMM(end) : null}
+        {getHHMM(start)} - {!always ? getHHMM(end) : null}
       </span>
     </li>
   );
