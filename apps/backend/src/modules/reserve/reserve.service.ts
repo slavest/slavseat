@@ -139,14 +139,16 @@ export class ReserveService {
     const { date } = getReserveByDateRequestDto;
 
     const startDate = new Date(date);
-    startDate.setUTCHours(0, 0, 0, 0);
+    startDate.setHours(0, 0, 0, 0);
     const endDate = new Date(date);
-    endDate.setUTCHours(23, 59, 59, 999);
+    endDate.setHours(23, 59, 59, 999);
 
     const reserves = await this.reserveRepository.find({
       where: [
         {
           start: Between(startDate, endDate),
+        },
+        {
           end: Between(startDate, endDate),
         },
         {
