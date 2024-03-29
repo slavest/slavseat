@@ -24,18 +24,8 @@ export function Test() {
   useInitialize();
   const { user } = useUserStore();
 
-  const { mutate: createFloorMutation } = useCreateFloorMutation();
-  const { mutate: addFacilityMutation } = useAddFacilityMutation();
-  const { mutate: updateFacilityMutation } =
-    useUpdateFacilityMutation();
-  const { mutate: removeFacilityMutation } =
-    useRemoveFacilityMutation();
-
-  const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
-  const { data: floorDetail } = useGetFloorDetailQuery(1);
-
+  const [editingFloor, setEditingFloor] = useState<number>();
   const [floorName, setFloorName] = useState<string>('');
-
   const [editorMode, setEditorMode] =
     useState<FacilityGridEditorMode>('edit');
   const [selectedFacility, setSelectedFacility] = useState<
@@ -44,30 +34,45 @@ export function Test() {
   const [facilityType, setFacilityType] =
     useState<Model.FacilityType>(Model.FacilityType.NONE);
   const [facilityName, setFacilityName] = useState('');
-
   const [editingFacilities, setEditingFacilities] = useState<
     Model.FacilitySummary[]
   >([]);
 
+  const { mutate: createFloorMutation } = useCreateFloorMutation({
+    onSuccess: () => setFloorName(''),
+  });
+  const { mutate: addFacilityMutation } = useAddFacilityMutation({});
+  const { mutate: updateFacilityMutation } =
+    useUpdateFacilityMutation();
+  const { mutate: removeFacilityMutation } =
+    useRemoveFacilityMutation();
+
+  const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
+  const { data: floorDetail } = useGetFloorDetailQuery(
+    editingFloor!,
+    { enabled: editingFloor !== undefined },
+  );
   useEffect(() => {
     if (floorDetail) setEditingFacilities(floorDetail.facilities);
   }, [floorDetail]);
 
   const handleClickAddFacility = useCallback(() => {
+    if (!editingFloor) return;
+
     addFacilityMutation({
-      floorId: 1,
+      floorId: editingFloor,
       facilities: [
         {
           type: facilityType,
           name: facilityName,
-          w: 1,
-          h: 1,
+          w: 2,
+          h: 2,
           x: 0,
           y: 0,
         },
       ],
     });
-  }, [addFacilityMutation, facilityName, facilityType]);
+  }, [addFacilityMutation, facilityName, facilityType, editingFloor]);
 
   return (
     <div
@@ -112,6 +117,28 @@ export function Test() {
         <code>{JSON.stringify(allFloorSummary, null, 2)}</code>
       </pre> */}
       <div>
+        <div className="text-zinc-500 text-sm">Floor 선택</div>
+        <div className="inline-flex gap-2 items-center p-4 border-dashed border-2 rounded-md border-zinc-500 ">
+          <select
+            className="border border-neutral-200 rounded text-sm"
+            value={editingFloor}
+            onChange={(e) =>
+              e.target.value &&
+              setEditingFloor(Number(e.target.value))
+            }
+          >
+            <option value="" key="">
+              층을 선택해 주세요
+            </option>
+            {allFloorSummary?.map((floor) => (
+              <option value={floor.id} key={floor.id}>
+                {floor.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div>
         <div className="text-zinc-500 text-sm">Facility 추가 폼</div>
         <div className="inline-flex gap-2 items-center p-4 border-dashed border-2 rounded-md border-zinc-500 ">
           <div className="inline-flex flex-col my-auto">
@@ -140,7 +167,7 @@ export function Test() {
             className="my-auto"
             onClick={handleClickAddFacility}
           >
-            Seat 추가
+            Facility 추가
           </Button>
         </div>
       </div>
