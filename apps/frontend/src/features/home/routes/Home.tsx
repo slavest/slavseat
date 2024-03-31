@@ -495,7 +495,12 @@ function Home() {
         )}
       </div>
       {floorDetail && !isFloorDetailLoading && !isReserveLoading ? (
-        <TransformWrapper minScale={0.5} disablePadding>
+        <TransformWrapper
+          minScale={0.5}
+          maxScale={1}
+          disablePadding
+          centerOnInit
+        >
           <TransformComponent wrapperClass="w-full h-full">
             <FacilityGridViewer
               className="w-full m-4"
