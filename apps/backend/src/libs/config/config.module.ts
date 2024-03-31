@@ -50,7 +50,7 @@ import { Region } from 'oci-common';
         MS_CALLBACK_URL: Joi.string().required(),
         MS_CLIENT_ID: Joi.string().required(),
         MS_CLIENT_SECRET: Joi.string().required(),
-        MS_TENANT_ID: Joi.string().required(),
+        MS_TENANT_ID: Joi.string(),
       }),
     }),
   ],
