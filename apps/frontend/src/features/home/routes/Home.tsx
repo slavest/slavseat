@@ -5,6 +5,11 @@ import React, {
   useState,
 } from 'react';
 import { CgSpinner } from 'react-icons/cg';
+import {
+  MiniMap,
+  TransformComponent,
+  TransformWrapper,
+} from 'react-zoom-pan-pinch';
 
 import { Model } from '@slavseat/types';
 import { FacilityType } from '@slavseat/types/src/model';
@@ -16,9 +21,7 @@ import { useGetFloorDetailQuery } from '@/shared/api/query/floor/get-floor-detai
 import { useAddReserveMutation } from '@/shared/api/query/reserve/add-reserve';
 import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
 import { Badge, Status } from '@/shared/components/Badge';
-import { Button } from '@/shared/components/Button';
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
-import ScrollArea from '@/shared/components/ScrollArea';
 import { Toggle } from '@/shared/components/Toggle';
 import { useControlled } from '@/shared/hooks/useControlled';
 import { hideScrollBar } from '@/shared/styles/global-style.css';
@@ -195,7 +198,7 @@ function Tab({ items, selected: selectedProp, onChange }: TabProps) {
   return (
     <div
       className={cn(
-        'flex overflow-x-scroll gap-4 px-8 border-b border-neutral-200',
+        'flex overflow-x-scroll gap-4 px-8 border-b border-neutral-200 touch-pan-x',
         hideScrollBar,
       )}
     >
@@ -492,15 +495,18 @@ function Home() {
         )}
       </div>
       {floorDetail && !isFloorDetailLoading && !isReserveLoading ? (
-        <ScrollArea>
-          <FacilityGridViewer
-            facilities={floorDetail.facilities}
-            reserves={reservesByDate ?? []}
-            onClickFacility={(d) =>
-              d.type === FacilityType.SEAT && setSelectedFacility(d)
-            }
-          />
-        </ScrollArea>
+        <TransformWrapper minScale={0.5} disablePadding>
+          <TransformComponent wrapperClass="w-full h-full">
+            <FacilityGridViewer
+              className="w-full m-4"
+              facilities={floorDetail.facilities}
+              reserves={reservesByDate ?? []}
+              onClickFacility={(d) =>
+                d.type === FacilityType.SEAT && setSelectedFacility(d)
+              }
+            />
+          </TransformComponent>
+        </TransformWrapper>
       ) : (
         <div className="w-full h-full flex justify-center items-center ">
           <CgSpinner className="animate-spin w-5 h-5" />

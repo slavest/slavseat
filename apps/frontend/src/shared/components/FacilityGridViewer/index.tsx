@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import GridLayout from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -11,7 +11,8 @@ import { cn } from '@/shared/utils/class.util';
 
 import './index.css';
 
-interface FacilityGridViewerProps {
+interface FacilityGridViewerProps
+  extends GridLayout.ReactGridLayoutProps {
   facilities: Model.FacilitySummary[];
   reserves: Model.ReserveInfo[];
   onClickFacility?: (facility: Model.FacilitySummary) => void;
@@ -20,8 +21,16 @@ interface FacilityGridViewerProps {
 function FacilityGridViewer({
   facilities,
   reserves,
+  style,
+  className,
   onClickFacility,
+  ...rest
 }: FacilityGridViewerProps) {
+  const gridRef = useRef<GridLayout>(null);
+
+  const cols = 100;
+  const width = 5000;
+
   const getReserveStatus = useCallback(
     (facility: Model.FacilitySummary) => {
       const filteredReserves = reserves.filter(
@@ -46,22 +55,34 @@ function FacilityGridViewer({
     [reserves],
   );
 
+  const widthStyle = useMemo(() => {
+    const maxHorizontal = facilities.reduce(
+      (acc, { x }) => Math.max(acc, x),
+      0,
+    );
+
+    return maxHorizontal * (width / cols) + (width / cols) * 2;
+  }, [facilities]);
+
   return (
     <GridLayout
+      ref={gridRef}
       compactType={null}
       preventCollision={true}
       layout={facilities.map(({ id, ...facility }) => ({
         ...facility,
         i: String(id),
       }))}
-      cols={100}
+      cols={cols}
       rowHeight={50}
-      width={5000}
-      // style={{ width: '5000px' }}
+      width={width}
       margin={[0, 0]}
-      containerPadding={[25, 25]}
+      containerPadding={[0, 0]}
       isResizable={false}
       isDraggable={false}
+      className={cn('relative', className)}
+      style={{ width: widthStyle, ...style }}
+      {...rest}
     >
       {facilities.map((facility) => (
         <div
