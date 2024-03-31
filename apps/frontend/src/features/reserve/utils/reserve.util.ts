@@ -33,3 +33,23 @@ export function groupDataByDate(data: ReserveInfo[]) {
 
   return groupedData;
 }
+
+export function checkNowUse(data?: ReserveInfo[]) {
+  if (!data || data.length < 1) return false;
+
+  const groupData = groupDataByDate(data);
+
+  const todayReserve =
+    groupData[new Date().toISOString().split('T')[0]];
+
+  if (!todayReserve) return false;
+
+  const usingReserve = todayReserve.find(
+    (reserve) =>
+      new Date(reserve.start).getDate() === new Date().getDate(),
+  );
+
+  if (!usingReserve) return false;
+
+  return usingReserve;
+}

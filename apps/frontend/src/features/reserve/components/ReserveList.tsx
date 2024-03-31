@@ -26,7 +26,9 @@ function ReserveListItem({ reserve }: ReserveListItemProps) {
       </span>
 
       <span>
-        {getHHMM(start)} - {!always ? getHHMM(end) : null}
+        {always
+          ? '고정 좌석 사용중'
+          : `${getHHMM(start)} - ${getHHMM(end)}`}
       </span>
     </li>
   );

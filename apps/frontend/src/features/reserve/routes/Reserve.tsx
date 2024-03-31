@@ -7,6 +7,11 @@ import { ErrorNotice } from '../components/ErrorNotice';
 import { NotData } from '../components/NotData';
 import { ReserveList } from '../components/ReserveList';
 import { useGetReserveByUser } from '../query/reserve.query';
+import {
+  checkNowUse,
+  getHHMM,
+  groupDataByDate,
+} from '../utils/reserve.util';
 
 function Container({
   children,
@@ -30,25 +35,36 @@ function Reserve() {
   const { data, isError, isLoading } = useGetReserveByUser();
   const { user } = useUserStore();
 
-  console.log(data);
+  const renderDescription = () => {
+    const useReserve = checkNowUse(data);
+
+    return useReserve
+      ? `현재 ${useReserve.facility.floor.name}-${useReserve.facility.name} 좌석을 사용중 입니다.`
+      : '현재 사용중인 좌석이 없습니다.';
+  };
 
   const renderContent = () => {
-    return !data ? (
-      <NotData notDataPrefix="예약 현황이" />
-    ) : (
-      <>
-        {/* TODO: 날짜별 데이터 가공 필요 일단 그냥 리스트업 */}
-        <ReserveList reserves={data} />
+    if (!data || data.length <= 0)
+      return <NotData notDataPrefix="예약 현황이" />;
 
-        <ReserveList reserves={data} />
-      </>
-    );
+    const groupData = groupDataByDate(data);
+
+    return Object.keys(groupData)
+      .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+      .map((date) => (
+        <div key={date}>
+          <span className="text-xs text-gray-500 font-semibold px-1">
+            {date}
+          </span>
+          <ReserveList reserves={groupData[date]} />
+        </div>
+      ));
   };
 
   if (isError) {
     return (
       <Container className="grid place-content-center">
-        <ErrorNotice code={500} messages="FF" />
+        <ErrorNotice />
       </Container>
     );
   }
@@ -61,7 +77,7 @@ function Reserve() {
           <p>님의 좌석 예약 현황</p>
         </h1>
         <p className="text-sm text-neutral-700">
-          Sub Text | 서브 텍스트 모식갱이
+          {renderDescription()}
         </p>
       </header>
 
