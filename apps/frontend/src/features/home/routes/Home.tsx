@@ -88,9 +88,11 @@ function Home() {
           disablePadding
           centerOnInit
         >
-          <TransformComponent wrapperClass="w-full h-full">
+          <TransformComponent
+            wrapperStyle={{ width: '100%', height: '100%' }}
+          >
             <FacilityGridViewer
-              className="w-full m-4"
+              className="m-4"
               facilities={floorDetail.facilities}
               reserves={reservesByDate ?? []}
               onClickFacility={(d) =>
