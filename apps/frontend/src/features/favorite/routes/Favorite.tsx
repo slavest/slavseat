@@ -1,7 +1,11 @@
 import React from 'react';
+import { Navigate } from 'react-router-dom';
 
 function Favorite() {
-  return <div>Favorite</div>;
+  alert('구현 예정인 페이지 입니다.');
+
+  return <Navigate to="/" />;
+  // return <div>Favorite</div>;
 }
 
 export default Favorite;

@@ -15,5 +15,6 @@ export const useUserStore = create<UserStore>((set) => ({
   logout: async () => {
     await logout();
     set({ user: null });
+    window.location.pathname = '/login';
   },
 }));
