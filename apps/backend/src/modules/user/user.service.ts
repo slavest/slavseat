@@ -17,7 +17,7 @@ export class UserService {
       email: userSummary.email,
     });
     if (exist) {
-      await this.userRepository.update(exist, userSummary);
+      await this.userRepository.update(exist.id, userSummary);
       return this.userRepository.findOneBy({ id: exist.id });
     } else {
       return this.userRepository.save(userSummary);
