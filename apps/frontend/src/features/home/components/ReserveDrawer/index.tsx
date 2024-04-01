@@ -92,44 +92,44 @@ export function ReserveDrawer({
       <Drawer.Portal>
         <Drawer.Content className="max-w-[50rem] mx-auto fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-2xl bg-white shadow-blur outline-none">
           <div className="p-8">
-            <div className="flex justify-between">
-              <div>
-                {/* 현재 보는 좌석의 Status 표시 */}
-                <Badge
-                  status={
-                    currentReserve
-                      ? Status.USING
-                      : isFutureReserved
-                        ? Status.RESERVED
-                        : Status.ABLE_RESERVE
-                  }
-                />
-                <div className="text-2xl font-medium">
+            <div>
+              {/* 현재 보는 좌석의 Status 표시 */}
+              <Badge
+                status={
+                  currentReserve
+                    ? Status.USING
+                    : isFutureReserved
+                      ? Status.RESERVED
+                      : Status.ABLE_RESERVE
+                }
+              />
+              <div className="flex justify-between items-center text-2xl font-medium">
+                <span>
                   {facility?.name}
                   {/* 현재 step에 따라 다른 텍스트 표시 */}
                   {step === 'info' && ' 예약 현황'}
                   {step === 'reserve' && ' 예약'}
-                </div>
-                <div className="text-sm font-medium text-neutral-400">
-                  {/* 지금 시간을 기준으로 예약이 있는지 표시 */}
-                  {currentReserve
-                    ? `${currentReserve.user.name} 님이 현재 사용중입니다.`
-                    : '사용중이지 않은 좌석입니다.'}
-                </div>
+                </span>
+                {/* 예약 유형 변경 토글 */}
+                {step === 'reserve' && (
+                  <Toggle.Root
+                    className="m-auto mr-0"
+                    value={reserveType}
+                    onChange={(v) =>
+                      setReserveType(v as typeof reserveType)
+                    }
+                  >
+                    <Toggle.Item value="period">시간차</Toggle.Item>
+                    <Toggle.Item value="always">고정석</Toggle.Item>
+                  </Toggle.Root>
+                )}
               </div>
-              {/* 예약 유형 변경 토글 */}
-              {step === 'reserve' && (
-                <Toggle.Root
-                  className="m-auto mr-0"
-                  value={reserveType}
-                  onChange={(v) =>
-                    setReserveType(v as typeof reserveType)
-                  }
-                >
-                  <Toggle.Item value="period">시간차</Toggle.Item>
-                  <Toggle.Item value="always">고정석</Toggle.Item>
-                </Toggle.Root>
-              )}
+              <div className="text-sm font-medium text-neutral-400">
+                {/* 지금 시간을 기준으로 예약이 있는지 표시 */}
+                {currentReserve
+                  ? `${currentReserve.user.name} 님이 현재 사용중입니다.`
+                  : '사용중이지 않은 좌석입니다.'}
+              </div>
             </div>
 
             {/* info 스텝일때 표시할 내용 */}
