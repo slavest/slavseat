@@ -4,7 +4,7 @@ import { Model } from '@slavseat/types';
 
 import { cn } from '@/shared/utils/class.util';
 
-import { getHHMM } from '../utils/reserve.util';
+import { getHHMM, getYYYYMMDD } from '../utils/reserve.util';
 
 interface ReserveListItemProps {
   reserve: Model.ReserveInfo;
@@ -12,6 +12,7 @@ interface ReserveListItemProps {
 
 function ReserveListItem({ reserve }: ReserveListItemProps) {
   const { facility, always, start, end } = reserve;
+
   return (
     <li
       className={cn(
@@ -27,7 +28,7 @@ function ReserveListItem({ reserve }: ReserveListItemProps) {
 
       <span>
         {always
-          ? '고정 좌석 사용중'
+          ? `${getYYYYMMDD(start)} ${getHHMM(start)}`
           : `${getHHMM(start)} - ${getHHMM(end)}`}
       </span>
     </li>
@@ -35,15 +36,21 @@ function ReserveListItem({ reserve }: ReserveListItemProps) {
 }
 
 interface ReserveListProps {
+  title?: string;
   reserves: Model.ReserveInfo[];
 }
 
-export function ReserveList({ reserves }: ReserveListProps) {
+export function ReserveList({ title, reserves }: ReserveListProps) {
   return (
-    <ul className="border rounded-md">
-      {reserves.map((reserve) => (
-        <ReserveListItem key={reserve.id} reserve={reserve} />
-      ))}
-    </ul>
+    <div>
+      <span className="text-xs text-gray-500 font-semibold px-1">
+        {title}
+      </span>
+      <ul className="border rounded-md">
+        {reserves.map((reserve) => (
+          <ReserveListItem key={reserve.id} reserve={reserve} />
+        ))}
+      </ul>
+    </div>
   );
 }

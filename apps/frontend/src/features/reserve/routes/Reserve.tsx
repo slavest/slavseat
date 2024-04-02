@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import React, { ComponentProps, PropsWithChildren } from 'react';
 
 import { useUserStore } from '@/shared/stores/userStore';
 import { cn } from '@/shared/utils/class.util';
@@ -6,12 +6,9 @@ import { cn } from '@/shared/utils/class.util';
 import { ErrorNotice } from '../components/ErrorNotice';
 import { NotData } from '../components/NotData';
 import { ReserveList } from '../components/ReserveList';
+import { useReserve } from '../hooks/useReserve';
 import { useGetReserveByUser } from '../query/reserve.query';
-import {
-  checkNowUse,
-  getHHMM,
-  groupDataByDate,
-} from '../utils/reserve.util';
+import { getSeatName } from '../utils/reserve.util';
 
 function Container({
   children,
@@ -31,35 +28,31 @@ function Container({
   );
 }
 
+interface ContentProps {
+  loading: boolean;
+  notData: boolean;
+}
+
+function Content({
+  children,
+  loading = false,
+  notData = false,
+}: PropsWithChildren<ContentProps>) {
+  if (loading) return '...loading';
+
+  if (notData) return <NotData />;
+
+  return children;
+}
+
 function Reserve() {
   const { data, isError, isLoading } = useGetReserveByUser();
   const { user } = useUserStore();
 
-  const renderDescription = () => {
-    const useReserve = checkNowUse(data);
+  const { alwayReserve, usingReserves, groupReserves } =
+    useReserve(data);
 
-    return useReserve
-      ? `현재 ${useReserve.facility.floor.name}-${useReserve.facility.name} 좌석을 사용중 입니다.`
-      : '현재 사용중인 좌석이 없습니다.';
-  };
-
-  const renderContent = () => {
-    if (!data || data.length <= 0)
-      return <NotData notDataPrefix="예약 현황이" />;
-
-    const groupData = groupDataByDate(data);
-
-    return Object.keys(groupData)
-      .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-      .map((date) => (
-        <div key={date}>
-          <span className="text-xs text-gray-500 font-semibold px-1">
-            {date}
-          </span>
-          <ReserveList reserves={groupData[date]} />
-        </div>
-      ));
-  };
+  const dateKeys = groupReserves ? Object.keys(groupReserves) : [];
 
   if (isError) {
     return (
@@ -77,12 +70,36 @@ function Reserve() {
           <p>님의 좌석 예약 현황</p>
         </h1>
         <p className="text-sm text-neutral-700">
-          {renderDescription()}
+          {`현재 [${usingReserves
+            .map((reserve) => getSeatName(reserve))
+            .join(', ')}] 좌석을 이용 가능합니다.`}
         </p>
       </header>
 
       <section className="flex flex-col gap-y-8">
-        {isLoading ? '...loading' : renderContent()}
+        <Content
+          loading={isLoading}
+          notData={!alwayReserve && !groupReserves}
+        >
+          <>
+            {alwayReserve && (
+              <ReserveList
+                title="고정 좌석"
+                reserves={[alwayReserve]}
+              />
+            )}
+
+            {dateKeys.map((date) =>
+              groupReserves?.[date] ? (
+                <ReserveList
+                  key={date}
+                  title={date}
+                  reserves={groupReserves[date]}
+                />
+              ) : null,
+            )}
+          </>
+        </Content>
       </section>
     </Container>
   );
