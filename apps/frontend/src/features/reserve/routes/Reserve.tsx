@@ -76,6 +76,7 @@ function Reserve() {
       alert('예약이 취소되었습니다.');
 
       // TODO: 캐시 초기화
+      // NOTE: mutation 쓰시면 한번 호출로 캐시 초기화까지 가능합니당, remove-facility.ts 참고
     });
   }, []);
 
