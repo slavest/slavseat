@@ -5,8 +5,9 @@ import { Drawer } from 'vaul';
 
 import { Button } from '@/shared/components/Button';
 import { cn } from '@/shared/utils/class.util';
+import { getHHMM } from '@/shared/utils/date.util';
 
-import { getHHMM, getYYYYMMDD } from '../utils/reserve.util';
+import { getYYYYMMDD } from '../utils/reserve.util';
 
 interface CancelReserveDrawerProps {
   targetReserve: Model.ReserveInfo | null;
