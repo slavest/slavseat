@@ -113,7 +113,7 @@ export class ReserveService {
         facility,
       });
 
-      return this.reserveRepository.save(reserve);
+      return await this.reserveRepository.save(reserve);
     } finally {
       await this.redisClient.del(lockKey);
     }
