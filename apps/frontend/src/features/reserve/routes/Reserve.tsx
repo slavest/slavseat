@@ -82,54 +82,54 @@ function Reserve() {
   }
 
   return (
-    <Container>
-      <header className="mb-8">
-        <h1 className="w-full flex items-center flex-wrap text-2xl font-bold">
-          <p>{user?.name || '...'}</p>
-          <p>님의 좌석 예약 현황</p>
-        </h1>
-        <p className="text-sm text-neutral-700">
-          {`현재 [${usingReserves
-            .map((reserve) => getSeatName(reserve))
-            .join(', ')}] 좌석을 이용 가능합니다.`}
-        </p>
-      </header>
+    <CancelReserveDrawer.Root>
+      <Container>
+        <header className="mb-8">
+          <h1 className="w-full flex items-center flex-wrap text-2xl font-bold">
+            <p>{user?.name || '...'}</p>
+            <p>님의 좌석 예약 현황</p>
+          </h1>
+          <p className="text-sm text-neutral-700">
+            {`현재 [${usingReserves
+              .map((reserve) => getSeatName(reserve))
+              .join(', ')}] 좌석을 이용 가능합니다.`}
+          </p>
+        </header>
 
-      <section className="flex flex-col gap-y-8">
-        <Content
-          loading={isLoading}
-          notData={!alwayReserve && !groupReserves}
-        >
-          <>
-            {alwayReserve && (
-              <ReserveList
-                title="고정 좌석"
-                reserves={[alwayReserve]}
-                onClickItem={setSelectedReserve}
-              />
-            )}
-
-            {dateKeys.map((date) =>
-              groupReserves?.[date] ? (
+        <section className="flex flex-col gap-y-8">
+          <Content
+            loading={isLoading}
+            notData={!alwayReserve && !groupReserves}
+          >
+            <>
+              {alwayReserve && (
                 <ReserveList
-                  key={date}
-                  title={date}
-                  reserves={groupReserves[date]}
+                  title="고정 좌석"
+                  reserves={[alwayReserve]}
                   onClickItem={setSelectedReserve}
                 />
-              ) : null,
-            )}
-          </>
-        </Content>
-      </section>
+              )}
 
-      <CancelReserveDrawer
-        // open={!!selectedReserve}
-        onClose={() => setSelectedReserve(null)}
-        targetReserve={selectedReserve}
-        onClickCancel={(reserve) => cancelReserve(reserve.id)}
-      />
-    </Container>
+              {dateKeys.map((date) =>
+                groupReserves?.[date] ? (
+                  <ReserveList
+                    key={date}
+                    title={date}
+                    reserves={groupReserves[date]}
+                    onClickItem={setSelectedReserve}
+                  />
+                ) : null,
+              )}
+            </>
+          </Content>
+        </section>
+
+        <CancelReserveDrawer.Content
+          targetReserve={selectedReserve}
+          onClickCancel={(reserve) => cancelReserve(reserve.id)}
+        />
+      </Container>
+    </CancelReserveDrawer.Root>
   );
 }
 

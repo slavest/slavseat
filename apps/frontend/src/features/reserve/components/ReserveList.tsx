@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Model } from '@slavseat/types';
+import { Drawer } from 'vaul';
 
 import { cn } from '@/shared/utils/class.util';
 
@@ -18,25 +19,27 @@ function ReserveListItem({
   const { facility, always, start, end } = reserve;
 
   return (
-    <li
-      className={cn(
-        'w-full h-12 flex items-center justify-between px-4',
-        'text-xs font-semibold',
-        'bg-white',
-        'first:rounded-t-md last:rounded-b-md',
-      )}
-      onClick={() => onClickItem?.(reserve)}
-    >
-      <span>
-        {facility.floor.name}-{facility.name}
-      </span>
+    <Drawer.Trigger asChild>
+      <li
+        className={cn(
+          'w-full h-12 flex items-center justify-between px-4',
+          'text-xs font-semibold',
+          'bg-white',
+          'first:rounded-t-md last:rounded-b-md',
+        )}
+        onClick={() => onClickItem?.(reserve)}
+      >
+        <span>
+          {facility.floor.name}-{facility.name}
+        </span>
 
-      <span>
-        {always
-          ? `${getYYYYMMDD(start)} ${getHHMM(start)}`
-          : `${getHHMM(start)} - ${getHHMM(end)}`}
-      </span>
-    </li>
+        <span>
+          {always
+            ? `${getYYYYMMDD(start)} ${getHHMM(start)}`
+            : `${getHHMM(start)} - ${getHHMM(end)}`}
+        </span>
+      </li>
+    </Drawer.Trigger>
   );
 }
 
