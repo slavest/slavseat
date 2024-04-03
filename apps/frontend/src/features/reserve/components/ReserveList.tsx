@@ -23,9 +23,9 @@ function ReserveListItem({
       <li
         className={cn(
           'w-full h-12 flex items-center justify-between px-4',
-          'text-xs font-semibold',
+          'text-xs font-medium',
           'bg-white',
-          'first:rounded-t-md last:rounded-b-md',
+          'first:rounded-t-lg last:rounded-b-lg',
         )}
         onClick={() => onClickItem?.(reserve)}
       >
@@ -55,11 +55,11 @@ export function ReserveList({
   onClickItem,
 }: ReserveListProps) {
   return (
-    <div>
-      <span className="text-xs text-gray-500 font-semibold px-1">
+    <div className="space-y-1">
+      <span className="text-xs text-gray-500 px-1 font-medium">
         {title}
       </span>
-      <ul className="border rounded-md">
+      <ul className="rounded-lg shadow-blur-sm">
         {reserves.map((reserve) => (
           <ReserveListItem
             key={reserve.id}
