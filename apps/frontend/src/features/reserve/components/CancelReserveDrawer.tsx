@@ -24,7 +24,10 @@ export function CancelReserveDrawer({
   return (
     <Drawer.Root open={open || !!targetReserve} onClose={onClose}>
       <Drawer.Portal>
-        <Drawer.Content className="max-w-[50rem] mx-auto fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-2xl bg-white shadow-blur outline-none p-8">
+        <Drawer.Content
+          onBlur={onClose}
+          className="max-w-[50rem] mx-auto fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-2xl bg-white shadow-blur outline-none p-8"
+        >
           <div className={cn('w-full h-full', 'flex flex-col')}>
             {targetReserve ? (
               <div className="flex flex-col gap-y-3">
@@ -48,7 +51,7 @@ export function CancelReserveDrawer({
                 <Button
                   variant="secondary"
                   className="w-full"
-                  onClick={() => onClickCancel(targetReserve)}
+                  onMouseDown={() => onClickCancel(targetReserve)}
                 >
                   예약 취소 하기
                 </Button>
@@ -56,7 +59,6 @@ export function CancelReserveDrawer({
             ) : null}
           </div>
         </Drawer.Content>
-        <Drawer.Overlay />
       </Drawer.Portal>
     </Drawer.Root>
   );
