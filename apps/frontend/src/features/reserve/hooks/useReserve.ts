@@ -1,32 +1,76 @@
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import { Model } from '@slavseat/types';
+import {
+  getReserveListByUser,
+  removeReserve,
+} from '@/shared/api/reserve';
 
 import { checkUsing, groupDataByDate } from '../utils/reserve.util';
 
-/**
- * 고정 좌석
- * 사용중 좌석
- * 그냥 좌석 날짜별
- * @param reserves
- * @returns
- */
-export function useReserve(
-  reserves: Model.ReserveInfo[] | undefined,
-) {
+interface UseCancelReserveArgs {
+  onSuccess?: ({ removed }: { removed: number }) => void;
+}
+
+function useCancelReserve({ onSuccess }: UseCancelReserveArgs) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: removeReserve,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: [getReserveListByUser.name],
+      });
+
+      onSuccess?.(data);
+    },
+  });
+}
+
+interface UseReserveArgs {
+  onCancelSuccess?: UseCancelReserveArgs['onSuccess'];
+}
+
+export function useReserve({ onCancelSuccess }: UseReserveArgs) {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: [getReserveListByUser.name],
+    queryFn: () => getReserveListByUser(),
+  });
+
+  // 예약 취소
+  const { mutate: cancelReserve } = useCancelReserve({
+    onSuccess: onCancelSuccess,
+  });
+
   // 고정 좌석 예약 정보
   const alwayReserve = useMemo(() => {
-    return reserves?.find((reserve) => reserve.always);
-  }, [reserves]);
+    return data?.find((reserve) => reserve.always);
+  }, [data]);
 
   // 날짜별 예약 정보
-  const groupReserves = reserves
-    ? groupDataByDate(reserves.filter((reserve) => !reserve.always))
-    : null;
+  const groupReserves = useMemo(
+    () =>
+      data
+        ? groupDataByDate(data.filter((reserve) => !reserve.always))
+        : null,
+    [data],
+  );
 
-  const usingReserves = reserves
-    ? reserves.filter((reserve) => checkUsing(reserve))
-    : [];
+  const usingReserves = useMemo(
+    () => (data ? data.filter((reserve) => checkUsing(reserve)) : []),
+    [data],
+  );
 
-  return { alwayReserve, groupReserves, usingReserves };
+  return {
+    alwayReserve,
+    groupReserves,
+    usingReserves,
+    isError,
+    isLoading,
+    cancelReserve,
+  };
 }

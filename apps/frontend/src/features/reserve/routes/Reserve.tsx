@@ -1,28 +1,20 @@
 import React, {
   ComponentProps,
   PropsWithChildren,
-  useCallback,
   useState,
 } from 'react';
 
 import { Model } from '@slavseat/types';
-import { Drawer } from 'vaul';
 
-import { removeReserve } from '@/shared/api/reserve';
-import { Button } from '@/shared/components/Button';
 import { useUserStore } from '@/shared/stores/userStore';
 import { cn } from '@/shared/utils/class.util';
 
+import { CancelReserveDrawer } from '../components/CancelReserveDrawer';
 import { ErrorNotice } from '../components/ErrorNotice';
 import { NotData } from '../components/NotData';
 import { ReserveList } from '../components/ReserveList';
 import { useReserve } from '../hooks/useReserve';
-import { useGetReserveByUser } from '../query/reserve.query';
-import {
-  getHHMM,
-  getSeatName,
-  getYYYYMMDD,
-} from '../utils/reserve.util';
+import { getSeatName } from '../utils/reserve.util';
 
 function Container({
   children,
@@ -60,25 +52,26 @@ function Content({
 }
 
 function Reserve() {
-  const { data, isError, isLoading } = useGetReserveByUser();
-  const { user } = useUserStore();
-
-  const { alwayReserve, usingReserves, groupReserves } =
-    useReserve(data);
-
-  const dateKeys = groupReserves ? Object.keys(groupReserves) : [];
-
   const [selectedReserve, setSelectedReserve] =
     useState<Model.ReserveInfo | null>(null);
 
-  const cancelReserve = useCallback((reserve: Model.ReserveInfo) => {
-    removeReserve(reserve.id).then(() => {
-      alert('예약이 취소되었습니다.');
+  const { user } = useUserStore();
 
-      // TODO: 캐시 초기화
-      // NOTE: mutation 쓰시면 한번 호출로 캐시 초기화까지 가능합니당, remove-facility.ts 참고
-    });
-  }, []);
+  const {
+    alwayReserve,
+    usingReserves,
+    groupReserves,
+    isError,
+    isLoading,
+    cancelReserve,
+  } = useReserve({
+    onCancelSuccess: () => {
+      alert('예약이 취소되었습니다.');
+      setSelectedReserve(null);
+    },
+  });
+
+  const dateKeys = groupReserves ? Object.keys(groupReserves) : [];
 
   if (isError) {
     return (
@@ -130,46 +123,12 @@ function Reserve() {
         </Content>
       </section>
 
-      <Drawer.Root
-        open={!!selectedReserve}
+      <CancelReserveDrawer
+        // open={!!selectedReserve}
         onClose={() => setSelectedReserve(null)}
-      >
-        <Drawer.Portal>
-          <Drawer.Content className="max-w-[50rem] mx-auto fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-2xl bg-white shadow-blur outline-none p-8">
-            <div className={cn('w-full h-full', 'flex flex-col')}>
-              {selectedReserve ? (
-                <div className="flex flex-col gap-y-3">
-                  <div className="flex items-center gap-x-2">
-                    <p className="text-xl font-semibold">
-                      {getYYYYMMDD(selectedReserve.start)}
-                    </p>
-                    <p>
-                      {selectedReserve.always
-                        ? `고정 좌석`
-                        : `${getHHMM(
-                            selectedReserve.start,
-                            (hh, mm) => `${hh}시 ${mm}분`,
-                          )} ~ ${getHHMM(
-                            selectedReserve.end,
-                            (hh, mm) => `${hh}시 ${mm}분`,
-                          )}`}
-                    </p>
-                  </div>
-
-                  <Button
-                    variant="secondary"
-                    className="w-full"
-                    onClick={() => cancelReserve(selectedReserve)}
-                  >
-                    예약 취소 하기
-                  </Button>
-                </div>
-              ) : null}
-            </div>
-          </Drawer.Content>
-          <Drawer.Overlay />
-        </Drawer.Portal>
-      </Drawer.Root>
+        targetReserve={selectedReserve}
+        onClickCancel={(reserve) => cancelReserve(reserve.id)}
+      />
     </Container>
   );
 }
