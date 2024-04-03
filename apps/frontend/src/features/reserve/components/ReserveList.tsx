@@ -4,8 +4,9 @@ import { Model } from '@slavseat/types';
 import { Drawer } from 'vaul';
 
 import { cn } from '@/shared/utils/class.util';
+import { getHHMM } from '@/shared/utils/date.util';
 
-import { getHHMM, getYYYYMMDD } from '../utils/reserve.util';
+import { getYYYYMMDD } from '../utils/reserve.util';
 
 interface ReserveListItemProps {
   reserve: Model.ReserveInfo;
