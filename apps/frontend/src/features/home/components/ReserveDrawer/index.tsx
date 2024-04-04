@@ -5,6 +5,7 @@ import { parse } from 'date-fns';
 import { Drawer } from 'vaul';
 
 import { Badge, Status } from '@/shared/components/Badge';
+import { Button } from '@/shared/components/Button';
 import { Toggle } from '@/shared/components/Toggle';
 import { cn } from '@/shared/utils/class.util';
 import { getHHMM } from '@/shared/utils/date.util';
@@ -166,12 +167,14 @@ export function ReserveDrawer({
                     </div>
                   ))}
                 </div>
-                <button
-                  className="w-full mt-8 py-3 rounded-2xl bg-neutral-200 text-black font-medium text-sm active:bg-neutral-300 transition-colors"
+                <Button
+                  variant="secondary"
+                  size="full"
+                  className="mt-8"
                   onClick={() => setStep('reserve')}
                 >
                   예약 화면으로
-                </button>
+                </Button>
               </>
             )}
 
@@ -206,21 +209,24 @@ export function ReserveDrawer({
                   />
                 </div>
                 <div className="flex gap-3">
-                  <button
-                    className="px-4 py-3 rounded-2xl bg-neutral-200 text-black font-medium text-sm active:bg-neutral-300 transition-colors"
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="text-sm"
                     onClick={(e) => {
                       e.preventDefault();
                       setStep('info');
                     }}
                   >
                     예약 현황
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="primary"
                     type="submit"
-                    className="flex-1 px-4 py-3 rounded-2xl bg-primary text-white font-medium text-sm transition-colors"
+                    className="flex-1 text-sm"
                   >
                     좌석 예약
-                  </button>
+                  </Button>
                 </div>
               </form>
             )}
