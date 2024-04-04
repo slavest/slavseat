@@ -6,7 +6,6 @@ import { cn } from '@/shared/utils/class.util';
 
 interface DrawerProps {
   open: boolean;
-  useTrigger?: boolean;
   onClose: () => void;
 }
 
