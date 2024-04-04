@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import { Model } from '@slavseat/types';
 import { parse } from 'date-fns';
@@ -53,12 +54,16 @@ export function ReserveDrawer({
   >(
     (e) => {
       e.preventDefault();
-      if (!facility || !start) return;
+      if (!facility || !start)
+        return toast.error('예약 시간이 잘못되었습니다');
+      const always = reserveType === 'always';
+      if (!always && end && start.getTime() >= end.getTime())
+        return toast.error('예약 시간이 잘못되었습니다');
 
-      onSubmit?.({
+      return onSubmit?.({
         start,
         end,
-        always: reserveType === 'always',
+        always,
         facilityId: facility.id,
       });
     },
