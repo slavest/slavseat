@@ -1,22 +1,18 @@
 import React, { ComponentProps } from 'react';
 
-import { twMerge } from 'tailwind-merge';
-
 import { cn } from '@/shared/utils/class.util';
 
-type ButtonVariant = 'primary' | 'secondary';
+type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
 
 type ButtonSize = 'sm' | 'md' | 'lg' | 'full';
 
 interface ButtonProps extends ComponentProps<'button'> {
   variant?: ButtonVariant;
-  disabled?: boolean;
   size?: ButtonSize;
 }
 
 export const Button = ({
   variant = 'primary',
-  disabled,
   size,
   className,
   children,
@@ -25,20 +21,23 @@ export const Button = ({
   return (
     <button
       className={cn(
-        twMerge(
-          'rounded-3xl py-3 px-5 cursor-pointer font-medium',
-          className,
-        ),
+        'px-3 py-3',
+        'rounded-2xl cursor-pointer font-medium transition-colors',
+        'disabled:opacity-75 disabled:cursor-default',
         {
-          'bg-green-500 text-white': variant === 'primary',
-          'bg-neutral-200 text-black': variant === 'secondary',
+          'bg-primary text-white active:bg-neutral-300 disabled:active:bg-primary':
+            variant === 'primary',
+          'bg-neutral-200 text-black active:bg-neutral-300 disabled:active:bg-neutral-200':
+            variant === 'secondary',
+          'bg-[#52525B] text-white active:bg-neutral-300 disabled:active:bg-[#52525B]':
+            variant === 'tertiary',
           'w-24': size === 'sm',
           'w-60': size === 'md',
           'w-80': size === 'lg',
           'w-full': size === 'full',
         },
+        className,
       )}
-      disabled={disabled}
       {...rest}
     >
       {children}
