@@ -60,10 +60,15 @@ export function useReserve({ onCancelSuccess }: UseReserveArgs) {
     [data],
   );
 
-  const usingReserves = useMemo(
-    () => (data ? data.filter((reserve) => checkUsing(reserve)) : []),
-    [data],
-  );
+  const usingReserves = useMemo(() => {
+    const filterdReserve = data?.filter((reserve) =>
+      checkUsing(reserve),
+    );
+
+    if (!filterdReserve || filterdReserve.length < 1) return null;
+
+    return filterdReserve;
+  }, [data]);
 
   return {
     alwayReserve,

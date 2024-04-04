@@ -58,6 +58,11 @@ export class ReserveService {
         `시작 날짜는 종료 날짜보다 같거나 클 수 없습니다.`,
       );
 
+    if (!always && end === null)
+      throw new BadRequestException(
+        '시간차 예약은 종료 시간이 포함되어야 합니다.',
+      );
+
     const facility =
       await this.facilityService.findOneById(facilityId);
     if (!facility)
@@ -129,7 +134,9 @@ export class ReserveService {
     });
     if (!exist) throw new NotFoundException('reserve not found');
 
-    const removeResult = await this.reserveRepository.delete(exist);
+    const removeResult = await this.reserveRepository.delete(
+      exist.id,
+    );
     return { removed: removeResult.affected ?? 0 };
   }
 
