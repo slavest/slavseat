@@ -48,7 +48,7 @@ function Content({
 }: PropsWithChildren<ContentProps>) {
   if (loading) return <Loading />;
 
-  if (notData) return <NotData />;
+  if (notData) return <NotData notDataPrefix="좌석 정보가" />;
 
   return children;
 }
@@ -102,7 +102,7 @@ function Reserve() {
       <section className="flex flex-col gap-y-8">
         <Content
           loading={isLoading}
-          notData={!alwayReserve && !groupReserves}
+          notData={!alwayReserve && dateKeys.length < 1}
         >
           <>
             {alwayReserve && (
