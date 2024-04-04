@@ -3,6 +3,7 @@ import React, {
   PropsWithChildren,
   useState,
 } from 'react';
+import { toast } from 'react-toastify';
 
 import { Model } from '@slavseat/types';
 
@@ -67,7 +68,7 @@ function Reserve() {
     cancelReserve,
   } = useReserve({
     onCancelSuccess: () => {
-      alert('예약이 취소되었습니다.');
+      toast.success('예약이 취소되었습니다.');
       setSelectedReserve(null);
     },
   });
