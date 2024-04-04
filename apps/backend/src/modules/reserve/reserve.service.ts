@@ -129,7 +129,9 @@ export class ReserveService {
     });
     if (!exist) throw new NotFoundException('reserve not found');
 
-    const removeResult = await this.reserveRepository.delete(exist);
+    const removeResult = await this.reserveRepository.delete(
+      exist.id,
+    );
     return { removed: removeResult.affected ?? 0 };
   }
 
