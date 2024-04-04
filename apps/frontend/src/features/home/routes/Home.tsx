@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { CgSpinner } from 'react-icons/cg';
 import {
   TransformComponent,
   TransformWrapper,
@@ -14,6 +13,7 @@ import { useAddReserveMutation } from '@/shared/api/query/reserve/add-reserve';
 import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
 import { DateSelector } from '@/shared/components/DateSelector';
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
+import { Loading } from '@/shared/components/Loading';
 import { Tab } from '@/shared/components/Tab';
 
 import {
@@ -102,9 +102,7 @@ function Home() {
           </TransformComponent>
         </TransformWrapper>
       ) : (
-        <div className="w-full h-full flex justify-center items-center ">
-          <CgSpinner className="animate-spin w-5 h-5" />
-        </div>
+        <Loading />
       )}
       <ReserveDrawer
         open={!!selectedFacility && !!reservesByDate}

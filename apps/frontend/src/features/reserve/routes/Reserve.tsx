@@ -3,9 +3,11 @@ import React, {
   PropsWithChildren,
   useState,
 } from 'react';
+import { toast } from 'react-toastify';
 
 import { Model } from '@slavseat/types';
 
+import { Loading } from '@/shared/components/Loading';
 import { useUserStore } from '@/shared/stores/userStore';
 import { cn } from '@/shared/utils/class.util';
 
@@ -44,9 +46,9 @@ function Content({
   loading = false,
   notData = false,
 }: PropsWithChildren<ContentProps>) {
-  if (loading) return '...loading';
+  if (loading) return <Loading />;
 
-  if (notData) return <NotData />;
+  if (notData) return <NotData notDataPrefix="좌석 정보가" />;
 
   return children;
 }
@@ -66,7 +68,7 @@ function Reserve() {
     cancelReserve,
   } = useReserve({
     onCancelSuccess: () => {
-      alert('예약이 취소되었습니다.');
+      toast.success('예약이 취소되었습니다.');
       setSelectedReserve(null);
     },
   });
@@ -85,7 +87,7 @@ function Reserve() {
     <Container>
       <header className="mb-8">
         <h1 className="w-full flex items-center flex-wrap text-2xl font-bold">
-          <p>{user?.name || '...'}</p>
+          <p>{user?.name || <Loading />}</p>
           <p>님의 좌석 예약 현황</p>
         </h1>
         <p className="text-sm text-neutral-700">
@@ -100,7 +102,7 @@ function Reserve() {
       <section className="flex flex-col gap-y-8">
         <Content
           loading={isLoading}
-          notData={!alwayReserve && !groupReserves}
+          notData={!alwayReserve && dateKeys.length < 1}
         >
           <>
             {alwayReserve && (

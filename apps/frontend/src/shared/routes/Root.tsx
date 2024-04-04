@@ -1,5 +1,4 @@
 import React from 'react';
-import { CgSpinner } from 'react-icons/cg';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Bounce, ToastContainer } from 'react-toastify';
 
@@ -11,6 +10,7 @@ import { ReserveIcon } from '@/assets/icons/Reserve';
 import Footer from '@/shared/components/Footer';
 import { useInitialize } from '@/shared/hooks/useInitialize';
 
+import { Loading } from '../components/Loading';
 import { Locations } from '../constants/location.constant';
 
 function AppFooter() {
@@ -79,9 +79,7 @@ function Root() {
           <AppFooter />
         </>
       ) : (
-        <div className="h-full w-full flex justify-center items-center">
-          <CgSpinner className="animate-spin w-5 h-5" />
-        </div>
+        <Loading />
       )}
 
       <ToastContainer
