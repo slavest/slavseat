@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button } from '@/legacy/Button_Legacy';
+import { Button } from '@/shared/components/Button';
 import { useUserStore } from '@/shared/stores/userStore';
 
 function Profile() {
@@ -18,7 +18,7 @@ function Profile() {
           </code>
         </pre>
       </div>
-      <Button onClick={logout} className="block">
+      <Button variant="secondary" size="sm" onClick={logout}>
         로그아웃
       </Button>
     </div>
