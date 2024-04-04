@@ -5,6 +5,9 @@
 :root {
   --var-footer-height: 4rem;
   --var-footer-padding-bottom: 2rem;
+  --toastify-toast-width: 70%;
+  --toastify-font-family: 'Noto Sans KR', sans-serif;
+  --toastify-toast-offset: 24px;
 }
 
 body,
@@ -13,4 +16,23 @@ body,
   font-optical-sizing: auto;
   font-style: normal;
   touch-action: none;
+}
+
+@media only screen and (max-width: 480px) {
+  .Toastify__toast {
+    border-radius: var(--toastify-toast-bd-radius);
+  }
+
+  .Toastify__toast-container {
+    width: 70vw;
+    padding: 0;
+    left: env(safe-area-inset-left);
+    margin: 0;
+  }
+
+  .Toastify__toast-container--top-center {
+    top: var(--toastify-toast-top);
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
