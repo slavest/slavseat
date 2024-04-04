@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { Model } from '@slavseat/types';
 
-import { Button } from '@/legacy/Button_Legacy';
 import { login } from '@/shared/api/auth';
 import { useAddFacilityMutation } from '@/shared/api/query/facility/add-facility';
 import { useRemoveFacilityMutation } from '@/shared/api/query/facility/remove-facility';
@@ -10,6 +9,7 @@ import { useUpdateFacilityMutation } from '@/shared/api/query/facility/update-fa
 import { useCreateFloorMutation } from '@/shared/api/query/floor/create-floor';
 import { useGetAllFloorSummaryQuery } from '@/shared/api/query/floor/get-all-floor-summary';
 import { useGetFloorDetailQuery } from '@/shared/api/query/floor/get-floor-detail';
+import { Button } from '@/shared/components/Button';
 import FacilityGridEditor, {
   FacilityGridEditorMode,
 } from '@/shared/components/FacilityGridEditor';
@@ -81,7 +81,11 @@ export function Test() {
         hideScrollBar,
       )}
     >
-      <Button onClick={() => login('microsoft')} className="block">
+      <Button
+        variant="tertiary"
+        onClick={() => login('microsoft')}
+        className="block"
+      >
         로그인
       </Button>
       <div>
@@ -106,7 +110,7 @@ export function Test() {
             onChange={(e) => setFloorName(e.target.value)}
           />
           <Button
-            className="ml-auto mr-0"
+            variant="tertiary"
             onClick={() => createFloorMutation({ name: floorName })}
           >
             Floor 추가
@@ -164,6 +168,7 @@ export function Test() {
             </select>
           </div>
           <Button
+            variant="tertiary"
             className="my-auto"
             onClick={handleClickAddFacility}
           >
@@ -178,8 +183,8 @@ export function Test() {
         <div className="p-2 border-dashed border-2 rounded-md border-zinc-500">
           <div className="space-x-2">
             <Button
+              variant="tertiary"
               className="text-sm"
-              size="sm"
               onClick={() =>
                 setEditorMode((prev) =>
                   prev === 'edit' ? 'select' : 'edit',
@@ -189,8 +194,8 @@ export function Test() {
               {editorMode} mode
             </Button>
             <Button
+              variant="tertiary"
               className="text-sm"
-              size="sm"
               onClick={() =>
                 updateFacilityMutation(editingFacilities)
               }
@@ -198,9 +203,8 @@ export function Test() {
               Update Facility
             </Button>
             <Button
+              variant="tertiary"
               className="text-sm"
-              size="sm"
-              variant="outlined"
               onClick={() =>
                 removeFacilityMutation(
                   selectedFacility.map((v) => v.id),

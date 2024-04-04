@@ -1,11 +1,11 @@
 import React from 'react';
 
 import { Model } from '@slavseat/types';
-import { Drawer } from 'vaul';
 
 import { cn } from '@/shared/utils/class.util';
+import { getHHMM } from '@/shared/utils/date.util';
 
-import { getHHMM, getYYYYMMDD } from '../utils/reserve.util';
+import { getYYYYMMDD } from '../utils/reserve.util';
 
 interface ReserveListItemProps {
   reserve: Model.ReserveInfo;
@@ -19,27 +19,25 @@ function ReserveListItem({
   const { facility, always, start, end } = reserve;
 
   return (
-    <Drawer.Trigger asChild>
-      <li
-        className={cn(
-          'w-full h-12 flex items-center justify-between px-4',
-          'text-xs font-medium',
-          'bg-white',
-          'first:rounded-t-lg last:rounded-b-lg',
-        )}
-        onClick={() => onClickItem?.(reserve)}
-      >
-        <span>
-          {facility.floor.name}-{facility.name}
-        </span>
+    <li
+      className={cn(
+        'w-full h-12 flex items-center justify-between px-4',
+        'text-xs font-medium',
+        'bg-white',
+        'first:rounded-t-lg last:rounded-b-lg',
+      )}
+      onClick={() => onClickItem?.(reserve)}
+    >
+      <span>
+        {facility.floor.name}-{facility.name}
+      </span>
 
-        <span>
-          {always
-            ? `${getYYYYMMDD(start)} ${getHHMM(start)}`
-            : `${getHHMM(start)} - ${getHHMM(end)}`}
-        </span>
-      </li>
-    </Drawer.Trigger>
+      <span>
+        {always
+          ? `${getYYYYMMDD(start)} ${getHHMM(start)}`
+          : `${getHHMM(start)} - ${getHHMM(end)}`}
+      </span>
+    </li>
   );
 }
 
