@@ -89,9 +89,11 @@ function Reserve() {
           <p>님의 좌석 예약 현황</p>
         </h1>
         <p className="text-sm text-neutral-700">
-          {`현재 [${usingReserves
-            .map((reserve) => getSeatName(reserve))
-            .join(', ')}] 좌석을 이용 가능합니다.`}
+          {usingReserves
+            ? `현재 [${usingReserves
+                .map((reserve) => getSeatName(reserve))
+                .join(', ')}] 좌석을 이용 가능합니다.`
+            : '현재 이용가능한 좌석이 없습니다.'}
         </p>
       </header>
 
