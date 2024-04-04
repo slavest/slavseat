@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { CgSpinner } from 'react-icons/cg';
 import { Navigate } from 'react-router-dom';
 
 import MicrosoftIcon from '@/assets/MicrosoftIcon.svg';
 import { login } from '@/shared/api/auth';
+import { Loading } from '@/shared/components/Loading';
 import { useInitialize } from '@/shared/hooks/useInitialize';
 import { useUserStore } from '@/shared/stores/userStore';
 
@@ -27,7 +27,7 @@ function Login() {
           }}
         >
           {loading ? (
-            <CgSpinner className="animate-spin w-5 h-5" />
+            <Loading />
           ) : (
             <>
               <img

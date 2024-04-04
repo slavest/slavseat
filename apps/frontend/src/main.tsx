@@ -8,6 +8,7 @@ import {
   RouterProvider,
   createBrowserRouter,
 } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Favorite from './features/favorite/routes/Favorite.tsx';
 import Home from './features/home/routes/Home.tsx';
