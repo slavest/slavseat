@@ -6,7 +6,9 @@ import { parse } from 'date-fns';
 import { Badge, Status } from '@/shared/components/Badge';
 import { Button } from '@/shared/components/Button';
 import { Drawer } from '@/shared/components/Drawer';
+import { TimePicker } from '@/shared/components/TimePicker';
 import { Toggle } from '@/shared/components/Toggle';
+import { formatHHMM } from '@/shared/constants/date.constant';
 import { cn } from '@/shared/utils/class.util';
 import { getHHMM } from '@/shared/utils/date.util';
 
@@ -90,7 +92,7 @@ export function ReserveDrawer({
 
   return (
     <Drawer open={open} onClose={handleClose}>
-      <div>
+      <div data-vaul-no-drag={true}>
         {/* 현재 보는 좌석의 Status 표시 */}
         <Badge
           status={
@@ -133,7 +135,7 @@ export function ReserveDrawer({
       {/* info 스텝일때 표시할 내용 */}
       {step === 'info' && (
         <>
-          <div className="my-4 space-y-2">
+          <div className="my-4 space-y-2" data-vaul-no-drag={true}>
             {/* 현재 좌석에 대한 예약들 표시 */}
             {reserves?.map((reserve) => (
               <div
@@ -176,28 +178,24 @@ export function ReserveDrawer({
 
       {/* reserve 스텝일때 표시할 내용 */}
       {step === 'reserve' && (
-        <form onSubmit={handleSubmitForm}>
-          <div className="flex my-10 gap-2 items-center justify-center">
-            <input
-              type="time"
-              className="px-2 border-2 rounded-md border-neutral-200"
-              onChange={(e) =>
-                setStart(parse(e.target.value, 'HH:mm', new Date()))
+        <form onSubmit={handleSubmitForm} data-vaul-no-drag={true}>
+          <div
+            className="flex my-10 gap-4 items-center justify-center"
+            data-vaul-no-drag={true}
+          >
+            <TimePicker
+              className="text-lg"
+              onChangeTime={(v) =>
+                setStart(parse(v, formatHHMM, new Date()))
               }
-              required
             />
             <span className="text-sm">부터</span>
-            <input
-              type="time"
-              className={cn(
-                'px-2 border-2 rounded-md border-neutral-200',
-                { 'opacity-50': reserveType === 'always' },
-              )}
-              onChange={(e) =>
-                setEnd(parse(e.target.value, 'HH:mm', new Date()))
+            <TimePicker
+              className="text-lg"
+              onChangeTime={(v) =>
+                setEnd(parse(v, formatHHMM, new Date()))
               }
               disabled={reserveType === 'always'}
-              required={reserveType === 'period'}
             />
           </div>
           <div className="flex gap-3">

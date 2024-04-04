@@ -1,56 +1,82 @@
-import React, { useState } from 'react';
+import React, { useCallback } from 'react';
 
-import { inrange, registDragEvent } from './utils';
+import { format, parse } from 'date-fns';
 
-const HEIGHT = 32;
+import { formatHHMM } from '@/shared/constants/date.constant';
+import { useControlled } from '@/shared/hooks/useControlled';
+import { cn } from '@/shared/utils/class.util';
 
-interface TimeSliderProps {
-  slideCount: number;
+import { TimeSlider } from './components/TimeSlider';
+
+interface TimePickerProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  disabled?: boolean;
+  value?: string;
+  onChangeHour?: (hour: number) => void;
+  onChangeMinute?: (minute: number) => void;
+  onChangeTime?: (time: string) => void;
 }
 
-export function TimeSlider({ slideCount }: TimeSliderProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [transY, setTransY] = useState(0);
+export function TimePicker({
+  value,
+  disabled,
+  className,
+  onChangeHour,
+  onChangeMinute,
+  onChangeTime,
+  ...rest
+}: TimePickerProps) {
+  const [time, setTime] = useControlled('00:00', value);
+
+  const handleChangeHour = useCallback(
+    (value: number) => {
+      const date = parse(time, formatHHMM, new Date());
+      date.setHours(value);
+      const dateString = format(date, formatHHMM);
+
+      setTime(dateString);
+      onChangeHour?.(value);
+      onChangeTime?.(dateString);
+    },
+    [onChangeHour, onChangeTime, setTime, time],
+  );
+
+  const handleChangeMinute = useCallback(
+    (value: number) => {
+      const date = parse(time, formatHHMM, new Date());
+      date.setMinutes(value);
+      const dateString = format(date, formatHHMM);
+
+      setTime(dateString);
+      onChangeMinute?.(value);
+      onChangeTime?.(dateString);
+    },
+    [onChangeMinute, onChangeTime, setTime, time],
+  );
 
   return (
     <div
-      style={{
-        height: `${HEIGHT}px`,
-      }}
-      className="m-16 border-2 border-gray-200 overflow-visible select-none"
-      {...registDragEvent({
-        onDragChange: (_, deltaY) => {
-          setTransY(deltaY);
-        },
-        onDragEnd: (_, deltaY) => {
-          setCurrentIndex(
-            inrange(
-              Math.round((HEIGHT * currentIndex - deltaY) / HEIGHT),
-              0,
-              slideCount - 1,
-            ),
-          );
-          setTransY(0);
-        },
-      })}
+      data-vaul-no-drag={true}
+      className={cn(
+        'flex gap-2 items-center',
+        { 'opacity-50 touch-none': disabled },
+        className,
+      )}
+      {...rest}
     >
-      <div
-        className=""
-        style={{
-          transform: `translateY(${
-            -(HEIGHT * currentIndex) + transY
-          }px)`,
-          transition: `transform ${
-            transY ? 0 : 150
-          }ms ease-in-out 0s`,
-        }}
-      >
-        {new Array(slideCount).fill(0).map((_, i) => (
-          <div style={{ height: `${HEIGHT}px` }} key={i}>
-            {i + 1}
-          </div>
-        ))}
-      </div>
+      <TimeSlider
+        slideCount={24}
+        value={parse(time, formatHHMM, new Date()).getHours()}
+        onChange={handleChangeHour}
+        disabled={disabled}
+      />
+      <span>:</span>
+      <TimeSlider
+        slideCount={60}
+        value={parse(time, formatHHMM, new Date()).getMinutes()}
+        onChange={handleChangeMinute}
+        disabled={disabled}
+      />
     </div>
   );
 }

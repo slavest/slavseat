@@ -1,14 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { TimeSlider } from '@/shared/components/TimePicker';
-
 function Favorite() {
-  return (
-    <div className="w-full h-full">
-      <TimeSlider slideCount={60} />
-    </div>
-  );
+  alert('구현 예정인 페이지 입니다.');
+
+  return <Navigate to="/" />;
+  // return <div>Favorite</div>;
 }
 
 export default Favorite;
