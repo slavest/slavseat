@@ -1,6 +1,7 @@
 import React from 'react';
 import { CgSpinner } from 'react-icons/cg';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Bounce, ToastContainer } from 'react-toastify';
 
 import { FavoriteIcon } from '@/assets/icons/Favorite';
 import { HomeIcon } from '@/assets/icons/Home';
@@ -82,6 +83,20 @@ function Root() {
           <CgSpinner className="animate-spin w-5 h-5" />
         </div>
       )}
+
+      <ToastContainer
+        position="top-center"
+        autoClose={1500}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover={false}
+        theme="light"
+        transition={Bounce}
+      />
     </div>
   );
 }
