@@ -72,12 +72,18 @@ function Home() {
   return (
     <div className="h-full flex flex-col">
       <div>
-        <div className="px-6 py-6 text-xl font-bold">좌석 배치도</div>
-        <DateSelector
-          className="mx-4"
-          selected={selectedDate}
-          onSelect={setSelectedDate}
-        />
+        <div className="px-6 pt-6 pb-3 text-xl font-bold">
+          좌석 배치도
+        </div>
+        <div className="mx-4">
+          <div className="px-2 pb-2 text-xs text-gray-400">
+            {selectedDate.getMonth() + 1}월
+          </div>
+          <DateSelector
+            selected={selectedDate}
+            onSelect={setSelectedDate}
+          />
+        </div>
         {allFloorSummary && (
           <Tab
             selected={selectedFloor?.toString() ?? null}
