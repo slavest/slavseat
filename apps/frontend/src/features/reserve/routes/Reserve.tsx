@@ -66,6 +66,7 @@ function Reserve() {
     isError,
     isLoading,
     cancelReserve,
+    cancelLoading,
   } = useReserve({
     onCancelSuccess: () => {
       toast.success('예약이 취소되었습니다.');
@@ -129,6 +130,7 @@ function Reserve() {
 
       <CancelReserveDrawer
         targetReserve={selectedReserve}
+        loading={cancelLoading}
         onClose={() => setSelectedReserve(null)}
         onClickCancel={(reserve) => cancelReserve(reserve.id)}
       />

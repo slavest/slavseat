@@ -3,7 +3,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import {
   getReserveListByUser,
@@ -18,8 +18,9 @@ interface UseCancelReserveArgs {
 
 function useCancelReserve({ onSuccess }: UseCancelReserveArgs) {
   const queryClient = useQueryClient();
+  const [loading, setLoading] = useState(false);
 
-  return useMutation({
+  const { mutate } = useMutation({
     mutationFn: removeReserve,
     onSuccess: (data) => {
       queryClient.invalidateQueries({
@@ -28,7 +29,21 @@ function useCancelReserve({ onSuccess }: UseCancelReserveArgs) {
 
       onSuccess?.(data);
     },
+    onMutate: () => {
+      console.log('onMutate');
+      setLoading(true);
+    },
+    onSettled: () => {
+      setLoading(false);
+    },
   });
+
+  const values = useMemo(
+    () => ({ loading, mutate }),
+    [loading, mutate],
+  );
+
+  return values;
 }
 
 interface UseReserveArgs {
@@ -42,9 +57,10 @@ export function useReserve({ onCancelSuccess }: UseReserveArgs) {
   });
 
   // 예약 취소
-  const { mutate: cancelReserve } = useCancelReserve({
-    onSuccess: onCancelSuccess,
-  });
+  const { mutate: cancelReserve, loading: cancelLoading } =
+    useCancelReserve({
+      onSuccess: onCancelSuccess,
+    });
 
   // 고정 좌석 예약 정보
   const alwayReserve = useMemo(() => {
@@ -76,6 +92,7 @@ export function useReserve({ onCancelSuccess }: UseReserveArgs) {
     usingReserves,
     isError,
     isLoading,
+    cancelLoading,
     cancelReserve,
   };
 }
