@@ -29,15 +29,15 @@ export function TimeSlider({
 
   const calculateStyle = useCallback(
     (index: number): React.CSSProperties => {
-      if (index === currentIndex) return { color: 'blue' };
+      // if (index === currentIndex) return { color: 'blue' };
 
-      if (Math.abs(currentIndex - index) > viewHeight) {
-        return { color: 'red' };
-      }
+      // if (Math.abs(currentIndex - index) > viewHeight) {
+      //   return { color: 'red' };
+      // }
 
       return {};
     },
-    [currentIndex, viewHeight],
+    [],
   );
 
   return (

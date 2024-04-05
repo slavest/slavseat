@@ -3,7 +3,7 @@ import { IoMdArrowRoundBack } from 'react-icons/io';
 import { toast } from 'react-toastify';
 
 import { Model } from '@slavseat/types';
-import { parse } from 'date-fns';
+import { format, parse } from 'date-fns';
 
 import { Badge, Status } from '@/shared/components/Badge';
 import { Button } from '@/shared/components/Button';
@@ -50,8 +50,12 @@ export function ReserveDrawer({
     'period',
   );
 
-  const [start, setStart] = useState<Date>();
-  const [end, setEnd] = useState<Date>();
+  const [start, setStart] = useState<Date>(
+    parse('08:00', formatHHMM, new Date()),
+  );
+  const [end, setEnd] = useState<Date>(
+    parse('17:00', formatHHMM, new Date()),
+  );
 
   const handleSubmitForm = useCallback<
     React.FormEventHandler<HTMLFormElement>
@@ -194,6 +198,7 @@ export function ReserveDrawer({
           >
             <TimePicker
               className="text-lg"
+              value={format(start, formatHHMM)}
               onChangeTime={(v) =>
                 setStart(parse(v, formatHHMM, new Date()))
               }
@@ -201,6 +206,7 @@ export function ReserveDrawer({
             <span className="text-sm">부터</span>
             <TimePicker
               className="text-lg"
+              value={format(end, formatHHMM)}
               onChangeTime={(v) =>
                 setEnd(parse(v, formatHHMM, new Date()))
               }
