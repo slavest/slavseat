@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import {
   TransformComponent,
   TransformWrapper,
@@ -38,9 +39,16 @@ function Home() {
   const { data: reservesByDate, isLoading: isReserveLoading } =
     useGetReserveByDate(selectedDate);
 
-  const { mutate: addReserveMutation } = useAddReserveMutation({
-    onSuccess: () => setSelectedFacility(undefined),
-  });
+  const { mutate: addReserveMutation, loading: mutateLoading } =
+    useAddReserveMutation({
+      onSuccess: () => setSelectedFacility(undefined),
+      onError: (error) => {
+        toast.error(
+          error.response?.data.message.replace('.', '.\n') ||
+            '에러가 발생 했습니다.',
+        );
+      },
+    });
 
   const handleSubmitReserve = useCallback(
     (data: ReserveData) => {
@@ -108,6 +116,7 @@ function Home() {
         open={!!selectedFacility && !!reservesByDate}
         onClose={() => setSelectedFacility(undefined)}
         facility={selectedFacility}
+        loading={mutateLoading}
         reserves={reservesByDate?.filter(
           (reserve) => reserve.facility.id === selectedFacility?.id,
         )}

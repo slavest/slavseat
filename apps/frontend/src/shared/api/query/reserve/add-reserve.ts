@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMemo, useState } from 'react';
 
 import {
   addReserve,
@@ -9,10 +10,13 @@ import { BaseMutation } from '../type';
 
 export const useAddReserveMutation = ({
   onSuccess,
+  onError,
 }: BaseMutation<typeof addReserve>) => {
+  const [loading, setLoading] = useState(false);
+
   const queryClient = useQueryClient();
 
-  return useMutation({
+  const { mutate } = useMutation({
     mutationKey: [addReserve.name],
     mutationFn: addReserve,
     onSuccess: (data) => {
@@ -24,5 +28,19 @@ export const useAddReserveMutation = ({
       });
       onSuccess?.(data);
     },
+    onError,
+    onMutate: () => {
+      setLoading(true);
+    },
+    onSettled: () => {
+      setLoading(false);
+    },
   });
+
+  const values = useMemo(
+    () => ({ loading, mutate }),
+    [loading, mutate],
+  );
+
+  return values;
 };
