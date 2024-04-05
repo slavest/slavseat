@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import { IoMdArrowRoundBack } from 'react-icons/io';
 import { toast } from 'react-toastify';
 
 import { Model } from '@slavseat/types';
@@ -7,6 +8,7 @@ import { parse } from 'date-fns';
 import { Badge, Status } from '@/shared/components/Badge';
 import { Button } from '@/shared/components/Button';
 import { Drawer } from '@/shared/components/Drawer';
+import { Loading } from '@/shared/components/Loading';
 import { TimePicker } from '@/shared/components/TimePicker';
 import { Toggle } from '@/shared/components/Toggle';
 import { formatHHMM } from '@/shared/constants/date.constant';
@@ -30,6 +32,7 @@ interface ReserveDrawerProps {
   open: boolean;
   reserves?: Model.ReserveInfo[];
   facility?: Model.FacilitySummary;
+  loading?: boolean;
   onClose?: () => void;
   onSubmit?: (data: ReserveData) => void;
 }
@@ -38,6 +41,7 @@ export function ReserveDrawer({
   open,
   reserves,
   facility,
+  loading,
   onClose,
   onSubmit,
 }: ReserveDrawerProps) {
@@ -176,7 +180,7 @@ export function ReserveDrawer({
             className="mt-8"
             onClick={() => setStep('reserve')}
           >
-            예약 화면으로
+            예약 하기
           </Button>
         </>
       )}
@@ -206,21 +210,22 @@ export function ReserveDrawer({
           <div className="flex gap-3">
             <Button
               variant="secondary"
-              size="sm"
-              className="text-sm"
+              className="w-12 flex justify-center items-center"
               onClick={(e) => {
                 e.preventDefault();
                 setStep('info');
               }}
             >
-              예약 현황
+              {/* 예약 현황 */}
+              <IoMdArrowRoundBack />
             </Button>
             <Button
               variant="primary"
               type="submit"
               className="flex-1 text-sm"
+              disabled={loading}
             >
-              좌석 예약
+              {loading ? <Loading /> : '좌석 예약'}
             </Button>
           </div>
         </form>
