@@ -81,8 +81,8 @@ export function ReserveDrawer({
   const handleClose = useCallback(() => {
     setStep('info');
     setReserveType('period');
-    setStart(undefined);
-    setEnd(undefined);
+    setStart(parse('08:00', formatHHMM, new Date()));
+    setEnd(parse('17:00', formatHHMM, new Date()));
     onClose?.();
   }, [onClose]);
 
