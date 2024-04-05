@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { getAuthedUser } from '@/shared/api/auth';
 import { useUserStore } from '@/shared/stores/userStore';
 
+import { useAppStore } from '../stores/appStore';
 import { useInitializeStyle } from './useInitializeStyle';
 
 export const useInitialize = () => {
@@ -13,9 +14,24 @@ export const useInitialize = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const { setIsPWA, setDeviceOS } = useAppStore();
   const { setUser } = useUserStore();
 
   useEffect(() => {
+    if (window.matchMedia('(display-mode: standalone)').matches)
+      setIsPWA(true);
+    else setIsPWA(false);
+
+    const userAgent = navigator.userAgent;
+
+    if (/android/i.test(userAgent)) {
+      setDeviceOS('andorid');
+    }
+
+    if (/iPad|iPhone|iPod/.test(userAgent)) {
+      setDeviceOS('ios');
+    }
+
     getAuthedUser()
       .then((user) => {
         setUser(user);
