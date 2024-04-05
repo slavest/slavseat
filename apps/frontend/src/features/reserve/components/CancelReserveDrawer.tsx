@@ -4,13 +4,15 @@ import { Model } from '@slavseat/types';
 
 import { Button } from '@/shared/components/Button';
 import { Drawer } from '@/shared/components/Drawer';
+import { Loading } from '@/shared/components/Loading';
 import { cn } from '@/shared/utils/class.util';
 import { getHHMM } from '@/shared/utils/date.util';
 
-import { getYYYYMMDD } from '../utils/reserve.util';
+import { getSeatName, getYYYYMMDD } from '../utils/reserve.util';
 
 interface CancelReserveDrawerProps {
   targetReserve: Model.ReserveInfo | null;
+  loading?: boolean;
   onClose: () => void;
   onClickCancel: (reserve: Model.ReserveInfo) => void;
 }
@@ -18,6 +20,7 @@ interface CancelReserveDrawerProps {
 // eslint-disable-next-line react-refresh/only-export-components
 export function CancelReserveDrawer({
   targetReserve,
+  loading,
   onClose,
   onClickCancel,
 }: CancelReserveDrawerProps) {
@@ -27,28 +30,36 @@ export function CancelReserveDrawer({
         {targetReserve ? (
           <div className="flex flex-col gap-y-3">
             <div className="flex items-center justify-between gap-x-2">
-              <p className="text-xl font-semibold">
-                {getYYYYMMDD(targetReserve.start)}
-              </p>
-              <p>
-                {targetReserve.always
-                  ? `고정 좌석`
-                  : `${getHHMM(
-                      targetReserve.start,
-                      (hh, mm) => `${hh}시 ${mm}분`,
-                    )} ~ ${getHHMM(
-                      targetReserve.end,
-                      (hh, mm) => `${hh}시 ${mm}분`,
-                    )}`}
-              </p>
+              <div>
+                <p className="text-xl font-semibold">
+                  {getYYYYMMDD(targetReserve.start)}
+                </p>
+
+                <p>
+                  {targetReserve.always
+                    ? `고정 좌석`
+                    : `${getHHMM(
+                        targetReserve.start,
+                        (hh, mm) => `${hh}시 ${mm}분`,
+                      )} ~ ${getHHMM(
+                        targetReserve.end,
+                        (hh, mm) => `${hh}시 ${mm}분`,
+                      )}`}
+                </p>
+              </div>
+
+              <h4 className="text-xl font-semibold">
+                {getSeatName(targetReserve)}
+              </h4>
             </div>
 
             <Button
               variant="secondary"
               className="w-full"
-              onMouseDown={() => onClickCancel(targetReserve)}
+              disabled={loading}
+              onClick={() => onClickCancel(targetReserve)}
             >
-              예약 취소 하기
+              {loading ? <Loading /> : '예약 취소 하기'}
             </Button>
           </div>
         ) : null}
