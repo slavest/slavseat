@@ -16,6 +16,10 @@ export const useInitialize = () => {
   const { setUser } = useUserStore();
 
   useEffect(() => {
+    if (window.matchMedia('(display-mode: standalone)').matches)
+      // Log launch display mode to analytics
+      console.log('DISPLAY_MODE_LAUNCH:', displayMode);
+
     getAuthedUser()
       .then((user) => {
         setUser(user);
