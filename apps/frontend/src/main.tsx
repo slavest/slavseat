@@ -10,12 +10,13 @@ import {
 } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { Test } from './features/admin/routes/Admin.tsx';
+import { AdminRoot } from './features/admin/routes/Root.tsx';
 import Favorite from './features/favorite/routes/Favorite.tsx';
 import Home from './features/home/routes/Home.tsx';
 import Login from './features/login/routes/Login.tsx';
 import Profile from './features/profile/routes/Profile.tsx';
 import Reserve from './features/reserve/routes/Reserve.tsx';
-import { Test } from './features/test/routes/Test.tsx';
 import { Locations } from './shared/constants/location.constant.ts';
 import Root from './shared/routes/Root.tsx';
 import './shared/styles/global-style.css.ts';
@@ -38,6 +39,16 @@ const router = createBrowserRouter([
   {
     path: '/test',
     element: <Test />,
+  },
+  {
+    path: Locations.ADMIN.ROOT,
+    element: <AdminRoot />,
+    children: [
+      {
+        path: Locations.ADMIN.FACILITY.EDIT,
+        element: <span>ADMIN 1</span>,
+      },
+    ],
   },
 ]);
 
