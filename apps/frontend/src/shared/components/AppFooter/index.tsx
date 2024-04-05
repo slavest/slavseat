@@ -51,7 +51,11 @@ function FooterButton({
   );
 }
 
-export function AppFooter() {
+interface AppFooterProps {
+  onClickPlusButton?: () => void;
+}
+
+export function AppFooter({ onClickPlusButton }: AppFooterProps) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -66,6 +70,7 @@ export function AppFooter() {
           홈
         </p>
       </FooterButton>
+
       <FooterButton
         active={location.pathname === Locations.RESERVE}
         onClick={() => navigate(Locations.RESERVE)}
@@ -75,11 +80,18 @@ export function AppFooter() {
           예약
         </p>
       </FooterButton>
-      <FooterButton>
-        <article className="text-white bg-green-400 p-2 rounded-full mb-2">
+
+      <FooterButton onClick={onClickPlusButton}>
+        <article
+          className={cn(
+            'text-white bg-primary p-2 rounded-full mb-2 transition-transform',
+            'active:scale-110',
+          )}
+        >
           <PlusIcon />
         </article>
       </FooterButton>
+
       <FooterButton
         active={location.pathname === Locations.FAVORITE}
         onClick={() => navigate(Locations.FAVORITE)}
@@ -89,6 +101,7 @@ export function AppFooter() {
           즐겨찾기
         </p>
       </FooterButton>
+
       <FooterButton
         active={location.pathname === Locations.PROFILE}
         onClick={() => navigate(Locations.PROFILE)}
