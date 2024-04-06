@@ -11,6 +11,14 @@ export const Locations = {
       EDIT: '/admin/facility/edit',
       VIEW: '/admin/facility/view',
     },
+    FLOOR: {
+      ROOT: '/admin/floor',
+      MANAGE: '/admin/floor/manage',
+    },
+    RESERVE: {
+      ROOT: '/admin/reserve',
+      MANAGE: '/admin/reserve/manage',
+    },
   },
 };
 export type Locations = (typeof Locations)[keyof typeof Locations];
