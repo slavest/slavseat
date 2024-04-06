@@ -9,9 +9,12 @@ import { AppFooter } from '../components/AppFooter';
 import { Button } from '../components/Button';
 import { FloatingDrawer } from '../components/Drawer';
 import { Loading } from '../components/Loading';
+import { useAppStore } from '../stores/appStore';
+import { cn } from '../utils/class.util';
 
 function Root() {
   const { initialized } = useInitialize();
+  const { isPWA, deviceOS } = useAppStore();
   const [isOpenShortcut, setIsOpenShortcut] = useState(false);
 
   const openShortcut = () => setIsOpenShortcut(true);
@@ -27,7 +30,15 @@ function Root() {
       <header className="hidden">Header</header>
       {initialized ? (
         <>
-          <main className="h-[calc(100%_-_var(--var-footer-height)_-_var(--var-footer-padding-bottom))]">
+          <main
+            className={cn(
+              'h-[calc(100%_-_var(--var-footer-height))]',
+              {
+                'h-[calc(100%_-_var(--var-footer-height)_-_var(--var-footer-padding-bottom))]':
+                  deviceOS === 'ios' && isPWA,
+              },
+            )}
+          >
             <Outlet />
           </main>
 

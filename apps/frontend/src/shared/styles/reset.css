@@ -4,7 +4,7 @@
 
 :root {
   --var-footer-height: 4rem;
-  --var-footer-padding-bottom: 2rem;
+  --var-footer-padding-bottom: 1.5rem;
   --toastify-toast-width: 70%;
   --toastify-font-family: 'Noto Sans KR', sans-serif;
   --toastify-toast-offset: 24px;

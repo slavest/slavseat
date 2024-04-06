@@ -8,10 +8,13 @@ export const getAuthedUser = () => {
     .then((res) => res.data);
 };
 
-export const login = (provider: string = 'microsoft') => {
+export const login = (
+  provider: string = 'microsoft',
+  callbackUrl: string = '/',
+) => {
   const baseURL = import.meta.env.DEV ? 'http://localhost:3000' : '';
 
-  window.location.href = `${baseURL}/api/auth/${provider}?redirectBackTo=${window.location.origin}`;
+  window.location.href = `${baseURL}/api/auth/${provider}?redirectBackTo=${window.location.origin}${callbackUrl}`;
 };
 
 export const refreshAccessToken = () => {

@@ -14,8 +14,8 @@ export default defineConfig({
       base: '/',
       includeAssets: ['vite.svg'],
       manifest: {
-        name: 'Seat Reserve',
-        short_name: 'Seat Reserve',
+        name: 'Booksy 좌석예약',
+        short_name: 'Booksy',
         theme_color: '#ffffff',
         icons: [
           // {
@@ -24,7 +24,7 @@ export default defineConfig({
           //   type: 'image/png',
           // },
           {
-            src: 'vite-512.png', // <== don't remove slash, for testing
+            src: 'booksy-512.png', // <== don't remove slash, for testing
             sizes: '512x512',
             type: 'image/png',
           },
