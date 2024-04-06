@@ -9,6 +9,7 @@ import MicrosoftIcon from '@/assets/MicrosoftIcon.svg';
 import { login } from '@/shared/api/auth';
 import { Loading } from '@/shared/components/Loading';
 import { useInitialize } from '@/shared/hooks/useInitialize';
+import { LogoWithoutNameIcon } from '@/shared/icons/LogoWithoutNameIcon';
 import { useUserStore } from '@/shared/stores/userStore';
 
 function Login() {
@@ -25,7 +26,10 @@ function Login() {
   return (
     <div className="w-screen h-screen flex flex-col items-center justify-center">
       <div className="flex flex-col items-center gap-8">
-        <span className="text-xl font-bold">로그인</span>
+        <div className="flex flex-col items-center gap-4">
+          <LogoWithoutNameIcon className="w-14 h-14 mx-auto" />
+          <span className="text-xl font-bold">로그인</span>
+        </div>
         <button
           className="flex justify-center items-center gap-3 w-60 h-11 rounded-2xl text-sm font-medium bg-black text-white active:bg-neutral-700 transition-colors"
           onClick={() => {
