@@ -7,7 +7,7 @@ export const Locations = {
   ADMIN: {
     ROOT: '/admin',
     FACILITY: {
-      ROOT: '/admini/facility',
+      ROOT: '/admin/facility',
       EDIT: '/admin/facility/edit',
       VIEW: '/admin/facility/view',
     },
