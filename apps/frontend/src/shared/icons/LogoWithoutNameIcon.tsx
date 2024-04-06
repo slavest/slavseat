@@ -20,20 +20,20 @@ export function LogoWithoutNameIcon(props: LogoWithoutNameIconProps) {
       <path
         d="M140.236 239.962V78"
         stroke="white"
-        stroke-width="10"
-        stroke-linecap="square"
+        strokeWidth="10"
+        strokeLinecap="square"
       />
       <path
         d="M116.534 239.559V125"
         stroke="white"
-        stroke-width="10"
-        stroke-linecap="square"
+        strokeWidth="10"
+        strokeLinecap="square"
       />
       <path
         d="M162 239.559L162 125"
         stroke="white"
-        stroke-width="10"
-        stroke-linecap="square"
+        strokeWidth="10"
+        strokeLinecap="square"
       />
     </svg>
   );

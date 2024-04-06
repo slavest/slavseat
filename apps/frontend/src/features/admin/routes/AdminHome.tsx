@@ -19,16 +19,18 @@ import FacilityGridEditor, {
 } from '@/shared/components/FacilityGridEditor';
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
 import ScrollArea from '@/shared/components/ScrollArea';
-import { useInitialize } from '@/shared/hooks/useInitialize';
 import { useUserStore } from '@/shared/stores/userStore';
 import { hideScrollBar } from '@/shared/styles/global-style.css';
 import { cn } from '@/shared/utils/class.util';
 
 import { Box } from '../components/Box';
+import { useAdminAppStore } from '../stores/adminAppStore';
 
-export function Test() {
-  useInitialize();
+export function AdminHome() {
+  const { setTitle } = useAdminAppStore();
   const { user } = useUserStore();
+
+  useEffect(() => setTitle('Admin'), [setTitle]);
 
   const [editingFloor, setEditingFloor] = useState<number>();
   const [floorName, setFloorName] = useState<string>('');
