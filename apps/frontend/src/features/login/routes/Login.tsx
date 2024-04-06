@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import {
+  Navigate,
+  useLocation,
+  useSearchParams,
+} from 'react-router-dom';
 
 import MicrosoftIcon from '@/assets/MicrosoftIcon.svg';
 import { login } from '@/shared/api/auth';
@@ -9,11 +13,14 @@ import { useUserStore } from '@/shared/stores/userStore';
 
 function Login() {
   useInitialize();
+  const location = useLocation();
+  const [params] = useSearchParams(location.search);
   const { user } = useUserStore();
 
   const [loading, setLoading] = useState(false);
 
-  if (user !== null) return <Navigate to="/" />;
+  if (user !== null)
+    return <Navigate to={params.get('callbackUrl') ?? '/'} />;
 
   return (
     <div className="w-screen h-screen flex flex-col items-center justify-center">
@@ -23,7 +30,7 @@ function Login() {
           className="flex justify-center items-center gap-3 w-60 h-11 rounded-2xl text-sm font-medium bg-black text-white active:bg-neutral-700 transition-colors"
           onClick={() => {
             setLoading(true);
-            login('microsoft');
+            login('microsoft', params.get('callbackUrl') ?? '/');
           }}
         >
           {loading ? (

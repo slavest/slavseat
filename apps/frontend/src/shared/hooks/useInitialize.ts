@@ -38,7 +38,8 @@ export const useInitialize = () => {
       })
       .catch(() => {
         console.error('로그인된 유저 정보를 불러올 수 없습니다.');
-        if (location.pathname !== '/login') navigate('/login');
+        if (location.pathname !== '/login')
+          navigate(`/login?callbackUrl=${location.pathname}`);
       })
       .finally(() => {
         setInitialized(true);
