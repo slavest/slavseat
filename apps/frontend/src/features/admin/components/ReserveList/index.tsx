@@ -2,13 +2,9 @@ import React from 'react';
 
 import { Model } from '@slavseat/types';
 
+import { getYYYYMMDD } from '@/features/reserve/utils/reserve.util';
 import { cn } from '@/shared/utils/class.util';
 import { getHHMM } from '@/shared/utils/date.util';
-
-import {
-  getYYYYMMDD,
-  sortReserveByDate,
-} from '../utils/reserve.util';
 
 interface ReserveListItemProps {
   reserve: Model.ReserveInfo;

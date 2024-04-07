@@ -14,7 +14,7 @@ export function getYYYYMMDD(date: Date) {
 export function groupDataByDate(data: Model.ReserveInfo[]) {
   const groupedData: GroupedData = {};
 
-  data.forEach((item) => {
+  data.sort(sortReserveByDate).forEach((item) => {
     const dateString = getYYYYMMDD(item.start);
 
     if (!groupedData[dateString]) {
@@ -38,4 +38,12 @@ export function checkUsing(data: Model.ReserveInfo) {
 
 export function getSeatName(reserve: Model.ReserveInfo) {
   return `${reserve.facility.floor.name} - ${reserve.facility.name}`;
+}
+
+export function sortReserveByDate(
+  a: Model.ReserveInfo,
+  b: Model.ReserveInfo,
+) {
+  if (a.always) return -1;
+  return new Date(b.start).getTime() - new Date(a.start).getTime();
 }

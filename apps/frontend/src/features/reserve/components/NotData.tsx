@@ -10,8 +10,11 @@ export function NotData({
 }: NotDataProps) {
   return (
     <section className="w-full flex flex-col items-center">
-      <BiSolidErrorCircle className="opacity-60 mb-4" size="50%" />
-      <p className="text-xl font-bold text-neutral-700">
+      <BiSolidErrorCircle
+        className="fill-neutral-400 mb-4"
+        size="25%"
+      />
+      <p className="text-xl font-bold text-neutral-600">
         {notDataPrefix} 존재하지 않습니다.
       </p>
     </section>

@@ -10,8 +10,12 @@ import {
 } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { Test } from './features/admin/routes/Admin.tsx';
-import { AdminRoot } from './features/admin/routes/Root.tsx';
+import { AdminFacilityEdit } from './features/admin/routes/AdminFacilityEdit.tsx';
+import { AdminFacilityView } from './features/admin/routes/AdminFacilityView.tsx';
+import { AdminFloorManage } from './features/admin/routes/AdminFloorManage.tsx';
+import { AdminHome } from './features/admin/routes/AdminHome.tsx';
+import { AdminReserveManage } from './features/admin/routes/AdminReserveManage.tsx';
+import { AdminRoot } from './features/admin/routes/AdminRoot.tsx';
 import Favorite from './features/favorite/routes/Favorite.tsx';
 import Home from './features/home/routes/Home.tsx';
 import Login from './features/login/routes/Login.tsx';
@@ -37,16 +41,28 @@ const router = createBrowserRouter([
   },
   { path: Locations.LOGIN, element: <Login /> },
   {
-    path: '/test',
-    element: <Test />,
-  },
-  {
     path: Locations.ADMIN.ROOT,
     element: <AdminRoot />,
     children: [
       {
+        path: Locations.ADMIN.ROOT,
+        element: <AdminHome />,
+      },
+      {
         path: Locations.ADMIN.FACILITY.EDIT,
-        element: <span>ADMIN 1</span>,
+        element: <AdminFacilityEdit />,
+      },
+      {
+        path: Locations.ADMIN.FACILITY.VIEW,
+        element: <AdminFacilityView />,
+      },
+      {
+        path: Locations.ADMIN.FLOOR.MANAGE,
+        element: <AdminFloorManage />,
+      },
+      {
+        path: Locations.ADMIN.RESERVE.MANAGE,
+        element: <AdminReserveManage />,
       },
     ],
   },
