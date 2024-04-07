@@ -27,7 +27,7 @@ function Container({
   return (
     <div
       className={cn(
-        'w-full h-full bg-neutral-100 px-10 pt-16',
+        'w-full h-full bg-neutral-100 px-10 py-16',
         className,
       )}
       {...attr}
@@ -86,7 +86,7 @@ function Reserve() {
   }
 
   return (
-    <Container className="overflow-hidden">
+    <Container className="flex flex-col h-full overflow-hidden">
       <header className="mb-8">
         <h1 className="w-full flex items-center flex-wrap text-2xl font-bold">
           <p>{user?.name || <Loading />}</p>
@@ -101,7 +101,7 @@ function Reserve() {
         </p>
       </header>
 
-      <ScrollArea>
+      <ScrollArea className="">
         <section className="flex flex-col gap-y-8">
           <Content
             loading={isLoading}
