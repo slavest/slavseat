@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { Model } from '@slavseat/types';
 
 import { Loading } from '@/shared/components/Loading';
+import ScrollArea from '@/shared/components/ScrollArea';
 import { useUserStore } from '@/shared/stores/userStore';
 import { cn } from '@/shared/utils/class.util';
 
@@ -26,7 +27,7 @@ function Container({
   return (
     <div
       className={cn(
-        'w-full h-full bg-neutral-100 px-10 py-16',
+        'w-full h-full bg-neutral-100 px-10 pt-16',
         className,
       )}
       {...attr}
@@ -85,7 +86,7 @@ function Reserve() {
   }
 
   return (
-    <Container>
+    <Container className="overflow-hidden">
       <header className="mb-8">
         <h1 className="w-full flex items-center flex-wrap text-2xl font-bold">
           <p>{user?.name || <Loading />}</p>
@@ -100,12 +101,12 @@ function Reserve() {
         </p>
       </header>
 
-      <section className="flex flex-col gap-y-8">
-        <Content
-          loading={isLoading}
-          notData={!alwayReserve && dateKeys.length < 1}
-        >
-          <>
+      <ScrollArea>
+        <section className="flex flex-col gap-y-8">
+          <Content
+            loading={isLoading}
+            notData={!alwayReserve && dateKeys.length < 1}
+          >
             {alwayReserve && (
               <ReserveList
                 title="고정 좌석"
@@ -124,9 +125,9 @@ function Reserve() {
                 />
               ) : null,
             )}
-          </>
-        </Content>
-      </section>
+          </Content>
+        </section>
+      </ScrollArea>
 
       <CancelReserveDrawer
         targetReserve={selectedReserve}
