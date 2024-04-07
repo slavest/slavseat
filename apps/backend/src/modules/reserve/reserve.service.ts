@@ -3,9 +3,9 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Model } from '@slavseat/types';
 import { Redis } from 'ioredis';
@@ -36,6 +36,7 @@ export class ReserveService {
     private readonly reserveRepository: Repository<Reserve>,
     private readonly facilityService: FacilityService,
     private readonly redisService: RedisService,
+    private readonly configService: ConfigService,
   ) {
     this.redisClient = this.redisService.getClient();
   }
@@ -128,10 +129,21 @@ export class ReserveService {
     user: User,
     removeReserveDto: RemoveReserveRequestDto,
   ): Promise<RemoveReserveResponseDto> {
-    const exist = await this.reserveRepository.findOneBy({
-      id: removeReserveDto.id,
-      user: { id: user.id },
-    });
+    const admins = this.configService.get('ADMINS') as
+      | string[]
+      | undefined;
+    let exist: Reserve;
+
+    if (admins?.includes(user.email)) {
+      exist = await this.reserveRepository.findOneBy({
+        id: removeReserveDto.id,
+      });
+    } else {
+      exist = await this.reserveRepository.findOneBy({
+        id: removeReserveDto.id,
+        user: { id: user.id },
+      });
+    }
     if (!exist) throw new NotFoundException('reserve not found');
 
     const removeResult = await this.reserveRepository.delete(
