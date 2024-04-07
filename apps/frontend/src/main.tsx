@@ -14,6 +14,7 @@ import { AdminFacilityEdit } from './features/admin/routes/AdminFacilityEdit.tsx
 import { AdminFacilityView } from './features/admin/routes/AdminFacilityView.tsx';
 import { AdminFloorManage } from './features/admin/routes/AdminFloorManage.tsx';
 import { AdminHome } from './features/admin/routes/AdminHome.tsx';
+import { AdminReserveManage } from './features/admin/routes/AdminReserveManage.tsx';
 import { AdminRoot } from './features/admin/routes/AdminRoot.tsx';
 import Favorite from './features/favorite/routes/Favorite.tsx';
 import Home from './features/home/routes/Home.tsx';
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
       {
         path: Locations.ADMIN.FLOOR.MANAGE,
         element: <AdminFloorManage />,
+      },
+      {
+        path: Locations.ADMIN.RESERVE.MANAGE,
+        element: <AdminReserveManage />,
       },
     ],
   },

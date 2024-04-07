@@ -55,6 +55,14 @@ export function AdminRoot() {
                   관리
                 </SideBar.Item>
               </SideBar.ItemGroup>
+              <SideBar.ItemGroup
+                groupKey={Locations.ADMIN.RESERVE.ROOT}
+                label="예약"
+              >
+                <SideBar.Item value={Locations.ADMIN.RESERVE.MANAGE}>
+                  관리
+                </SideBar.Item>
+              </SideBar.ItemGroup>
             </SideBar>
 
             <div className="flex-1 flex flex-col max-h-screen">

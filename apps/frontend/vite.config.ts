@@ -12,7 +12,11 @@ export default defineConfig({
     vanillaExtractPlugin(),
     VitePWA({
       base: '/',
-      includeAssets: ['vite.svg'],
+      includeAssets: [
+        'booksy.svg',
+        'booksy-app-256.png',
+        'booksy-app-512.png',
+      ],
       manifest: {
         name: 'Booksy 좌석예약',
         short_name: 'Booksy',
@@ -24,7 +28,12 @@ export default defineConfig({
           //   type: 'image/png',
           // },
           {
-            src: 'booksy-512.png', // <== don't remove slash, for testing
+            src: 'booksy-app-256.png', // <== don't remove slash, for testing
+            sizes: '256x256',
+            type: 'image/png',
+          },
+          {
+            src: 'booksy-app-512.png', // <== don't remove slash, for testing
             sizes: '512x512',
             type: 'image/png',
           },
