@@ -5,7 +5,10 @@ import { Model } from '@slavseat/types';
 import { cn } from '@/shared/utils/class.util';
 import { getHHMM } from '@/shared/utils/date.util';
 
-import { getYYYYMMDD } from '../utils/reserve.util';
+import {
+  getYYYYMMDD,
+  sortReserveByDate,
+} from '../utils/reserve.util';
 
 interface ReserveListItemProps {
   reserve: Model.ReserveInfo;
