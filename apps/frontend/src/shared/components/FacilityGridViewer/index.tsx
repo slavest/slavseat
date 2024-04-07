@@ -15,19 +15,24 @@ interface FacilityGridViewerProps
   extends GridLayout.ReactGridLayoutProps {
   facilities: Model.FacilitySummary[];
   reserves: Model.ReserveInfo[];
+  selected?: number[];
   onClickFacility?: (facility: Model.FacilitySummary) => void;
+  onItemRender?: (
+    facility: Model.FacilitySummary,
+    ref: HTMLDivElement | null,
+  ) => void;
 }
 
 function FacilityGridViewer({
   facilities,
   reserves,
+  selected,
   style,
   className,
   onClickFacility,
+  onItemRender,
   ...rest
 }: FacilityGridViewerProps) {
-  const gridRef = useRef<GridLayout>(null);
-
   const cols = 100;
   const width = 5000;
 
@@ -66,7 +71,6 @@ function FacilityGridViewer({
 
   return (
     <GridLayout
-      ref={gridRef}
       compactType={null}
       preventCollision={true}
       layout={facilities.map(({ id, ...facility }) => ({
@@ -90,7 +94,13 @@ function FacilityGridViewer({
           className="p-1 transition-none"
           onClick={() => onClickFacility?.(facility)}
         >
-          <div className="w-full h-full flex justify-center items-center p-2 bg-neutral-50 border border-neutral-200 rounded-md select-none box-border">
+          <div
+            ref={(ref) => onItemRender?.(facility, ref)}
+            className={cn(
+              'w-full h-full flex justify-center items-center p-2 bg-neutral-50 border border-neutral-200 rounded-md select-none box-border',
+              { 'border-black': selected?.includes(facility.id) },
+            )}
+          >
             <div className="flex flex-col gap-2 justify-center items-center">
               <Text className="text-sm font-medium">
                 {facility.name}
