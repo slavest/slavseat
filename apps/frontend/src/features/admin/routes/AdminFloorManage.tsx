@@ -15,7 +15,10 @@ export function AdminFloorManage() {
   const [floorName, setFloorName] = useState<string>('');
 
   const { mutate: createFloorMutation } = useCreateFloorMutation({
-    onSuccess: () => setFloorName(''),
+    onSuccess: () => {
+      setFloorName('');
+      toast.success('추가를 완료했습니다.');
+    },
     onError: (e) => toast.error(e.response?.data.message),
   });
 
