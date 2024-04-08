@@ -91,13 +91,12 @@ function Root() {
       className={cn(
         'w-screen h-[calc(100dvh)] flex justify-center',
         'bg-slate-100',
-        'xl:gap-x-8',
+        'xl:gap-x-32',
       )}
     >
       <div
         className={cn(
           'hidden h-full max-h-[calc(100dvh)] overflow-y-auto scroll-smooth',
-          'bg-white border-r border-l border-gray-300 shadow-md',
           'xl:block xl:w-[50rem]',
           hideScrollBar,
         )}
@@ -112,7 +111,7 @@ function Root() {
       <div
         className={cn(
           'w-full h-full max-w-[64rem] flex flex-col overflow-hidden bg-white',
-          'xl:min-w-[26.25rem] xl:max-w-[40dvh] xl:shadow-md xl:border-r xl:border-l border-gray-300',
+          'xl:min-w-[26.25rem] xl:max-w-[40dvh] xl:shadow-blur-sm xl:border-r xl:border-l border-gray-300',
         )}
       >
         <header className="hidden">Header</header>

@@ -13,7 +13,7 @@ export function LogoWithNameIcon(props: LogoWithNameIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <rect width="512" height="512" fill="white" />
+      <rect width="512" height="512" />
       <path
         d="M116 255.664L255.664 116L395.328 255.664L325.496 325.496L290.58 360.412H255.664H220.748L185.832 325.496L116 255.664Z"
         fill="black"
