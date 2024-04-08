@@ -1,5 +1,6 @@
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Bounce, ToastContainer } from 'react-toastify';
 
 import { Loading } from '@/shared/components/Loading';
 import ScrollArea from '@/shared/components/ScrollArea';
@@ -26,6 +27,7 @@ export function AdminRoot() {
         <div className="flex flex-col w-full h-full">
           <div className="flex flex-1">
             <SideBar
+              className="w-[var(--var-admin-sidebar-width)]"
               onItemClick={(v) => navigate(v.value)}
               activated={location.pathname}
             >
@@ -65,7 +67,7 @@ export function AdminRoot() {
               </SideBar.ItemGroup>
             </SideBar>
 
-            <div className="flex-1 flex flex-col max-h-screen">
+            <div className="flex-1 flex flex-col w-[calc(100%_-_var(--var-admin-sidebar-width))] max-h-screen">
               <AdminHeader title={title} />
               <ScrollArea>
                 <Outlet />
@@ -76,6 +78,20 @@ export function AdminRoot() {
       ) : (
         <Loading />
       )}
+
+      <ToastContainer
+        position="bottom-right"
+        autoClose={1500}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        // rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover={false}
+        theme="light"
+        transition={Bounce}
+      />
     </div>
   );
 }

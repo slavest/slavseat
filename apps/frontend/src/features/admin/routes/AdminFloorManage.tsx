@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import { useCreateFloorMutation } from '@/shared/api/query/floor/create-floor';
 import { useGetAllFloorSummaryQuery } from '@/shared/api/query/floor/get-all-floor-summary';
@@ -15,6 +16,7 @@ export function AdminFloorManage() {
 
   const { mutate: createFloorMutation } = useCreateFloorMutation({
     onSuccess: () => setFloorName(''),
+    onError: (e) => toast.error(e.response?.data.message),
   });
 
   const { data: allFloorSummary } = useGetAllFloorSummaryQuery();

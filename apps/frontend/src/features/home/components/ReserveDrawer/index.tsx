@@ -46,9 +46,9 @@ export function ReserveDrawer({
   onSubmit,
 }: ReserveDrawerProps) {
   const [step, setStep] = useState<'info' | 'reserve'>('info');
-  const [reserveType, setReserveType] = useState<'always' | 'period'>(
-    'period',
-  );
+  const [reserveType, setReserveType] = useState<
+    'always' | 'period' | 'day'
+  >('day');
 
   const [start, setStart] = useState<Date>(
     parse('08:00', formatHHMM, new Date()),
@@ -56,6 +56,11 @@ export function ReserveDrawer({
   const [end, setEnd] = useState<Date>(
     parse('17:00', formatHHMM, new Date()),
   );
+
+  const setRange = useCallback((start: string, end: string) => {
+    setStart(parse(start, formatHHMM, new Date()));
+    setEnd(parse(end, formatHHMM, new Date()));
+  }, []);
 
   const handleSubmitForm = useCallback<
     React.FormEventHandler<HTMLFormElement>
@@ -80,7 +85,7 @@ export function ReserveDrawer({
 
   const handleClose = useCallback(() => {
     setStep('info');
-    setReserveType('period');
+    setReserveType('day');
     setStart(parse('08:00', formatHHMM, new Date()));
     setEnd(parse('17:00', formatHHMM, new Date()));
     onClose?.();
@@ -116,6 +121,7 @@ export function ReserveDrawer({
                 : Status.ABLE_RESERVE
           }
         />
+
         <div className="flex justify-between items-center text-2xl font-medium">
           <span>
             {facility?.name}
@@ -132,6 +138,7 @@ export function ReserveDrawer({
                 setReserveType(v as typeof reserveType)
               }
             >
+              <Toggle.Item value="day">종일</Toggle.Item>
               <Toggle.Item value="period">시간차</Toggle.Item>
               <Toggle.Item value="always">고정석</Toggle.Item>
             </Toggle.Root>
@@ -196,23 +203,57 @@ export function ReserveDrawer({
             className="flex my-10 gap-4 items-center justify-center"
             data-vaul-no-drag={true}
           >
-            <TimePicker
-              className="text-lg"
-              value={format(start, formatHHMM)}
-              onChangeTime={(v) =>
-                setStart(parse(v, formatHHMM, new Date()))
-              }
-            />
-            <span className="text-sm">부터</span>
-            <TimePicker
-              className="text-lg"
-              value={format(end, formatHHMM)}
-              onChangeTime={(v) =>
-                setEnd(parse(v, formatHHMM, new Date()))
-              }
-              disabled={reserveType === 'always'}
-            />
+            {reserveType === 'day' ? (
+              <>
+                <Toggle.Root
+                  className="h-[4rem] p-1.5 rounded-xl"
+                  defaultValue="85"
+                >
+                  <Toggle.Item
+                    value="85"
+                    className="w-[5rem] grid place-content-center text-lg font-semibold rounded-lg"
+                    onClick={() => setRange('08:00', '17:00')}
+                  >
+                    8 To 5
+                  </Toggle.Item>
+                  <Toggle.Item
+                    value="96"
+                    className="w-[5rem] grid place-content-center text-lg font-semibold rounded-lg"
+                    onClick={() => setRange('09:00', '18:00')}
+                  >
+                    9 To 6
+                  </Toggle.Item>
+                  <Toggle.Item
+                    value="107"
+                    className="w-[5rem] grid place-content-center text-lg font-semibold rounded-lg"
+                    onClick={() => setRange('10:00', '19:00')}
+                  >
+                    10 To 7
+                  </Toggle.Item>
+                </Toggle.Root>
+              </>
+            ) : (
+              <>
+                <TimePicker
+                  className="text-lg"
+                  value={format(start, formatHHMM)}
+                  onChangeTime={(v) => {
+                    setStart(parse(v, formatHHMM, new Date()));
+                  }}
+                />
+                <span className="text-sm">부터</span>
+                <TimePicker
+                  className="text-lg"
+                  value={format(end, formatHHMM)}
+                  onChangeTime={(v) =>
+                    setEnd(parse(v, formatHHMM, new Date()))
+                  }
+                  disabled={reserveType === 'always'}
+                />
+              </>
+            )}
           </div>
+
           <div className="flex gap-3">
             <Button
               variant="secondary"

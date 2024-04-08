@@ -15,7 +15,11 @@ const SideBar: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
 }) => {
   return (
     <div
-      className={cn('w-64 py-2 bg-neutral-800', 'text-sm', className)}
+      className={cn(
+        'w-64 min-w-64 py-2 bg-neutral-800',
+        'text-sm',
+        className,
+      )}
       {...rest}
     >
       {children}

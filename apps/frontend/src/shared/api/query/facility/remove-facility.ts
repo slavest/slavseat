@@ -10,6 +10,7 @@ import { BaseMutation } from '../type';
 
 export const useRemoveFacilityMutation = ({
   onSuccess,
+  onError,
 }: BaseMutation<typeof removeFacility> = {}) => {
   const queryClient = useQueryClient();
 
@@ -25,5 +26,6 @@ export const useRemoveFacilityMutation = ({
       });
       onSuccess?.(data);
     },
+    onError,
   });
 };

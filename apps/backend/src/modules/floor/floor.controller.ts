@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   FileTypeValidator,
+  ForbiddenException,
   Get,
   Logger,
   NotFoundException,
@@ -13,6 +14,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
@@ -25,8 +27,10 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 
+import { AuthUser } from '../auth/decorator/auth-user.decorator';
 import { JwtAccesGuard } from '../auth/guard/jwt-access.guard';
 import { ObjectStorageService } from '../object-storage/object-storage.service';
+import { User } from '../user/entity/user.entity';
 import { FloorSummaryDto } from './dto/floorSummary.dto';
 import { CreateFloorRequestDto } from './dto/request/createFloorRequest.dto';
 import { GetFloorByIdRequestDto } from './dto/request/getFloorByIdRequest.dto';
@@ -43,6 +47,7 @@ export class FloorController {
   constructor(
     private readonly floorService: FloorService,
     private readonly objectStorageService: ObjectStorageService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Get()
@@ -122,8 +127,14 @@ export class FloorController {
   @ApiOperation({ summary: '층 생성' })
   @ApiCreatedResponse({ type: Floor })
   async createFloor(
+    @AuthUser() user: User,
     @Body() createFloorRequestDto: CreateFloorRequestDto,
   ) {
+    const admins = this.configService.get('ADMINS') as
+      | string[]
+      | undefined;
+    if (!admins?.includes(user.email))
+      throw new ForbiddenException('접근 권한이 없습니다.');
     return this.floorService.createFloor(createFloorRequestDto);
   }
 }

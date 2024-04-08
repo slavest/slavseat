@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import { Model } from '@slavseat/types';
 
@@ -34,11 +35,17 @@ export function AdminFacilityEdit() {
     Model.FacilitySummary[]
   >([]);
 
-  const { mutate: addFacilityMutation } = useAddFacilityMutation({});
+  const { mutate: addFacilityMutation } = useAddFacilityMutation({
+    onError: (e) => toast.error(e.response?.data?.message),
+  });
   const { mutate: updateFacilityMutation } =
-    useUpdateFacilityMutation();
+    useUpdateFacilityMutation({
+      onError: (e) => toast.error(e.response?.data?.message),
+    });
   const { mutate: removeFacilityMutation } =
-    useRemoveFacilityMutation();
+    useRemoveFacilityMutation({
+      onError: (e) => toast.error(e.response?.data?.message),
+    });
 
   const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
   const { data: floorDetail } = useGetFloorDetailQuery(
@@ -50,7 +57,10 @@ export function AdminFacilityEdit() {
   }, [floorDetail]);
 
   const handleClickAddFacility = useCallback(() => {
-    if (!editingFloor) return;
+    if (!editingFloor) {
+      toast.error('Facility를 추가할 층을 선택해 주세요');
+      return;
+    }
 
     addFacilityMutation({
       floorId: editingFloor,

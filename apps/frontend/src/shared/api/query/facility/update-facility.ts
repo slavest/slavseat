@@ -10,6 +10,7 @@ import { BaseMutation } from '../type';
 
 export const useUpdateFacilityMutation = ({
   onSuccess,
+  onError,
 }: BaseMutation<typeof updateFacility> = {}) => {
   const queryClient = useQueryClient();
 
@@ -26,5 +27,6 @@ export const useUpdateFacilityMutation = ({
       });
       onSuccess?.(data);
     },
+    onError,
   });
 };
