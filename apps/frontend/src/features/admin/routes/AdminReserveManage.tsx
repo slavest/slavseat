@@ -130,7 +130,7 @@ export function AdminReserveManage() {
                       key={reserve.id}
                       onClick={() => handleClickReserve(reserve)}
                       className={cn(
-                        'flex gap-4 p-2 shadow-blur-sm border border-neutral-200 rounded-lg cursor-pointer',
+                        'flex gap-4 p-2 shadow-blur-sm border border-neutral-200 rounded-lg cursor-pointer text-nowrap',
                         {
                           'border-black':
                             selectedReserve?.id === reserve.id,
@@ -143,10 +143,10 @@ export function AdminReserveManage() {
                       </span>
                       <span>{reserve.user.name}</span>
                       <span>
-                        {format(reserve.start, 'hh:mm')}-
+                        {format(reserve.start, formatHHMM)}-
                         {reserve.always
                           ? '(고정석)'
-                          : format(reserve.end, 'hh:mm')}
+                          : format(reserve.end, formatHHMM)}
                       </span>
                     </div>
                   ))}
