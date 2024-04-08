@@ -20,7 +20,7 @@ function TopContent() {
       id="top"
       className="w-full min-h-full flex flex-col items-center justify-center"
     >
-      <LogoWithNameIcon />
+      <LogoWithNameIcon className="w-60 h-60" />
       <div className="flex items-center gap-x-6">
         <a
           href="#android"
