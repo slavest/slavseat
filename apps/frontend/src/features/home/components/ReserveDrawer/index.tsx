@@ -205,24 +205,27 @@ export function ReserveDrawer({
           >
             {reserveType === 'day' ? (
               <>
-                <Toggle.Root className="h-[6rem]" defaultValue="85">
+                <Toggle.Root
+                  className="h-[4rem] p-1.5 rounded-xl"
+                  defaultValue="85"
+                >
                   <Toggle.Item
                     value="85"
-                    className="w-[6rem] grid place-content-center text-lg font-semibold"
+                    className="w-[5rem] grid place-content-center text-lg font-semibold rounded-lg"
                     onClick={() => setRange('08:00', '17:00')}
                   >
                     8 To 5
                   </Toggle.Item>
                   <Toggle.Item
                     value="96"
-                    className="w-[6rem] grid place-content-center text-lg font-semibold"
+                    className="w-[5rem] grid place-content-center text-lg font-semibold rounded-lg"
                     onClick={() => setRange('09:00', '18:00')}
                   >
                     9 To 6
                   </Toggle.Item>
                   <Toggle.Item
                     value="107"
-                    className="w-[6rem] grid place-content-center text-lg font-semibold"
+                    className="w-[5rem] grid place-content-center text-lg font-semibold rounded-lg"
                     onClick={() => setRange('10:00', '19:00')}
                   >
                     10 To 7
