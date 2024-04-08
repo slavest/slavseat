@@ -110,7 +110,7 @@ function Root() {
       <div
         className={cn(
           'w-full h-full max-w-[64rem] flex flex-col overflow-hidden bg-white',
-          'xl:max-w-[40dvh] xl:shadow-md xl:border-r xl:border-l border-gray-300',
+          'xl:min-w-[26.25rem] xl:max-w-[40dvh] xl:shadow-md xl:border-r xl:border-l border-gray-300',
         )}
       >
         <header className="hidden">Header</header>
