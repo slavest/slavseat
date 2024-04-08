@@ -20,6 +20,7 @@ import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-d
 import { Button } from '@/shared/components/Button';
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
 import ScrollArea from '@/shared/components/ScrollArea';
+import { formatHHMM } from '@/shared/constants/date.constant';
 import { cn } from '@/shared/utils/class.util';
 
 import { Box } from '../components/Box';

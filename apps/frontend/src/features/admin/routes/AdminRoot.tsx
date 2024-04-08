@@ -27,6 +27,7 @@ export function AdminRoot() {
         <div className="flex flex-col w-full h-full">
           <div className="flex flex-1">
             <SideBar
+              className="w-[var(--var-admin-sidebar-width)]"
               onItemClick={(v) => navigate(v.value)}
               activated={location.pathname}
             >
@@ -66,7 +67,7 @@ export function AdminRoot() {
               </SideBar.ItemGroup>
             </SideBar>
 
-            <div className="flex-1 flex flex-col max-h-screen">
+            <div className="flex-1 flex flex-col w-[calc(100%_-_var(--var-admin-sidebar-width))] max-h-screen">
               <AdminHeader title={title} />
               <ScrollArea>
                 <Outlet />

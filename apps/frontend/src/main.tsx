@@ -23,8 +23,8 @@ import Profile from './features/profile/routes/Profile.tsx';
 import Reserve from './features/reserve/routes/Reserve.tsx';
 import { Locations } from './shared/constants/location.constant.ts';
 import Root from './shared/routes/Root.tsx';
+import './shared/styles/app.css';
 import './shared/styles/global-style.css.ts';
-import './shared/styles/reset.css';
 
 const queryClient = new QueryClient();
 
