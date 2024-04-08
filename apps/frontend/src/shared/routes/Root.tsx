@@ -11,6 +11,7 @@ import { FloatingDrawer } from '../components/Drawer';
 import { Loading } from '../components/Loading';
 import { LogoWithNameIcon } from '../icons/LogoWithNameIcon';
 import { useAppStore } from '../stores/appStore';
+import { hideScrollBar } from '../styles/global-style.css';
 import { cn } from '../utils/class.util';
 
 function TopContent() {
@@ -98,6 +99,7 @@ function Root() {
           'hidden h-full max-h-[calc(100dvh)] overflow-y-auto scroll-smooth',
           'bg-white border-r border-l border-gray-300 shadow-md',
           'xl:block xl:w-[50rem]',
+          hideScrollBar,
         )}
       >
         <TopContent />
