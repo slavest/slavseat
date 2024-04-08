@@ -1,5 +1,6 @@
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Bounce, ToastContainer } from 'react-toastify';
 
 import { Loading } from '@/shared/components/Loading';
 import ScrollArea from '@/shared/components/ScrollArea';
@@ -76,6 +77,20 @@ export function AdminRoot() {
       ) : (
         <Loading />
       )}
+
+      <ToastContainer
+        position="bottom-right"
+        autoClose={1500}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        // rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover={false}
+        theme="light"
+        transition={Bounce}
+      />
     </div>
   );
 }

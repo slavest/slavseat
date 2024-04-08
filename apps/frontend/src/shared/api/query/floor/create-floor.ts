@@ -10,6 +10,7 @@ import { BaseMutation } from '../type';
 
 export const useCreateFloorMutation = ({
   onSuccess,
+  onError,
 }: BaseMutation<typeof createFloor> = {}) => {
   const queryClient = useQueryClient();
 
@@ -25,5 +26,6 @@ export const useCreateFloorMutation = ({
       });
       onSuccess?.(data);
     },
+    onError,
   });
 };

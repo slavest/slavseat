@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Post,
@@ -9,6 +10,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -17,7 +19,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
+import { AuthUser } from '../auth/decorator/auth-user.decorator';
 import { JwtAccesGuard } from '../auth/guard/jwt-access.guard';
+import { User } from '../user/entity/user.entity';
 import { FacilitySummaryDto } from './dto/facilitySummary.dto';
 import { AddFacilityRequestDto } from './dto/request/addFacilityRequest.dto';
 import { RemoveFacilityRequestDto } from './dto/request/removeFacilityRequest.dto';
@@ -30,7 +34,10 @@ import { FacilityService } from './facility.service';
 @ApiTags('시설 API')
 @Controller('/api/facility')
 export class FacilityController {
-  constructor(private readonly facilityService: FacilityService) {}
+  constructor(
+    private readonly facilityService: FacilityService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: '모든 시설 조회' })
@@ -44,7 +51,15 @@ export class FacilityController {
   @ApiBearerAuth()
   @ApiOperation({ summary: '시설 등록' })
   @ApiCreatedResponse({ type: Facility, isArray: true })
-  async addFacility(@Body() addFacilityDto: AddFacilityRequestDto) {
+  async addFacility(
+    @AuthUser() user: User,
+    @Body() addFacilityDto: AddFacilityRequestDto,
+  ) {
+    const admins = this.configService.get('ADMINS') as
+      | string[]
+      | undefined;
+    if (!admins?.includes(user.email))
+      throw new ForbiddenException('접근 권한이 없습니다.');
     return this.facilityService.addFacility(addFacilityDto);
   }
 
@@ -54,8 +69,14 @@ export class FacilityController {
   @ApiOperation({ summary: '시설 정보 수정' })
   @ApiOkResponse({ type: UpdateFacilityResponseDto })
   async updateFacility(
+    @AuthUser() user: User,
     @Body() updateFacilityDto: UpdateFacilityRequestDto,
   ) {
+    const admins = this.configService.get('ADMINS') as
+      | string[]
+      | undefined;
+    if (!admins?.includes(user.email))
+      throw new ForbiddenException('접근 권한이 없습니다.');
     return this.facilityService.updateFacility(updateFacilityDto);
   }
 
@@ -65,8 +86,14 @@ export class FacilityController {
   @ApiOperation({ summary: '시설 정보 삭제' })
   @ApiOkResponse({ type: RemoveFacilityResponseDto })
   async removeFacility(
+    @AuthUser() user: User,
     @Body() removeFacilityDto: RemoveFacilityRequestDto,
   ) {
+    const admins = this.configService.get('ADMINS') as
+      | string[]
+      | undefined;
+    if (!admins?.includes(user.email))
+      throw new ForbiddenException('접근 권한이 없습니다.');
     return this.facilityService.removeFacility(removeFacilityDto);
   }
 }
