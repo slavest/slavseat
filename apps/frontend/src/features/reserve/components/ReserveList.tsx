@@ -5,10 +5,7 @@ import { Model } from '@slavseat/types';
 import { cn } from '@/shared/utils/class.util';
 import { getHHMM } from '@/shared/utils/date.util';
 
-import {
-  getYYYYMMDD,
-  sortReserveByDate,
-} from '../utils/reserve.util';
+import { checkUsing, getYYYYMMDD } from '../utils/reserve.util';
 
 interface ReserveListItemProps {
   reserve: Model.ReserveInfo;
@@ -21,6 +18,8 @@ function ReserveListItem({
 }: ReserveListItemProps) {
   const { facility, always, start, end } = reserve;
 
+  const using = checkUsing(reserve);
+
   return (
     <li
       className={cn(
@@ -31,9 +30,12 @@ function ReserveListItem({
       )}
       onClick={() => onClickItem?.(reserve)}
     >
-      <span>
+      <p>
         {facility.floor.name}-{facility.name}
-      </span>
+        {using ? (
+          <span className="ml-1 text-xs text-red-500">사용중</span>
+        ) : null}
+      </p>
 
       <span>
         {always
