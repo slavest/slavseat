@@ -5,6 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { toast } from 'react-toastify';
 import {
   ReactZoomPanPinchContentRef,
   TransformComponent,
@@ -40,8 +41,10 @@ export function AdminReserveManage() {
   const [selectedReserve, setSelectedReserve] =
     useState<Model.ReserveInfo>();
 
-  const { mutate: cancleReserveMutation } =
-    useCancelReserveMutation();
+  const { mutate: cancleReserveMutation } = useCancelReserveMutation({
+    onSuccess: () => toast.success('예약이 취소되었습니다.'),
+    onError: (e) => toast.error(e.response?.data.message),
+  });
 
   const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
   const { data: floorDetail } = useGetFloorDetailQuery(viewFloor!, {

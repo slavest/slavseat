@@ -36,14 +36,17 @@ export function AdminFacilityEdit() {
   >([]);
 
   const { mutate: addFacilityMutation } = useAddFacilityMutation({
+    onSuccess: () => toast.success('추가를 완료했습니다.'),
     onError: (e) => toast.error(e.response?.data?.message),
   });
   const { mutate: updateFacilityMutation } =
     useUpdateFacilityMutation({
+      onSuccess: () => toast.success('저장을 완료했습니다.'),
       onError: (e) => toast.error(e.response?.data?.message),
     });
   const { mutate: removeFacilityMutation } =
     useRemoveFacilityMutation({
+      onSuccess: () => toast.success('삭제를 완료했습니다.'),
       onError: (e) => toast.error(e.response?.data?.message),
     });
 
