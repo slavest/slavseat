@@ -162,7 +162,7 @@ export function AdminReserveManage() {
         {floorDetail && (
           <Box
             title="Facility Grid 뷰"
-            className="flex-1"
+            className="flex-1 w-1"
             innerPadding={false}
             fullWidth
           >
