@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisModule } from 'src/libs/redis/redis.module';
 
 import { FacilityModule } from '../facility/facility.module';
+import { UserModule } from '../user/user.module';
 import { Reserve } from './entity/reserve.entity';
 import { ReserveController } from './reserve.controller';
 import { ReserveService } from './reserve.service';
@@ -12,6 +13,7 @@ import { ReserveService } from './reserve.service';
     TypeOrmModule.forFeature([Reserve]),
     RedisModule,
     FacilityModule,
+    UserModule,
   ],
   controllers: [ReserveController],
   providers: [ReserveService],

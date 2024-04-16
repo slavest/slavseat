@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Post,
@@ -42,7 +43,14 @@ export class ReserveController {
     @AuthUser() user: User,
     @Body() addReserveRequestDto: AddReserveRequestDto,
   ) {
-    return this.reserveService.addReserve(user, addReserveRequestDto);
+    if (addReserveRequestDto.always)
+      throw new ForbiddenException(
+        '고정석 예약은 관리자 페이지에서만 가능합니다.',
+      );
+    return this.reserveService.addReserve(
+      user.id,
+      addReserveRequestDto,
+    );
   }
 
   @Get()
@@ -80,6 +88,9 @@ export class ReserveController {
     @AuthUser() user: User,
     @Param() removeReserveDto: RemoveReserveRequestDto,
   ) {
-    return this.reserveService.removeReserve(user, removeReserveDto);
+    return this.reserveService.removeReserve(
+      user.id,
+      removeReserveDto,
+    );
   }
 }
