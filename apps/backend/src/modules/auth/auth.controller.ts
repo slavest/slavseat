@@ -3,20 +3,21 @@ import {
   Get,
   Post,
   Query,
-  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiCookieAuth,
-  ApiGoneResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
+import { RefreshToken } from '../jwt/decorator/refresh-token.decorator';
+import { JwtRefreshGuard } from '../jwt/guard/jwt-refresh.guard';
+import { JwtService } from '../jwt/jwt.service';
 import { User } from '../user/entity/user.entity';
 import {
   ACCESS_TOKEN_COOKIE,
@@ -26,14 +27,15 @@ import { OAuthState } from './auth.interface';
 import { AuthService } from './auth.service';
 import { AuthUser } from './decorator/auth-user.decorator';
 import { OAuthStateDto } from './dto/oauth-state.dto';
-import { JwtAccesGuard } from './guard/jwt-access.guard';
-import { JwtRefreshGuard } from './guard/jwt-refresh.guard';
-import { MicrosoftGuard } from './guard/microsoft.guard';
+import { AuthUserGuard } from './guard/auth-user.guard';
 
 @ApiTags('인증')
 @Controller('/api/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @Post('logout')
   @ApiOperation({ summary: '로그아웃' })
@@ -75,8 +77,8 @@ export class AuthController {
       code,
     );
 
-    const accessToken = this.authService.createAccessToken(user);
-    const refreshToken = this.authService.createRefreshToken(user);
+    const accessToken = this.jwtService.createAccessToken(user);
+    const refreshToken = this.jwtService.createRefreshToken(user);
 
     res.cookie(ACCESS_TOKEN_COOKIE, accessToken);
     res.cookie(REFRESH_TOKEN_COOKIE, refreshToken, {
@@ -87,7 +89,7 @@ export class AuthController {
   }
 
   @Get('me')
-  @UseGuards(JwtAccesGuard)
+  @UseGuards(AuthUserGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: '사용자 프로필 조회' })
   @ApiOkResponse({ type: User })
@@ -105,9 +107,10 @@ export class AuthController {
   @ApiOkResponse()
   async issueAccessToken(
     @Res() res: Response,
-    @AuthUser() user: User,
+    @RefreshToken() refreshToken: string,
   ) {
-    const accessToken = this.authService.createAccessToken(user);
+    const accessToken =
+      this.jwtService.createAccessTokenFromRefreshToken(refreshToken);
 
     res.cookie(ACCESS_TOKEN_COOKIE, accessToken);
     return res.end();

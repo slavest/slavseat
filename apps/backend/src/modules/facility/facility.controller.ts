@@ -20,7 +20,8 @@ import {
 } from '@nestjs/swagger';
 
 import { AuthUser } from '../auth/decorator/auth-user.decorator';
-import { JwtAccesGuard } from '../auth/guard/jwt-access.guard';
+import { AdminGuard } from '../auth/guard/admin.guard';
+import { AuthUserGuard } from '../auth/guard/auth-user.guard';
 import { User } from '../user/entity/user.entity';
 import { FacilitySummaryDto } from './dto/facilitySummary.dto';
 import { AddFacilityRequestDto } from './dto/request/addFacilityRequest.dto';
@@ -47,53 +48,36 @@ export class FacilityController {
   }
 
   @Post()
-  @UseGuards(JwtAccesGuard)
+  @UseGuards(AuthUserGuard)
+  @UseGuards(AdminGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: '시설 등록' })
   @ApiCreatedResponse({ type: Facility, isArray: true })
-  async addFacility(
-    @AuthUser() user: User,
-    @Body() addFacilityDto: AddFacilityRequestDto,
-  ) {
-    const admins = this.configService.get('ADMINS') as
-      | string[]
-      | undefined;
-    if (!admins?.includes(user.email))
-      throw new ForbiddenException('접근 권한이 없습니다.');
+  async addFacility(@Body() addFacilityDto: AddFacilityRequestDto) {
     return this.facilityService.addFacility(addFacilityDto);
   }
 
   @Put()
-  @UseGuards(JwtAccesGuard)
+  @UseGuards(AuthUserGuard)
+  @UseGuards(AdminGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: '시설 정보 수정' })
   @ApiOkResponse({ type: UpdateFacilityResponseDto })
   async updateFacility(
-    @AuthUser() user: User,
     @Body() updateFacilityDto: UpdateFacilityRequestDto,
   ) {
-    const admins = this.configService.get('ADMINS') as
-      | string[]
-      | undefined;
-    if (!admins?.includes(user.email))
-      throw new ForbiddenException('접근 권한이 없습니다.');
     return this.facilityService.updateFacility(updateFacilityDto);
   }
 
   @Delete()
-  @UseGuards(JwtAccesGuard)
+  @UseGuards(AuthUserGuard)
+  @UseGuards(AdminGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: '시설 정보 삭제' })
   @ApiOkResponse({ type: RemoveFacilityResponseDto })
   async removeFacility(
-    @AuthUser() user: User,
     @Body() removeFacilityDto: RemoveFacilityRequestDto,
   ) {
-    const admins = this.configService.get('ADMINS') as
-      | string[]
-      | undefined;
-    if (!admins?.includes(user.email))
-      throw new ForbiddenException('접근 권한이 없습니다.');
     return this.facilityService.removeFacility(removeFacilityDto);
   }
 }

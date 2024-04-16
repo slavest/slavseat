@@ -17,7 +17,7 @@ import {
 } from '@nestjs/swagger';
 
 import { AuthUser } from '../auth/decorator/auth-user.decorator';
-import { JwtAccesGuard } from '../auth/guard/jwt-access.guard';
+import { AuthUserGuard } from '../auth/guard/auth-user.guard';
 import { User } from '../user/entity/user.entity';
 import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
 import { GetReserveByDateRequestDto } from './dto/request/getReserveByDateRequest.dto';
@@ -34,7 +34,7 @@ export class ReserveController {
   constructor(private readonly reserveService: ReserveService) {}
 
   @Post()
-  @UseGuards(JwtAccesGuard)
+  @UseGuards(AuthUserGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: '좌석 예약' })
   @ApiCreatedResponse({ type: Reserve })
@@ -60,7 +60,7 @@ export class ReserveController {
   }
 
   @Get('/user')
-  @UseGuards(JwtAccesGuard)
+  @UseGuards(AuthUserGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: '유저 기준 좌석 예약 조회' })
   @ApiOkResponse({
@@ -72,7 +72,7 @@ export class ReserveController {
   }
 
   @Delete('/:id')
-  @UseGuards(JwtAccesGuard)
+  @UseGuards(AuthUserGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: '예약 취소' })
   @ApiOkResponse({ type: RemoveReserveResponseDto })
