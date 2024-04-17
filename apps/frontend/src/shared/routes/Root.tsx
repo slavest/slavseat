@@ -7,7 +7,7 @@ import { useInitialize } from '@/shared/hooks/useInitialize';
 
 import { AppFooter } from '../components/AppFooter';
 import { Button } from '../components/Button';
-import { FloatingDrawer } from '../components/Drawer';
+import { FloatingDrawer } from '../components/LegacyDrawer';
 import { Loading } from '../components/Loading';
 import { LogoWithNameIcon } from '../icons/LogoWithNameIcon';
 import { useAppStore } from '../stores/appStore';

@@ -42,7 +42,6 @@ export function TimeSlider({
 
   return (
     <div
-      data-vaul-no-drag={true}
       style={{
         height: `${elementHeight * viewHeight * 2 + elementHeight}px`,
       }}
@@ -70,17 +69,14 @@ export function TimeSlider({
       })}
     >
       <div
-        data-vaul-no-drag={true}
         className="absolute top-0 w-full bg-gradient-to-b from-white from-30% z-10"
         style={{ height: `${elementHeight * viewHeight}px` }}
       />
       <div
-        data-vaul-no-drag={true}
         className="absolute bottom-0 w-full bg-gradient-to-t from-white from-30% z-10"
         style={{ height: `${elementHeight * viewHeight}px` }}
       />
       <div
-        data-vaul-no-drag={true}
         style={{
           transform: `translateY(${
             -(elementHeight * currentIndex) +
@@ -94,7 +90,6 @@ export function TimeSlider({
       >
         {new Array(slideCount).fill(0).map((_, i) => (
           <div
-            data-vaul-no-drag={true}
             style={{
               height: `${elementHeight}px`,
               ...calculateStyle(i),

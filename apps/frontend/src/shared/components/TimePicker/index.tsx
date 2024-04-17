@@ -56,7 +56,6 @@ export function TimePicker({
 
   return (
     <div
-      data-vaul-no-drag={true}
       className={cn(
         'flex gap-2 items-center',
         { 'opacity-50 touch-none': disabled },

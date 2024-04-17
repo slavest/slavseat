@@ -83,7 +83,7 @@ export function ReserveDrawer({
     [end, facility, onSubmit, reserveType, start],
   );
 
-  const handleClose = useCallback(() => {
+  const handleOpenChange = useCallback(() => {
     setStep('info');
     setReserveType('day');
     setStart(parse('08:00', formatHHMM, new Date()));
@@ -109,174 +109,183 @@ export function ReserveDrawer({
   );
 
   return (
-    <Drawer open={open} onClose={handleClose}>
-      <div data-vaul-no-drag={true}>
-        {/* 현재 보는 좌석의 Status 표시 */}
-        <Badge
-          status={
-            currentReserve
-              ? Status.USING
-              : isFutureReserved
-                ? Status.RESERVED
-                : Status.ABLE_RESERVE
-          }
-        />
-
-        <div className="flex justify-between items-center text-2xl font-medium">
-          <span>
-            {facility?.name}
-            {/* 현재 step에 따라 다른 텍스트 표시 */}
-            {step === 'info' && ' 예약 현황'}
-            {step === 'reserve' && ' 예약'}
-          </span>
-          {/* 예약 유형 변경 토글 */}
-          {step === 'reserve' && (
-            <Toggle.Root
-              className="m-auto mr-0"
-              value={reserveType}
-              onChange={(v) =>
-                setReserveType(v as typeof reserveType)
+    <Drawer.Root open={open} onClose={handleOpenChange}>
+      <Drawer.Popover>
+        <Drawer.Backdrop />
+        <Drawer.Body className="w-full max-w-[50rem] rounded-t-2xl shadow-blur p-8 pt-4">
+          <Drawer.DragBar className="w-full flex justify-center p-2 cursor-pointer select-none">
+            <div className="w-20 h-1 bg-neutral-200 rounded-full" />
+          </Drawer.DragBar>
+          <div>
+            {/* 현재 보는 좌석의 Status 표시 */}
+            <Badge
+              status={
+                currentReserve
+                  ? Status.USING
+                  : isFutureReserved
+                    ? Status.RESERVED
+                    : Status.ABLE_RESERVE
               }
-            >
-              <Toggle.Item value="day">종일</Toggle.Item>
-              <Toggle.Item value="period">시간차</Toggle.Item>
-              <Toggle.Item value="always">고정석</Toggle.Item>
-            </Toggle.Root>
-          )}
-        </div>
-        <div className="text-sm font-medium text-neutral-400">
-          {/* 지금 시간을 기준으로 예약이 있는지 표시 */}
-          {currentReserve
-            ? `${currentReserve.user.name} 님이 현재 사용중입니다.`
-            : '사용중이지 않은 좌석입니다.'}
-        </div>
-      </div>
+            />
 
-      {/* info 스텝일때 표시할 내용 */}
-      {step === 'info' && (
-        <>
-          <div className="my-4 space-y-2" data-vaul-no-drag={true}>
-            {/* 현재 좌석에 대한 예약들 표시 */}
-            {reserves?.map((reserve) => (
-              <div
-                key={reserve.id}
-                className={cn(
-                  'flex justify-between px-6 py-3.5 border border-neutral-150 rounded-[10px] shadow-blur-sm text-sm font-medium',
-                  {
-                    'opacity-50':
-                      reserve.end &&
-                      new Date(reserve.end) <= new Date() &&
-                      !reserve.always,
-                  },
-                )}
-              >
-                <span>{reserve.user.name}</span>
-                <span>
-                  {reserve.always ? (
-                    '고정석'
-                  ) : (
-                    <span className="flex gap-1">
-                      {getHHMM(new Date(reserve.start))}
-                      <span>-</span>
-                      {reserve.end && getHHMM(new Date(reserve.end))}
-                    </span>
-                  )}
-                </span>
-              </div>
-            ))}
-          </div>
-          <Button
-            variant="secondary"
-            size="full"
-            className="mt-8"
-            onClick={() => setStep('reserve')}
-          >
-            예약 하기
-          </Button>
-        </>
-      )}
-
-      {/* reserve 스텝일때 표시할 내용 */}
-      {step === 'reserve' && (
-        <form onSubmit={handleSubmitForm} data-vaul-no-drag={true}>
-          <div
-            className="flex my-10 gap-4 items-center justify-center"
-            data-vaul-no-drag={true}
-          >
-            {reserveType === 'day' ? (
-              <>
+            <div className="flex justify-between items-center text-2xl font-medium">
+              <span>
+                {facility?.name}
+                {/* 현재 step에 따라 다른 텍스트 표시 */}
+                {step === 'info' && ' 예약 현황'}
+                {step === 'reserve' && ' 예약'}
+              </span>
+              {/* 예약 유형 변경 토글 */}
+              {step === 'reserve' && (
                 <Toggle.Root
-                  className="h-[4rem] p-1.5 rounded-xl"
-                  defaultValue="85"
-                >
-                  <Toggle.Item
-                    value="85"
-                    className="w-[5rem] grid place-content-center text-lg font-semibold rounded-lg"
-                    onClick={() => setRange('08:00', '17:00')}
-                  >
-                    8 To 5
-                  </Toggle.Item>
-                  <Toggle.Item
-                    value="96"
-                    className="w-[5rem] grid place-content-center text-lg font-semibold rounded-lg"
-                    onClick={() => setRange('09:00', '18:00')}
-                  >
-                    9 To 6
-                  </Toggle.Item>
-                  <Toggle.Item
-                    value="107"
-                    className="w-[5rem] grid place-content-center text-lg font-semibold rounded-lg"
-                    onClick={() => setRange('10:00', '19:00')}
-                  >
-                    10 To 7
-                  </Toggle.Item>
-                </Toggle.Root>
-              </>
-            ) : (
-              <>
-                <TimePicker
-                  className="text-lg"
-                  value={format(start, formatHHMM)}
-                  onChangeTime={(v) => {
-                    setStart(parse(v, formatHHMM, new Date()));
-                  }}
-                />
-                <span className="text-sm">부터</span>
-                <TimePicker
-                  className="text-lg"
-                  value={format(end, formatHHMM)}
-                  onChangeTime={(v) =>
-                    setEnd(parse(v, formatHHMM, new Date()))
+                  className="m-auto mr-0"
+                  value={reserveType}
+                  onChange={(v) =>
+                    setReserveType(v as typeof reserveType)
                   }
-                  disabled={reserveType === 'always'}
-                />
-              </>
-            )}
+                >
+                  <Toggle.Item value="day">종일</Toggle.Item>
+                  <Toggle.Item value="period">시간차</Toggle.Item>
+                  <Toggle.Item value="always">고정석</Toggle.Item>
+                </Toggle.Root>
+              )}
+            </div>
+            <div className="text-sm font-medium text-neutral-400">
+              {/* 지금 시간을 기준으로 예약이 있는지 표시 */}
+              {currentReserve
+                ? `${currentReserve.user.name} 님이 현재 사용중입니다.`
+                : '사용중이지 않은 좌석입니다.'}
+            </div>
           </div>
 
-          <div className="flex gap-3">
-            <Button
-              variant="secondary"
-              className="w-12 flex justify-center items-center"
-              onClick={(e) => {
-                e.preventDefault();
-                setStep('info');
-              }}
-            >
-              {/* 예약 현황 */}
-              <IoMdArrowRoundBack />
-            </Button>
-            <Button
-              variant="primary"
-              type="submit"
-              className="flex-1 text-sm"
-              disabled={loading}
-            >
-              {loading ? <Loading /> : '좌석 예약'}
-            </Button>
-          </div>
-        </form>
-      )}
-    </Drawer>
+          {/* info 스텝일때 표시할 내용 */}
+          {step === 'info' && (
+            <>
+              <div
+                className="my-4 space-y-2"
+                data-vaul-no-drag={true}
+              >
+                {/* 현재 좌석에 대한 예약들 표시 */}
+                {reserves?.map((reserve) => (
+                  <div
+                    key={reserve.id}
+                    className={cn(
+                      'flex justify-between px-6 py-3.5 border border-neutral-150 rounded-[10px] shadow-blur-sm text-sm font-medium',
+                      {
+                        'opacity-50':
+                          reserve.end &&
+                          new Date(reserve.end) <= new Date() &&
+                          !reserve.always,
+                      },
+                    )}
+                  >
+                    <span>{reserve.user.name}</span>
+                    <span>
+                      {reserve.always ? (
+                        '고정석'
+                      ) : (
+                        <span className="flex gap-1">
+                          {getHHMM(new Date(reserve.start))}
+                          <span>-</span>
+                          {reserve.end &&
+                            getHHMM(new Date(reserve.end))}
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <Button
+                variant="secondary"
+                size="full"
+                className="mt-8"
+                onClick={() => setStep('reserve')}
+              >
+                예약 하기
+              </Button>
+            </>
+          )}
+
+          {/* reserve 스텝일때 표시할 내용 */}
+          {step === 'reserve' && (
+            <form onSubmit={handleSubmitForm}>
+              <div className="flex my-10 gap-4 items-center justify-center">
+                {reserveType === 'day' ? (
+                  <>
+                    <Toggle.Root
+                      className="h-[4rem] p-1.5 rounded-xl"
+                      defaultValue="85"
+                    >
+                      <Toggle.Item
+                        value="85"
+                        className="w-[5rem] grid place-content-center text-lg font-semibold rounded-lg"
+                        onClick={() => setRange('08:00', '17:00')}
+                      >
+                        8 To 5
+                      </Toggle.Item>
+                      <Toggle.Item
+                        value="96"
+                        className="w-[5rem] grid place-content-center text-lg font-semibold rounded-lg"
+                        onClick={() => setRange('09:00', '18:00')}
+                      >
+                        9 To 6
+                      </Toggle.Item>
+                      <Toggle.Item
+                        value="107"
+                        className="w-[5rem] grid place-content-center text-lg font-semibold rounded-lg"
+                        onClick={() => setRange('10:00', '19:00')}
+                      >
+                        10 To 7
+                      </Toggle.Item>
+                    </Toggle.Root>
+                  </>
+                ) : (
+                  <>
+                    <TimePicker
+                      className="text-lg"
+                      value={format(start, formatHHMM)}
+                      onChangeTime={(v) => {
+                        setStart(parse(v, formatHHMM, new Date()));
+                      }}
+                    />
+                    <span className="text-sm">부터</span>
+                    <TimePicker
+                      className="text-lg"
+                      value={format(end, formatHHMM)}
+                      onChangeTime={(v) =>
+                        setEnd(parse(v, formatHHMM, new Date()))
+                      }
+                      disabled={reserveType === 'always'}
+                    />
+                  </>
+                )}
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  variant="secondary"
+                  className="w-12 flex justify-center items-center"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setStep('info');
+                  }}
+                >
+                  {/* 예약 현황 */}
+                  <IoMdArrowRoundBack />
+                </Button>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="flex-1 text-sm"
+                  disabled={loading}
+                >
+                  {loading ? <Loading /> : '좌석 예약'}
+                </Button>
+              </div>
+            </form>
+          )}
+        </Drawer.Body>
+      </Drawer.Popover>
+    </Drawer.Root>
   );
 }

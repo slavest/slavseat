@@ -3,7 +3,7 @@ import React from 'react';
 import { Model } from '@slavseat/types';
 
 import { Button } from '@/shared/components/Button';
-import { Drawer } from '@/shared/components/Drawer';
+import { Drawer } from '@/shared/components/LegacyDrawer';
 import { Loading } from '@/shared/components/Loading';
 import { cn } from '@/shared/utils/class.util';
 import { getHHMM } from '@/shared/utils/date.util';
