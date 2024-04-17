@@ -6,6 +6,8 @@ import { FacilityType } from '@slavseat/types/src/model';
 
 import { cn } from '@/shared/utils/class.util';
 
+import { checkUsing } from '../../utils/home.util';
+
 interface SeatCounterProps {
   floorInfo: Model.FloorInfo | undefined;
   reserveInfos: Model.ReserveInfo[] | undefined;
@@ -25,7 +27,9 @@ export function SeatCounter({
           ).length
         : 0;
 
-      const usingSeatCount = reserveInfos?.length || 0;
+      const usingSeatCount =
+        reserveInfos?.filter((reserve) => checkUsing(reserve))
+          ?.length || 0;
 
       const restSeatCount =
         !floorInfo || !reserveInfos
