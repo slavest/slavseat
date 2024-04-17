@@ -44,14 +44,22 @@ export function SeatCounter({
       className={cn(
         'w-[calc(100%_-_2rem)] h-[2.625rem]',
         'absolute bottom-4 right-4',
-        'flex items-center justify-center',
+        'flex items-center justify-center gap-x-1',
         'rounded-3xl border',
         'bg-white shadow-xl',
         'text-xs font-semibold',
         'select-none',
       )}
     >
-      {`총 좌석: ${allSeatCount}석 / 잔여 좌석: ${restSeatCount}석 / 사용중인 좌석: ${usingSeatCount}석`}
+      <span>총 좌석 {allSeatCount}석</span>
+      <span>/</span>
+      <span className="text-green-600">
+        잔여 좌석 {restSeatCount}석
+      </span>
+      <span>/</span>
+      <span className="text-red-600">
+        사용중인 좌석 {usingSeatCount}석
+      </span>
 
       <CgClose
         className="absolute right-4 cursor-pointer"
