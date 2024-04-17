@@ -89,6 +89,10 @@ export class ReserveService {
     }
 
     try {
+      const user = await this.userService.findById(userId);
+      if (!user)
+        throw new NotFoundException('유저를 찾을 수 없습니다.');
+
       const existReserve = await this.reserveRepository.findOne({
         where: [
           dateSearch && {
@@ -99,6 +103,11 @@ export class ReserveService {
             facility: { id: facility.id },
             end: Between(start, end),
           },
+          dateSearch && {
+            user: { id: userId },
+            start: Between(start, end),
+            end: Between(start, end),
+          },
           always && {
             facility: { id: facility.id },
             start: MoreThanOrEqual(start),
@@ -107,17 +116,23 @@ export class ReserveService {
             facility: { id: facility.id },
             end: MoreThanOrEqual(start),
           },
-          { facility: { id: facility.id }, always: true },
+          always && {
+            facility: { id: facility.id },
+            end: MoreThanOrEqual(start),
+          },
+          {
+            facility: { id: facility.id },
+            start: MoreThanOrEqual(start),
+            always: true,
+          },
+          {
+            user: { id: userId },
+            start: MoreThanOrEqual(start),
+            always: true,
+          },
         ].filter((item) => item !== undefined),
       });
-      if (existReserve)
-        throw new ConflictException(
-          '이미 예약된 시간입니다. 예약 시간을 다시 확인해 주세요',
-        );
-
-      const user = await this.userService.findById(userId);
-      if (!user)
-        throw new NotFoundException('유저를 찾을 수 없습니다.');
+      if (existReserve) throw new ConflictException(existReserve);
 
       const reserve = this.reserveRepository.create({
         ...addReserveRequestDto,
