@@ -21,6 +21,7 @@ import {
   ReserveData,
   ReserveDrawer,
 } from '../components/ReserveDrawer';
+import { SeatCounter } from '../components/SeatCounter';
 
 function Home() {
   const [selectedFacility, setSelectedFacility] =
@@ -70,7 +71,7 @@ function Home() {
   }, [allFloorSummary]);
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col relative">
       <div>
         <div className="px-6 pt-6 pb-3 text-xl font-bold">
           좌석 배치도
@@ -118,6 +119,12 @@ function Home() {
       ) : (
         <Loading />
       )}
+
+      <SeatCounter
+        floorInfo={floorDetail}
+        reserveInfos={reservesByDate}
+      />
+
       <ReserveDrawer
         open={!!selectedFacility && !!reservesByDate}
         onClose={() => setSelectedFacility(undefined)}
