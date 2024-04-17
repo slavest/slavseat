@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Model } from '@slavseat/types';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 
 import { User } from './entity/user.entity';
 
@@ -11,6 +11,14 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
+
+  async searchUserByName(name: string): Promise<User[]> {
+    return this.userRepository.find({
+      where: {
+        name: Like(`${name}%`),
+      },
+    });
+  }
 
   async saveUser(userSummary: Model.UserSummary): Promise<User> {
     const exist = await this.userRepository.findOneBy({

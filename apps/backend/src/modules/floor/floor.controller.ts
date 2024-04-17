@@ -28,7 +28,8 @@ import {
 import { Response } from 'express';
 
 import { AuthUser } from '../auth/decorator/auth-user.decorator';
-import { JwtAccesGuard } from '../auth/guard/jwt-access.guard';
+import { AdminGuard } from '../auth/guard/admin.guard';
+import { AuthUserGuard } from '../auth/guard/auth-user.guard';
 import { ObjectStorageService } from '../object-storage/object-storage.service';
 import { User } from '../user/entity/user.entity';
 import { FloorSummaryDto } from './dto/floorSummary.dto';
@@ -47,7 +48,6 @@ export class FloorController {
   constructor(
     private readonly floorService: FloorService,
     private readonly objectStorageService: ObjectStorageService,
-    private readonly configService: ConfigService,
   ) {}
 
   @Get()
@@ -59,7 +59,8 @@ export class FloorController {
 
   @Post('/:id/image')
   @UseInterceptors(FileInterceptor('file'))
-  @UseGuards(JwtAccesGuard)
+  @UseGuards(AuthUserGuard)
+  @UseGuards(AdminGuard)
   @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -122,7 +123,8 @@ export class FloorController {
   }
 
   @Post()
-  @UseGuards(JwtAccesGuard)
+  @UseGuards(AuthUserGuard)
+  @UseGuards(AdminGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: '층 생성' })
   @ApiCreatedResponse({ type: Floor })
@@ -130,11 +132,6 @@ export class FloorController {
     @AuthUser() user: User,
     @Body() createFloorRequestDto: CreateFloorRequestDto,
   ) {
-    const admins = this.configService.get('ADMINS') as
-      | string[]
-      | undefined;
-    if (!admins?.includes(user.email))
-      throw new ForbiddenException('접근 권한이 없습니다.');
     return this.floorService.createFloor(createFloorRequestDto);
   }
 }
