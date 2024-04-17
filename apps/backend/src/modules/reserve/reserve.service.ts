@@ -19,6 +19,7 @@ import {
 
 import { FacilityService } from '../facility/facility.service';
 import { User } from '../user/entity/user.entity';
+import { UserService } from '../user/user.service';
 import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
 import { GetReserveByDateRequestDto } from './dto/request/getReserveByDateRequest.dto';
 import { RemoveReserveRequestDto } from './dto/request/removeReserveRequest.dto';
@@ -35,6 +36,7 @@ export class ReserveService {
     @InjectRepository(Reserve)
     private readonly reserveRepository: Repository<Reserve>,
     private readonly facilityService: FacilityService,
+    private readonly userService: UserService,
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
   ) {
@@ -42,7 +44,7 @@ export class ReserveService {
   }
 
   async addReserve(
-    user: User,
+    userId: number,
     addReserveRequestDto: AddReserveRequestDto,
     retry: number = 0,
   ): Promise<Reserve> {
@@ -83,7 +85,7 @@ export class ReserveService {
       }
 
       await sleep(1000);
-      return this.addReserve(user, addReserveRequestDto, retry + 1);
+      return this.addReserve(userId, addReserveRequestDto, retry + 1);
     }
 
     try {
@@ -113,6 +115,10 @@ export class ReserveService {
           '이미 예약된 시간입니다. 예약 시간을 다시 확인해 주세요',
         );
 
+      const user = await this.userService.findById(userId);
+      if (!user)
+        throw new NotFoundException('유저를 찾을 수 없습니다.');
+
       const reserve = this.reserveRepository.create({
         ...addReserveRequestDto,
         user,
@@ -126,9 +132,12 @@ export class ReserveService {
   }
 
   async removeReserve(
-    user: User,
+    userId: number,
     removeReserveDto: RemoveReserveRequestDto,
   ): Promise<RemoveReserveResponseDto> {
+    const user = await this.userService.findById(userId);
+    if (!user)
+      throw new NotFoundException('유저를 찾을 수 없습니다.');
     const admins = this.configService.get('ADMINS') as
       | string[]
       | undefined;

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Post,
@@ -17,7 +18,7 @@ import {
 } from '@nestjs/swagger';
 
 import { AuthUser } from '../auth/decorator/auth-user.decorator';
-import { JwtAccesGuard } from '../auth/guard/jwt-access.guard';
+import { AuthUserGuard } from '../auth/guard/auth-user.guard';
 import { User } from '../user/entity/user.entity';
 import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
 import { GetReserveByDateRequestDto } from './dto/request/getReserveByDateRequest.dto';
@@ -34,7 +35,7 @@ export class ReserveController {
   constructor(private readonly reserveService: ReserveService) {}
 
   @Post()
-  @UseGuards(JwtAccesGuard)
+  @UseGuards(AuthUserGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: '좌석 예약' })
   @ApiCreatedResponse({ type: Reserve })
@@ -42,7 +43,14 @@ export class ReserveController {
     @AuthUser() user: User,
     @Body() addReserveRequestDto: AddReserveRequestDto,
   ) {
-    return this.reserveService.addReserve(user, addReserveRequestDto);
+    if (addReserveRequestDto.always)
+      throw new ForbiddenException(
+        '고정석 예약은 관리자 페이지에서만 가능합니다.',
+      );
+    return this.reserveService.addReserve(
+      user.id,
+      addReserveRequestDto,
+    );
   }
 
   @Get()
@@ -60,7 +68,7 @@ export class ReserveController {
   }
 
   @Get('/user')
-  @UseGuards(JwtAccesGuard)
+  @UseGuards(AuthUserGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: '유저 기준 좌석 예약 조회' })
   @ApiOkResponse({
@@ -72,7 +80,7 @@ export class ReserveController {
   }
 
   @Delete('/:id')
-  @UseGuards(JwtAccesGuard)
+  @UseGuards(AuthUserGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: '예약 취소' })
   @ApiOkResponse({ type: RemoveReserveResponseDto })
@@ -80,6 +88,9 @@ export class ReserveController {
     @AuthUser() user: User,
     @Param() removeReserveDto: RemoveReserveRequestDto,
   ) {
-    return this.reserveService.removeReserve(user, removeReserveDto);
+    return this.reserveService.removeReserve(
+      user.id,
+      removeReserveDto,
+    );
   }
 }
