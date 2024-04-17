@@ -7,6 +7,7 @@ export interface ReserveInfoBase {
   start: Date;
   end: Date | null;
   always: boolean;
+  createdAt: Date;
 }
 
 export interface Reserve extends ReserveInfoBase {
