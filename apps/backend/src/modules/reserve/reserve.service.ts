@@ -134,6 +134,7 @@ export class ReserveService {
             always: true,
           },
         ].filter((item) => item !== undefined),
+        relations: { facility: true },
       });
       if (existReserve) throw new ConflictException(existReserve);
 
