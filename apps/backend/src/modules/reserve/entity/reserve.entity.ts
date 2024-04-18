@@ -12,6 +12,7 @@ import { Facility } from 'src/modules/facility/entity/facility.entity';
 import { User } from 'src/modules/user/entity/user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -55,4 +56,9 @@ export class Reserve implements Model.ReserveInfoBase {
   @IsBoolean()
   @ApiProperty({ description: '고정 예약 여부' })
   always: boolean;
+
+  @CreateDateColumn()
+  @IsDate()
+  @ApiProperty({ description: '등록 일시' })
+  createdAt: Date;
 }

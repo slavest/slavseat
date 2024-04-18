@@ -16,7 +16,7 @@ export const useAddReserveMutation = ({
 
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutate, isError } = useMutation({
     mutationKey: [addReserve.name],
     mutationFn: addReserve,
     onSuccess: (data) => {
@@ -38,8 +38,8 @@ export const useAddReserveMutation = ({
   });
 
   const values = useMemo(
-    () => ({ loading, mutate }),
-    [loading, mutate],
+    () => ({ loading, isError, mutate }),
+    [isError, loading, mutate],
   );
 
   return values;

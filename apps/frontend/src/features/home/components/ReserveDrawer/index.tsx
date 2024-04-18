@@ -115,7 +115,9 @@ export function ReserveDrawer({
         <Badge
           status={
             currentReserve
-              ? Status.USING
+              ? currentReserve.always
+                ? Status.ALWAYS
+                : Status.USING
               : isFutureReserved
                 ? Status.RESERVED
                 : Status.ABLE_RESERVE

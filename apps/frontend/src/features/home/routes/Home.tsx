@@ -13,6 +13,7 @@ import { useGetFloorDetailQuery } from '@/shared/api/query/floor/get-floor-detai
 import { useAddReserveMutation } from '@/shared/api/query/reserve/add-reserve';
 import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
 import { DateSelector } from '@/shared/components/DateSelector';
+import { FloatingDrawer } from '@/shared/components/Drawer';
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
 import { Loading } from '@/shared/components/Loading';
 import { Tab } from '@/shared/components/Tab';
@@ -21,11 +22,22 @@ import {
   ReserveData,
   ReserveDrawer,
 } from '../components/ReserveDrawer';
+import { ExistReserveNotice } from '../components/ReserveDrawer/DrawerContents/ExistReserveNotice';
+import { OverrideReserveConfirm } from '../components/ReserveDrawer/DrawerContents/OverrideReserveConfirm';
+import { SeatCounter } from '../components/SeatCounter';
 
 function Home() {
+  const [drawerStep, setDrawerStep] = useState<
+    'overrideNotice' | 'override'
+  >('overrideNotice');
+
+  const [existReserve, setExistReserve] =
+    useState<Model.ReserveInfo | null>(null);
+  const [newReserveData, setNewReserveData] =
+    useState<ReserveData | null>(null);
+
   const [selectedFacility, setSelectedFacility] =
     useState<Model.FacilitySummary>();
-
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedFloor, setSelectedFloor] = useState<number | null>(
     null,
@@ -43,6 +55,15 @@ function Home() {
     useAddReserveMutation({
       onSuccess: () => setSelectedFacility(undefined),
       onError: (error) => {
+        console.log('error?', error);
+        if (error.response?.status === 409) {
+          const existsReserve = error.response
+            .data as unknown as Model.ReserveInfo;
+
+          setExistReserve(existsReserve);
+          return;
+        }
+
         toast.error(
           error.response?.data.message.replace('.', '.\n') ||
             '에러가 발생 했습니다.',
@@ -58,10 +79,17 @@ function Home() {
       data.end?.setMonth(selectedDate.getMonth());
       data.end?.setDate(selectedDate.getDate());
 
+      setNewReserveData(data);
       addReserveMutation(data);
     },
     [addReserveMutation, selectedDate],
   );
+
+  const resetOverrideReserve = useCallback(() => {
+    setExistReserve(null);
+    setNewReserveData(null);
+    setDrawerStep('overrideNotice');
+  }, []);
 
   useEffect(() => {
     if (allFloorSummary) {
@@ -70,7 +98,7 @@ function Home() {
   }, [allFloorSummary]);
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col relative">
       <div>
         <div className="px-6 pt-6 pb-3 text-xl font-bold">
           좌석 배치도
@@ -118,8 +146,14 @@ function Home() {
       ) : (
         <Loading />
       )}
+
+      <SeatCounter
+        floorInfo={floorDetail}
+        reserveInfos={reservesByDate}
+      />
+
       <ReserveDrawer
-        open={!!selectedFacility && !!reservesByDate}
+        open={!existReserve && !!selectedFacility && !!reservesByDate}
         onClose={() => setSelectedFacility(undefined)}
         facility={selectedFacility}
         loading={mutateLoading}
@@ -128,6 +162,33 @@ function Home() {
         )}
         onSubmit={handleSubmitReserve}
       />
+
+      <FloatingDrawer
+        open={!!existReserve}
+        onClose={resetOverrideReserve}
+      >
+        {!existReserve || !newReserveData ? (
+          <Loading />
+        ) : (
+          {
+            overrideNotice: (
+              <ExistReserveNotice
+                existReserve={existReserve}
+                onClickCancel={() => setExistReserve(null)}
+                onClickOk={() => setDrawerStep('override')}
+              />
+            ),
+            override: (
+              <OverrideReserveConfirm
+                reserveData={newReserveData}
+                existReserve={existReserve}
+                onFinish={resetOverrideReserve}
+                onFail={resetOverrideReserve}
+              />
+            ),
+          }[drawerStep]
+        )}
+      </FloatingDrawer>
     </div>
   );
 }

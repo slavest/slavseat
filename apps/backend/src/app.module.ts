@@ -5,14 +5,15 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
-import { PassportModule } from '@nestjs/passport';
 
 import { ConfigurationModule } from './libs/config/config.module';
 import { DatabaseModule } from './libs/database/database.module';
 import { HttpLoggerMiddleware } from './libs/logging/http-logger.middleware';
 import { AuthModule } from './modules/auth/auth.module';
+import { AuthUserMiddleware } from './modules/auth/middleware/auth-user.middleware';
 import { FacilityModule } from './modules/facility/facility.module';
 import { FloorModule } from './modules/floor/floor.module';
+import { JwtModule } from './modules/jwt/jwt.module';
 import { ReserveModule } from './modules/reserve/reserve.module';
 import { UserModule } from './modules/user/user.module';
 
@@ -25,6 +26,7 @@ import { UserModule } from './modules/user/user.module';
     FacilityModule,
     AuthModule,
     UserModule,
+    JwtModule,
   ],
   providers: [
     {
@@ -42,5 +44,6 @@ import { UserModule } from './modules/user/user.module';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(HttpLoggerMiddleware).forRoutes('/');
+    consumer.apply(AuthUserMiddleware).forRoutes('*');
   }
 }
