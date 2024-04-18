@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { HiXMark } from 'react-icons/hi2';
 import { toast } from 'react-toastify';
 import {
@@ -25,8 +25,6 @@ import { cn } from '@/shared/utils/class.util';
 
 import { useSearchQuery } from '../../hooks/search-user';
 
-// 재사용성 포기.. GG
-
 interface CreateReserveSelectStepData {
   date: Date;
   facility: Model.FacilitySummary;
@@ -39,7 +37,7 @@ interface CreateReserveSelectStepProps {
 function CreateReserveSelectStep({
   onSubmit,
 }: CreateReserveSelectStepProps) {
-  const [userSearch, setUserSearch] = useState<string>();
+  const [userSearch, setUserSearch] = useState<string>('');
   const [selectedUser, setSelectedUser] = useState<Model.UserInfo>();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedFloor, setSelectedFloor] = useState<number>();
@@ -64,12 +62,18 @@ function CreateReserveSelectStep({
     500,
   );
 
-  const handleSelectUser = useCallback((user: Model.UserInfo) => {
-    setSelectedUser((prev) => {
-      if (prev?.id === user.id) return undefined;
-      else return user;
-    });
-  }, []);
+  const handleSelectUser = useCallback(
+    (user: Model.UserInfo) => {
+      let newSelectedUser;
+      if (selectedUser?.id === user.id) newSelectedUser = undefined;
+      else newSelectedUser = user;
+
+      if (newSelectedUser !== undefined) setUserSearch('');
+
+      setSelectedUser(newSelectedUser);
+    },
+    [selectedUser?.id],
+  );
 
   const handleClickFacility = useCallback(
     (facility: Model.FacilitySummary) => {
@@ -101,7 +105,8 @@ function CreateReserveSelectStep({
             type="text"
             className="border border-neutral-400 rounded-md text-sm p-1 focus:outline-purple-600"
             placeholder="유저명 검색"
-            onChange={handleChangeUserSearch}
+            onChange={(e) => setUserSearch(e.target.value)}
+            value={userSearch}
           />
           {selectedUser && (
             <>
