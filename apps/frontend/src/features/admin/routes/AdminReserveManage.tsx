@@ -1,32 +1,72 @@
-import { useMutation } from '@tanstack/react-query';
 import React, {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
 import { toast } from 'react-toastify';
-import {
-  ReactZoomPanPinchContentRef,
-  TransformComponent,
-  TransformWrapper,
-} from 'react-zoom-pan-pinch';
+import { ReactZoomPanPinchContentRef } from 'react-zoom-pan-pinch';
 
 import { Model } from '@slavseat/types';
-import { format, parse } from 'date-fns';
+import { format, formatDate, parse } from 'date-fns';
 
 import { useGetAllFloorSummaryQuery } from '@/shared/api/query/floor/get-all-floor-summary';
-import { useGetFloorDetailQuery } from '@/shared/api/query/floor/get-floor-detail';
 import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
-import { Button } from '@/shared/components/Button';
-import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
-import ScrollArea from '@/shared/components/ScrollArea';
-import { formatHHMM } from '@/shared/constants/date.constant';
+import { ColumnType, Table } from '@/shared/components/Table';
+import { formatMMDDHHMM } from '@/shared/constants/date.constant';
 import { cn } from '@/shared/utils/class.util';
 
 import { Box } from '../components/Box';
+import { CreateReserveModal } from '../components/Modal/CreateReserveModal';
 import { useCancelReserveMutation } from '../hooks/cancel-reserve';
 import { useAdminAppStore } from '../stores/adminAppStore';
+
+const columns: ColumnType<Model.ReserveInfo>[] = [
+  { dataKey: 'user.name', headerContent: '사용자명', flexGrow: 1 },
+  {
+    dataKey: 'start',
+    headerContent: '시작 시간',
+    flexGrow: 1,
+    renderContent: ({ start }) => formatDate(start, formatMMDDHHMM),
+  },
+  {
+    dataKey: 'end',
+    headerContent: '종료 시간',
+    flexGrow: 1,
+    renderContent: ({ end }) =>
+      end ? formatDate(end, formatMMDDHHMM) : null,
+  },
+  {
+    dataKey: 'always',
+    headerContent: '예약 유형',
+    flexGrow: 1,
+    renderContent: ({ always }) => (
+      <span
+        className={cn({
+          'text-blue-600': !always,
+          'text-red-600': always,
+        })}
+      >
+        {always ? '고정석' : '시간차'}
+      </span>
+    ),
+  },
+  {
+    dataKey: 'createdAt',
+    headerContent: '예약 일시',
+    flexGrow: 1,
+    renderContent: ({ createdAt }) =>
+      format(createdAt, 'yyyy-MM-dd HH:MM:SS'),
+  },
+  {
+    dataKey: 'facility',
+    headerContent: '좌석 정보',
+    flexGrow: 1,
+    renderContent: ({ facility }) =>
+      `${facility.floor.name} ${facility.name}`,
+  },
+];
 
 export function AdminReserveManage() {
   const { setTitle } = useAdminAppStore();
@@ -37,9 +77,12 @@ export function AdminReserveManage() {
     {},
   );
   const [date, setDate] = useState<Date>(new Date());
-  const [viewFloor, setViewFloor] = useState<number>();
+  const [searchUserName, setSearchUserName] = useState<string>('');
+  const [searchFloorId, setSearchFloorId] = useState<number>();
   const [selectedReserve, setSelectedReserve] =
     useState<Model.ReserveInfo>();
+  const [adminReserveModalOpen, setAdminReserveModalOpen] =
+    useState(false);
 
   const { mutate: cancleReserveMutation } = useCancelReserveMutation({
     onSuccess: () => toast.success('예약이 취소되었습니다.'),
@@ -47,10 +90,23 @@ export function AdminReserveManage() {
   });
 
   const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
-  const { data: floorDetail } = useGetFloorDetailQuery(viewFloor!, {
-    enabled: viewFloor !== undefined,
-  });
   const { data: reserveList } = useGetReserveByDate(date);
+
+  const filteredReserveList = useMemo(
+    () =>
+      reserveList
+        ?.filter((reserve) =>
+          searchUserName === ''
+            ? true
+            : reserve.user.name.includes(searchUserName),
+        )
+        .filter((reserve) =>
+          searchFloorId === undefined
+            ? true
+            : reserve.facility.floor.id === searchFloorId,
+        ),
+    [reserveList, searchFloorId, searchUserName],
+  );
 
   const addFacilityRef = useCallback(
     (id: number, ref: HTMLDivElement | null) => {
@@ -82,84 +138,81 @@ export function AdminReserveManage() {
   }, [cancleReserveMutation, selectedReserve]);
 
   return (
-    <div className="p-4">
-      <div className="flex gap-2">
-        <Box title="날짜 선택">
-          <input
-            type="date"
-            value={format(date, 'yyyy-MM-dd')}
-            onChange={(e) =>
-              setDate(parse(e.target.value, 'yyyy-MM-dd', new Date()))
-            }
-            className="text-sm border border-neutral-400 rounded-md p-1"
-          />
-        </Box>
-        <Box title="Floor 선택">
-          <select
-            className="border border-neutral-200 rounded text-sm"
-            value={viewFloor}
-            onChange={(e) =>
-              e.target.value && setViewFloor(Number(e.target.value))
-            }
-          >
-            <option value="" key="">
-              층을 선택해 주세요
-            </option>
-            {allFloorSummary?.map((floor) => (
-              <option value={floor.id} key={floor.id}>
-                {floor.name}
+    <div className="flex flex-col p-4 gap-4 h-[calc(100vh_-_var(--var-admin-header-height))] overflow-hidden">
+      <div className="flex gap-4">
+        <Box
+          title="필터"
+          className="flex-1"
+          innerClassName={cn('flex gap-4')}
+          fullWidth
+        >
+          <span>
+            <div className="text-xs">날짜</div>
+            <input
+              type="date"
+              value={format(date, 'yyyy-MM-dd')}
+              onChange={(e) =>
+                setDate(
+                  parse(e.target.value, 'yyyy-MM-dd', new Date()),
+                )
+              }
+              className="text-sm border border-neutral-400 rounded-md p-1 focus:outline-purple-600"
+            />
+          </span>
+
+          <span>
+            <div className="text-xs">층</div>
+            <select
+              className="border border-neutral-400 rounded-md text-sm p-1 focus:outline-purple-600"
+              value={searchFloorId}
+              onChange={(e) =>
+                setSearchFloorId(
+                  e.target.value ? Number(e.target.value) : undefined,
+                )
+              }
+            >
+              <option value="" key="">
+                전체
               </option>
-            ))}
-          </select>
+              {allFloorSummary?.map((floor) => (
+                <option value={floor.id} key={floor.id}>
+                  {floor.name}
+                </option>
+              ))}
+            </select>
+          </span>
+
+          <span>
+            <div className="text-xs">사용자명</div>
+            <input
+              type="text"
+              className="border border-neutral-400 rounded-md text-sm p-1 focus:outline-purple-600"
+              value={searchUserName}
+              onChange={(e) => setSearchUserName(e.target.value)}
+            />
+          </span>
         </Box>
-        <Box title="Reserve 관리 툴바">
-          <Button onClick={handleClickCancelReserve}>
-            선택 예약 취소
-          </Button>
+
+        <Box title="동작">
+          <button
+            className="px-4 py-2 text-white bg-violet-600 rounded-xl"
+            onClick={() => setAdminReserveModalOpen(true)}
+          >
+            새 예약
+          </button>
         </Box>
       </div>
+      {/* <ScrollArea> */}
+      <div className="flex-1">
+        <Table
+          data={filteredReserveList}
+          columns={columns}
+          fillHeight
+        />
+      </div>
+      {/* </ScrollArea> */}
 
-      <div className="flex gap-4">
-        {viewFloor && (
-          <Box title="예약 목록" innerPadding={false}>
-            <ScrollArea className="h-[50rem]">
-              <div className="p-2 space-y-2 text-sm overflow-visible">
-                {reserveList
-                  ?.filter(
-                    (reserve) =>
-                      reserve.facility.floor.id === viewFloor,
-                  )
-                  .map((reserve) => (
-                    <div
-                      key={reserve.id}
-                      onClick={() => handleClickReserve(reserve)}
-                      className={cn(
-                        'flex gap-4 p-2 shadow-blur-sm border border-neutral-200 rounded-lg cursor-pointer text-nowrap',
-                        {
-                          'border-black':
-                            selectedReserve?.id === reserve.id,
-                        },
-                      )}
-                    >
-                      <span>
-                        {reserve.facility.floor.name}-
-                        {reserve.facility.name}
-                      </span>
-                      <span>{reserve.user.name}</span>
-                      <span>
-                        {format(reserve.start, formatHHMM)}-
-                        {reserve.always
-                          ? '(고정석)'
-                          : format(reserve.end, formatHHMM)}
-                      </span>
-                    </div>
-                  ))}
-              </div>
-            </ScrollArea>
-          </Box>
-        )}
-
-        {floorDetail && (
+      {/* {floorDetail && (
           <Box
             title="Facility Grid 뷰"
             className="flex-1 w-1"
@@ -189,8 +242,11 @@ export function AdminReserveManage() {
               </TransformComponent>
             </TransformWrapper>
           </Box>
-        )}
-      </div>
+        )} */}
+      <CreateReserveModal
+        open={adminReserveModalOpen}
+        onClose={() => setAdminReserveModalOpen(false)}
+      />
     </div>
   );
 }
