@@ -85,7 +85,7 @@ function CreateReserveSelectStep({
   const handleSubmit = useCallback(() => {
     if (!selectedUser || !selectedFacility)
       return toast.error('입력값을 다시 확인해 주세요');
-    onSubmit?.({
+    return onSubmit?.({
       date: selectedDate,
       user: selectedUser,
       facility: selectedFacility,
