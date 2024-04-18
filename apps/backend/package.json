@@ -56,6 +56,7 @@
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
+    "@slavseat/prettier-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@nestjs/cli": "^10.3.1",
     "@nestjs/schematics": "^10.0.0",

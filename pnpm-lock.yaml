@@ -138,6 +138,9 @@ importers:
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      '@slavseat/prettier-config':
+        specifier: workspace:*
+        version: link:../../packages/prettier-config
       '@types/express':
         specifier: ^4.17.21
         version: 4.17.21

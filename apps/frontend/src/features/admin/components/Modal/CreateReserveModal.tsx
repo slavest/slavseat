@@ -242,7 +242,12 @@ export function CreateReserveModal({ onClose, ...rest }: CreateReserveModalProps
       onClose?.();
     },
     onError: (error) => {
-      toast.error(error.response?.data.message.replace('.', '.\n') || '에러가 발생 했습니다.');
+      let message = '오류가 발생했습니다.';
+      if (error.response?.data.message) message = error.response?.data?.message.replace('.', '.\n');
+      if ((error.response?.data as any).id)
+        message = `${(error.response?.data as any)?.id}번 예약과 중복되었습니다.`;
+
+      toast.error(message);
     },
   });
 
@@ -253,8 +258,16 @@ export function CreateReserveModal({ onClose, ...rest }: CreateReserveModalProps
     setStep(1);
   }, []);
 
+  const handleClose = useCallback(() => {
+    setUser(undefined);
+    setFacility(undefined);
+    setDate(undefined);
+    setStep(0);
+    onClose?.();
+  }, [onClose]);
+
   return (
-    <Modal.Root closeOnBackdropClick={false} onClose={onClose} {...rest}>
+    <Modal.Root closeOnBackdropClick={false} onClose={handleClose} {...rest}>
       <div className="space-y-4">
         <div className="flex justify-between font-semibold">
           예약 추가

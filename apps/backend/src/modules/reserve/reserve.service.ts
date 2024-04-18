@@ -10,12 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Model } from '@slavseat/types';
 import { Redis } from 'ioredis';
 import { sleep } from 'src/libs/utils/common';
-import {
-  Between,
-  LessThanOrEqual,
-  MoreThanOrEqual,
-  Repository,
-} from 'typeorm';
+import { Between, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 
 import { FacilityService } from '../facility/facility.service';
 import { User } from '../user/entity/user.entity';
@@ -48,28 +43,20 @@ export class ReserveService {
     addReserveRequestDto: AddReserveRequestDto,
     retry: number = 0,
   ): Promise<Reserve> {
-    const {
-      facilityId,
-      start,
-      end = null,
-      always,
-    } = addReserveRequestDto;
+    const { facilityId, start, end = null, always } = addReserveRequestDto;
     const dateSearch = start && end;
 
     if (dateSearch && start.getTime() >= end.getTime())
-      throw new BadRequestException(
-        `시작 날짜는 종료 날짜보다 같거나 클 수 없습니다.`,
-      );
+      throw new BadRequestException(`시작 날짜는 종료 날짜보다 같거나 클 수 없습니다.`);
+
+    if (start.getTime() < Date.now())
+      throw new BadRequestException('지난 시간은 예약할 수 없습니다.');
 
     if (!always && end === null)
-      throw new BadRequestException(
-        '시간차 예약은 종료 시간이 포함되어야 합니다.',
-      );
+      throw new BadRequestException('시간차 예약은 종료 시간이 포함되어야 합니다.');
 
-    const facility =
-      await this.facilityService.findOneById(facilityId);
-    if (!facility)
-      throw new NotFoundException(`시설을 찾을 수 없습니다.`);
+    const facility = await this.facilityService.findOneById(facilityId);
+    if (!facility) throw new NotFoundException(`시설을 찾을 수 없습니다.`);
 
     if (facility.type !== Model.FacilityType.SEAT)
       throw new BadRequestException('예약이 불가능한 시설입니다.');
@@ -79,9 +66,7 @@ export class ReserveService {
 
     if (redisLock > 1) {
       if (retry >= 3) {
-        throw new ConflictException(
-          '시설 예약이 불가능합니다. 잠시 후 다시 시도해 주세요.',
-        );
+        throw new ConflictException('시설 예약이 불가능합니다. 잠시 후 다시 시도해 주세요.');
       }
 
       await sleep(1000);
@@ -90,18 +75,26 @@ export class ReserveService {
 
     try {
       const user = await this.userService.findById(userId);
-      if (!user)
-        throw new NotFoundException('유저를 찾을 수 없습니다.');
+      if (!user) throw new NotFoundException('유저를 찾을 수 없습니다.');
 
       const existReserve = await this.reserveRepository.findOne({
         where: [
           dateSearch && {
-            facility: { id: facility.id },
+            facility: { id: facilityId },
             start: Between(start, end),
           },
           dateSearch && {
-            facility: { id: facility.id },
+            facility: { id: facilityId },
             end: Between(start, end),
+          },
+          dateSearch && {
+            facility: { id: facilityId },
+            start: LessThanOrEqual(start),
+            end: MoreThanOrEqual(end),
+          },
+          always && {
+            facility: { id: facilityId },
+            start: MoreThanOrEqual(start),
           },
           dateSearch && {
             user: { id: userId },
@@ -111,27 +104,14 @@ export class ReserveService {
             user: { id: userId },
             end: Between(start, end),
           },
-          always && {
-            facility: { id: facility.id },
-            start: MoreThanOrEqual(start),
-          },
-          always && {
-            facility: { id: facility.id },
-            end: MoreThanOrEqual(start),
-          },
-          always && {
-            facility: { id: facility.id },
-            end: MoreThanOrEqual(start),
-          },
-          {
-            facility: { id: facility.id },
-            start: MoreThanOrEqual(start),
-            always: true,
-          },
-          {
+          dateSearch && {
             user: { id: userId },
             start: LessThanOrEqual(start),
-            always: true,
+            end: MoreThanOrEqual(end),
+          },
+          always && {
+            user: { id: userId },
+            start: MoreThanOrEqual(start),
           },
         ].filter((item) => item !== undefined),
         relations: { facility: true },
@@ -155,11 +135,8 @@ export class ReserveService {
     removeReserveDto: RemoveReserveRequestDto,
   ): Promise<RemoveReserveResponseDto> {
     const user = await this.userService.findById(userId);
-    if (!user)
-      throw new NotFoundException('유저를 찾을 수 없습니다.');
-    const admins = this.configService.get('ADMINS') as
-      | string[]
-      | undefined;
+    if (!user) throw new NotFoundException('유저를 찾을 수 없습니다.');
+    const admins = this.configService.get('ADMINS') as string[] | undefined;
     let exist: Reserve;
 
     if (admins?.includes(user.email)) {
@@ -174,9 +151,7 @@ export class ReserveService {
     }
     if (!exist) throw new NotFoundException('reserve not found');
 
-    const removeResult = await this.reserveRepository.delete(
-      exist.id,
-    );
+    const removeResult = await this.reserveRepository.delete(exist.id);
     return { removed: removeResult.affected ?? 0 };
   }
 

@@ -27,6 +27,7 @@ export function AdminReserveManage() {
 
   const [date, setDate] = useState<Date>(new Date());
   const [searchUserName, setSearchUserName] = useState<string>('');
+  const [searchId, setSearchId] = useState<string>('');
   const [searchFloorId, setSearchFloorId] = useState<number>();
   const [adminReserveModalOpen, setAdminReserveModalOpen] = useState(false);
   // const [viewFacilityInGrid, setViewFacilityInGrid] = useState<Model.FacilitySummary>();
@@ -45,10 +46,11 @@ export function AdminReserveManage() {
         ?.filter((reserve) =>
           searchUserName === '' ? true : reserve.user.name.includes(searchUserName),
         )
+        .filter((reserve) => (searchId === '' ? true : reserve.id.toString() === searchId))
         .filter((reserve) =>
           searchFloorId === undefined ? true : reserve.facility.floor.id === searchFloorId,
         ),
-    [reserveList, searchFloorId, searchUserName],
+    [reserveList, searchFloorId, searchId, searchUserName],
   );
 
   const handleReserveAction = useCallback(
@@ -59,7 +61,8 @@ export function AdminReserveManage() {
   );
 
   const columns: ColumnType<Model.ReserveInfo>[] = [
-    { dataKey: 'user.name', headerContent: '사용자명', flexGrow: 1 },
+    { dataKey: 'id', headerContent: '예약 번호', flexGrow: 0.5 },
+    { dataKey: 'user.name', headerContent: '사용자명', flexGrow: 1, fullText: true },
     {
       dataKey: 'start',
       headerContent: '시작 시간',
@@ -150,6 +153,16 @@ export function AdminReserveManage() {
               type="text"
               value={searchUserName}
               onChange={(e) => setSearchUserName(e.target.value)}
+            />
+          </span>
+
+          <span>
+            <div className="text-xs">예약 번호</div>
+            <input
+              className="rounded-md border border-neutral-400 p-1 text-sm focus:outline-purple-600"
+              type="number"
+              value={searchId}
+              onChange={(e) => setSearchId(e.target.value)}
             />
           </span>
         </Box>
