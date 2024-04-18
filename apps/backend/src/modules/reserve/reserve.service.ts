@@ -106,6 +106,9 @@ export class ReserveService {
           dateSearch && {
             user: { id: userId },
             start: Between(start, end),
+          },
+          dateSearch && {
+            user: { id: userId },
             end: Between(start, end),
           },
           always && {
@@ -127,7 +130,7 @@ export class ReserveService {
           },
           {
             user: { id: userId },
-            start: MoreThanOrEqual(start),
+            start: LessThanOrEqual(start),
             always: true,
           },
         ].filter((item) => item !== undefined),
