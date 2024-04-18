@@ -1,11 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 
-import {
-  addAdminReserve,
-  getReserveListByDate,
-  getReserveListByUser,
-} from '../../reserve';
+import { addAdminReserve, getReserveListByDate, getReserveListByUser } from '../../reserve';
 import { BaseMutation } from '../type';
 
 export const useAddAdminReserveMutation = ({
@@ -37,10 +33,7 @@ export const useAddAdminReserveMutation = ({
     },
   });
 
-  const values = useMemo(
-    () => ({ loading, mutate }),
-    [loading, mutate],
-  );
+  const values = useMemo(() => ({ loading, mutate }), [loading, mutate]);
 
   return values;
 };
