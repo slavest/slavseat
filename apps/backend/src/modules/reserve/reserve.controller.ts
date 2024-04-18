@@ -20,6 +20,7 @@ import {
 import { AuthUser } from '../auth/decorator/auth-user.decorator';
 import { AuthUserGuard } from '../auth/guard/auth-user.guard';
 import { User } from '../user/entity/user.entity';
+import { AddAdminReserveRequestDto } from './dto/request/addAdminReserveRequest.dto';
 import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
 import { GetReserveByDateRequestDto } from './dto/request/getReserveByDateRequest.dto';
 import { RemoveReserveRequestDto } from './dto/request/removeReserveRequest.dto';
@@ -50,6 +51,20 @@ export class ReserveController {
     return this.reserveService.addReserve(
       user.id,
       addReserveRequestDto,
+    );
+  }
+
+  @Post('/admin')
+  @UseGuards(AuthUserGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: '좌석 예약' })
+  @ApiCreatedResponse({ type: Reserve })
+  async addAdminReserve(
+    @Body() addAdminReserveRequestDto: AddAdminReserveRequestDto,
+  ) {
+    return this.reserveService.addReserve(
+      addAdminReserveRequestDto.userId,
+      addAdminReserveRequestDto,
     );
   }
 
