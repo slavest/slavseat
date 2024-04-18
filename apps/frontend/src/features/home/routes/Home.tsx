@@ -24,6 +24,7 @@ import {
 } from '../components/ReserveDrawer';
 import { ExistReserveNotice } from '../components/ReserveDrawer/DrawerContents/ExistReserveNotice';
 import { OverrideReserveConfirm } from '../components/ReserveDrawer/DrawerContents/OverrideReserveConfirm';
+import { SeatCounter } from '../components/SeatCounter';
 
 function Home() {
   const [drawerStep, setDrawerStep] = useState<
@@ -97,7 +98,7 @@ function Home() {
   }, [allFloorSummary]);
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col relative">
       <div>
         <div className="px-6 pt-6 pb-3 text-xl font-bold">
           좌석 배치도
@@ -145,6 +146,12 @@ function Home() {
       ) : (
         <Loading />
       )}
+
+      <SeatCounter
+        floorInfo={floorDetail}
+        reserveInfos={reservesByDate}
+      />
+
       <ReserveDrawer
         open={!existReserve && !!selectedFacility && !!reservesByDate}
         onClose={() => setSelectedFacility(undefined)}
