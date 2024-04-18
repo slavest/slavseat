@@ -1,10 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getUsersByName } from '@/shared/api/user';
+import { Model } from '@slavseat/types';
+import debounce from 'lodash/debounce';
 
-export const useSearchQuery = (name?: string) =>
-  useQuery({
+import { getUsersByName } from '@/shared/api/user';
+import { debounceAsync } from '@/shared/utils/debounce.util';
+
+export const useSearchQuery = (name?: string) => {
+  return useQuery({
     queryKey: [getUsersByName.name, name],
-    queryFn: () => getUsersByName(name!),
+    queryFn: () =>
+      debounceAsync<Model.UserInfo[], typeof getUsersByName>(
+        getUsersByName,
+        500,
+      )(name!),
     enabled: !!name,
   });
+};
