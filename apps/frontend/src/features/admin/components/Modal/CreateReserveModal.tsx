@@ -231,8 +231,8 @@ function CreateReserve2Step({
   onSubmit,
 }: CreateReserve2StepProps) {
   const [always, setAlways] = useState(false);
-  const [start, setStart] = useState<Date>(new Date());
-  const [end, setEnd] = useState<Date>(new Date());
+  const [start, setStart] = useState<Date>(date);
+  const [end, setEnd] = useState<Date>(date);
 
   return (
     <div className="flex flex-col gap-4 text-xs">
