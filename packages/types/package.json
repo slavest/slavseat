@@ -11,6 +11,7 @@
     "build": "pnpm rollup && tsc"
   },
   "devDependencies": {
+    "@slavseat/prettier-config": "workspace:*",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "eslint-config-slavseat": "workspace:*",
