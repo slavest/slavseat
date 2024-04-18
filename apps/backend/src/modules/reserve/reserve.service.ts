@@ -113,6 +113,11 @@ export class ReserveService {
             user: { id: userId },
             start: MoreThanOrEqual(start),
           },
+          always && {
+            user: { id: userId },
+            start: LessThanOrEqual(start),
+            always: true,
+          },
         ].filter((item) => item !== undefined),
         relations: { facility: true },
       });
