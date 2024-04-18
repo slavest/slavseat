@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import GridLayout from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -36,28 +36,53 @@ function FacilityGridViewer({
   const cols = 100;
   const width = 5000;
 
-  const getReserveStatus = useCallback(
-    (facility: Model.FacilitySummary) => {
+  const getReserveInfo = useCallback(
+    (
+      facility: Model.FacilitySummary,
+    ): { username: string | null; status: Status } => {
       const filteredReserves = reserves.filter(
         (r) => r.facility.id === facility.id,
       );
 
       const now = new Date();
-      const isUsing = filteredReserves.some(
+      const usingReserve = filteredReserves.find(
         (r) =>
           new Date(r.start) <= now &&
           (r.always || !r.end || now <= new Date(r.end)),
       );
-      if (isUsing) return Status.USING;
+      if (usingReserve)
+        return {
+          username: usingReserve.user.name,
+          status: usingReserve.always ? Status.ALWAYS : Status.USING,
+        };
 
-      const isReserved = filteredReserves.some(
+      const waitReserve = filteredReserves.find(
         (r) => new Date(r.start) >= now,
       );
-      if (isReserved) return Status.RESERVED;
+      if (waitReserve)
+        return {
+          username: waitReserve.user.name,
+          status: waitReserve.always
+            ? Status.ALWAYS
+            : Status.RESERVED,
+        };
 
-      return Status.ABLE_RESERVE;
+      return { username: null, status: Status.ABLE_RESERVE };
     },
     [reserves],
+  );
+
+  const renderBadge = useCallback(
+    (facility: Model.FacilitySummary) => {
+      const { username, status } = getReserveInfo(facility);
+
+      if (status === Status.ABLE_RESERVE)
+        return <Badge status={status} />;
+
+      // TODO: 일단 로직 하드코딩
+      return <Badge status={status}>{username?.slice(0, 3)}</Badge>;
+    },
+    [getReserveInfo],
   );
 
   const widthStyle = useMemo(() => {
@@ -105,9 +130,9 @@ function FacilityGridViewer({
               <Text className="text-sm font-medium">
                 {facility.name}
               </Text>
-              {facility.type === Model.FacilityType.SEAT && (
-                <Badge status={getReserveStatus(facility)} />
-              )}
+
+              {facility.type === Model.FacilityType.SEAT &&
+                renderBadge(facility)}
             </div>
           </div>
         </div>
