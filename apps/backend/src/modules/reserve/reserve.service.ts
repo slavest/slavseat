@@ -49,8 +49,8 @@ export class ReserveService {
     if (dateSearch && start.getTime() >= end.getTime())
       throw new BadRequestException(`시작 날짜는 종료 날짜보다 같거나 클 수 없습니다.`);
 
-    if (start.getTime() < Date.now())
-      throw new BadRequestException('지난 시간은 예약할 수 없습니다.');
+    // if (start.getTime() < Date.now())
+    //   throw new BadRequestException('지난 시간은 예약할 수 없습니다.');
 
     if (!always && end === null)
       throw new BadRequestException('시간차 예약은 종료 시간이 포함되어야 합니다.');
