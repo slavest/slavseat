@@ -10,6 +10,7 @@ import {
   UpdateFloorRequestBodyDto,
   UpdateFloorRequestParamDto,
 } from './dto/request/updateFloorRequest.dto';
+import { UpdateFloorDto, UpdateFloorsRequestDto } from './dto/request/updateFloorsRequest.dto';
 import { UploadFloorImageRequestDto } from './dto/request/uploadFloorImageRequest.dto';
 import { UpdateFloorResponseDto } from './dto/response/updateFloorResponse.dto';
 import { Floor } from './entity/floor.entity';
@@ -68,20 +69,26 @@ export class FloorService {
     });
   }
 
-  async updateFloor({
-    id,
-    ...updateFloorRequestDto
-  }: UpdateFloorRequestParamDto & UpdateFloorRequestBodyDto): Promise<UpdateFloorResponseDto> {
+  async updateFloor({ id, ...updateFloorDto }: UpdateFloorDto): Promise<UpdateFloorResponseDto> {
     const existFloor = await this.floorRepository.findOneBy({
       id,
     });
     if (!existFloor) throw new NotFoundException('Floor not found');
 
     const updated = await this.floorRepository.update(existFloor.id, {
-      ...updateFloorRequestDto,
+      ...updateFloorDto,
     });
 
     return { updated: updated.affected ?? 0 };
+  }
+
+  async updateFloors({ floors }: UpdateFloorsRequestDto): Promise<UpdateFloorResponseDto> {
+    let updated = 0;
+    for (const floor of floors) {
+      updated += (await this.updateFloor(floor)).updated;
+    }
+
+    return { updated };
   }
 
   // async findFloorBySeatId(seatId: number) {

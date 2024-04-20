@@ -41,6 +41,7 @@ import {
   UpdateFloorRequestBodyDto,
   UpdateFloorRequestParamDto,
 } from './dto/request/updateFloorRequest.dto';
+import { UpdateFloorsRequestDto } from './dto/request/updateFloorsRequest.dto';
 import { UploadFloorImageRequestDto } from './dto/request/uploadFloorImageRequest.dto';
 import { UpdateFloorResponseDto } from './dto/response/updateFloorResponse.dto';
 import { Floor } from './entity/floor.entity';
@@ -128,7 +129,7 @@ export class FloorController {
   }
 
   @Put('/:id')
-  @ApiOperation({ summary: '층 수정' })
+  @ApiOperation({ summary: '단일 층 수정' })
   @ApiOkResponse({ type: UpdateFloorResponseDto })
   async updateFloor(
     @Param() updateFloorRequestParamDto: UpdateFloorRequestParamDto,
@@ -138,5 +139,12 @@ export class FloorController {
       ...updateFloorRequestParamDto,
       ...updateFloorRequestBodyDto,
     });
+  }
+
+  @Put()
+  @ApiOperation({ summary: '다중 층 수정' })
+  @ApiOkResponse({ type: UpdateFloorResponseDto })
+  async updateFloors(@Body() updateFloorsRequestDto: UpdateFloorsRequestDto) {
+    return this.floorService.updateFloors(updateFloorsRequestDto);
   }
 }

@@ -14,7 +14,9 @@ import { Model } from '@slavseat/types';
 
 import { useCreateFloorMutation } from '@/shared/api/query/floor/create-floor';
 import { useGetAllFloorSummaryQuery } from '@/shared/api/query/floor/get-all-floor-summary';
+import { useUpdateFloorsMutation } from '@/shared/api/query/floor/update-floors';
 import { Button } from '@/shared/components/Button';
+import { Loading } from '@/shared/components/Loading';
 import { cn } from '@/shared/utils/class.util';
 
 import { Box } from '../components/Box';
@@ -26,7 +28,7 @@ export function AdminFloorManage() {
   useEffect(() => setTitle('층 관리'), [setTitle]);
 
   const [floorName, setFloorName] = useState<string>('');
-  const [floorOrder, setFloorOrder] = useState<Model.FloorSummary[]>([]);
+  // const [floorOrder, setFloorOrder] = useState<Model.FloorSummary[]>([]);
 
   const { mutate: createFloorMutation } = useCreateFloorMutation({
     onSuccess: () => {
@@ -36,23 +38,33 @@ export function AdminFloorManage() {
     onError: (e) => toast.error(e.response?.data.message),
   });
 
-  const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
-  useEffect(() => setFloorOrder(allFloorSummary ?? []), [allFloorSummary]);
+  const { data: allFloorSummary, isFetching } = useGetAllFloorSummaryQuery();
+  const { mutate: updateFloorsMutation } = useUpdateFloorsMutation();
+  // useEffect(() => setFloorOrder(allFloorSummary ?? []), [allFloorSummary]);
 
-  const onDragEnd = useCallback((result: DropResult) => {
-    const { source, destination } = result;
-    // dropped outside the list
-    if (!destination || destination.index === source.index) {
-      return;
-    }
+  const onDragEnd = useCallback(
+    (result: DropResult) => {
+      const { source, destination } = result;
+      // dropped outside the list
+      if (!destination || destination.index === source.index) {
+        return;
+      }
 
-    // no movement
-    if (destination.index === source.index) {
-      return;
-    }
+      // no movement
+      if (destination.index === source.index) {
+        return;
+      }
 
-    setFloorOrder((prev) => reorder(prev, source.index, destination.index));
-  }, []);
+      if (!allFloorSummary) return;
+
+      const floors = reorder(allFloorSummary, source.index, destination.index).map(
+        (floor, index) => ({ ...floor, order: index }),
+      );
+
+      updateFloorsMutation({ floors });
+    },
+    [allFloorSummary, updateFloorsMutation],
+  );
 
   return (
     <div className="p-4">
@@ -73,38 +85,44 @@ export function AdminFloorManage() {
       </Box>
 
       <Box title="Floor 수정">
-        <DragDropContext onDragEnd={onDragEnd}>
-          <table>
-            <thead>
-              <tr>
-                <th>id</th>
-                <th>name</th>
-              </tr>
-            </thead>
-            <Droppable droppableId="table">
-              {(droppableProvided: DroppableProvided) => (
-                <tbody ref={droppableProvided.innerRef} {...droppableProvided.droppableProps}>
-                  {floorOrder.map((floor, index) => (
-                    <Draggable key={floor.id} draggableId={floor.id.toString()} index={index}>
-                      {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                        <tr
-                          ref={provided.innerRef}
-                          className={cn({ 'bg-blue-400': snapshot.isDragging })}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <td>{floor.id}</td>
-                          <td>{floor.name}</td>
-                        </tr>
-                      )}
-                    </Draggable>
-                  ))}
-                  {droppableProvided.placeholder}
-                </tbody>
-              )}
-            </Droppable>
-          </table>
-        </DragDropContext>
+        {isFetching || !allFloorSummary ? (
+          <Loading />
+        ) : (
+          <DragDropContext onDragEnd={onDragEnd}>
+            <table>
+              <thead>
+                <tr>
+                  <th>id</th>
+                  <th>name</th>
+                </tr>
+              </thead>
+              <Droppable droppableId="table">
+                {(droppableProvided: DroppableProvided) => (
+                  <tbody ref={droppableProvided.innerRef} {...droppableProvided.droppableProps}>
+                    {allFloorSummary
+                      .sort((a, b) => a.order - b.order)
+                      .map((floor, index) => (
+                        <Draggable key={floor.id} draggableId={floor.id.toString()} index={index}>
+                          {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                            <tr
+                              ref={provided.innerRef}
+                              className={cn({ 'bg-blue-400': snapshot.isDragging })}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <td>{floor.id}</td>
+                              <td>{floor.name}</td>
+                            </tr>
+                          )}
+                        </Draggable>
+                      ))}
+                    {droppableProvided.placeholder}
+                  </tbody>
+                )}
+              </Droppable>
+            </table>
+          </DragDropContext>
+        )}
       </Box>
     </div>
   );

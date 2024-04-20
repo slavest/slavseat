@@ -34,3 +34,9 @@ export const updateFloor = async (
     .put<{ updated: number }>(`/api/floor/${data.id}`, data)
     .then((res) => res.data);
 };
+
+export const updateFloors = async (data: {
+  floors: (Pick<Model.FloorSummary, 'id'> & Partial<Omit<Model.FloorSummary, 'id'>>)[];
+}) => {
+  return axiosInstance.put('/api/floor', data).then((res) => res.data);
+};
