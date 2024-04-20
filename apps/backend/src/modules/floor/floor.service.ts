@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Model } from '@slavseat/types';
 import { Readable } from 'stream';
@@ -10,9 +6,13 @@ import { Repository } from 'typeorm';
 
 import { ObjectStorageService } from '../object-storage/object-storage.service';
 import { CreateFloorRequestDto } from './dto/request/createFloorRequest.dto';
+import {
+  UpdateFloorRequestBodyDto,
+  UpdateFloorRequestParamDto,
+} from './dto/request/updateFloorRequest.dto';
 import { UploadFloorImageRequestDto } from './dto/request/uploadFloorImageRequest.dto';
+import { UpdateFloorResponseDto } from './dto/response/updateFloorResponse.dto';
 import { Floor } from './entity/floor.entity';
-import { UpdateFloorRequestDto } from './dto/request/updateFloorRequest.dto';
 
 @Injectable()
 export class FloorService {
@@ -22,16 +22,9 @@ export class FloorService {
     private readonly objectStorageService: ObjectStorageService,
   ) {}
 
-  async createFloor(
-    createFloorRequestDto: CreateFloorRequestDto,
-  ): Promise<Floor> {
-    const existFloor = await this.floorRepository.findBy(
-      createFloorRequestDto,
-    );
-    if (!existFloor)
-      throw new ConflictException(
-        `${CreateFloorRequestDto.name} is already Exist`,
-      );
+  async createFloor(createFloorRequestDto: CreateFloorRequestDto): Promise<Floor> {
+    const existFloor = await this.floorRepository.findBy(createFloorRequestDto);
+    if (!existFloor) throw new ConflictException(`${CreateFloorRequestDto.name} is already Exist`);
 
     return this.floorRepository.save(createFloorRequestDto);
   }
@@ -48,9 +41,7 @@ export class FloorService {
 
     const filePath = [
       'floor',
-      `${floor.name}-${floor.id}-${encodeURIComponent(
-        file.originalname,
-      )}`,
+      `${floor.name}-${floor.id}-${encodeURIComponent(file.originalname)}`,
     ].join('/');
 
     const objectMeta = await this.objectStorageService.save(
@@ -77,8 +68,20 @@ export class FloorService {
     });
   }
 
-  async updateFloor(updateFloorRequestDto: UpdateFloorRequestDto): Promise<Floor> {
-    const existFloor = 
+  async updateFloor({
+    id,
+    ...updateFloorRequestDto
+  }: UpdateFloorRequestParamDto & UpdateFloorRequestBodyDto): Promise<UpdateFloorResponseDto> {
+    const existFloor = await this.floorRepository.findOneBy({
+      id,
+    });
+    if (!existFloor) throw new NotFoundException('Floor not found');
+
+    const updated = await this.floorRepository.update(existFloor.id, {
+      ...updateFloorRequestDto,
+    });
+
+    return { updated: updated.affected ?? 0 };
   }
 
   // async findFloorBySeatId(seatId: number) {

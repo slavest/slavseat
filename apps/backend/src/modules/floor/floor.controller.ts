@@ -9,6 +9,7 @@ import {
   Param,
   ParseFilePipe,
   Post,
+  Put,
   Res,
   UploadedFile,
   UseGuards,
@@ -36,7 +37,12 @@ import { FloorSummaryDto } from './dto/floorSummary.dto';
 import { CreateFloorRequestDto } from './dto/request/createFloorRequest.dto';
 import { GetFloorByIdRequestDto } from './dto/request/getFloorByIdRequest.dto';
 import { GetFloorImageRequestDto } from './dto/request/getFloorImageRequest.dto';
+import {
+  UpdateFloorRequestBodyDto,
+  UpdateFloorRequestParamDto,
+} from './dto/request/updateFloorRequest.dto';
 import { UploadFloorImageRequestDto } from './dto/request/uploadFloorImageRequest.dto';
+import { UpdateFloorResponseDto } from './dto/response/updateFloorResponse.dto';
 import { Floor } from './entity/floor.entity';
 import { FloorService } from './floor.service';
 
@@ -85,10 +91,7 @@ export class FloorController {
     file: Express.Multer.File,
     @Param() uploadFloorImageRequestDto: UploadFloorImageRequestDto,
   ) {
-    return this.floorService.addImageToFloor(
-      uploadFloorImageRequestDto,
-      file,
-    );
+    return this.floorService.addImageToFloor(uploadFloorImageRequestDto, file);
   }
 
   @Get('/:id/image')
@@ -98,17 +101,11 @@ export class FloorController {
     @Param() getFloorImageRequestDto: GetFloorImageRequestDto,
   ) {
     console.log(getFloorImageRequestDto);
-    const floor = await this.floorService.findById(
-      getFloorImageRequestDto.id,
-    );
+    const floor = await this.floorService.findById(getFloorImageRequestDto.id);
     if (!floor) throw new NotFoundException(`floor not found`);
-    if (!floor.image)
-      throw new NotFoundException(`floor image not found`);
+    if (!floor.image) throw new NotFoundException(`floor image not found`);
 
-    const data = await this.objectStorageService.getObjectUrlById(
-      floor.image.id,
-      60 * 10,
-    );
+    const data = await this.objectStorageService.getObjectUrlById(floor.image.id, 60 * 10);
 
     return response.redirect(data);
   }
@@ -116,9 +113,7 @@ export class FloorController {
   @Get('/:id')
   @ApiOperation({ summary: '단일 층 조회' })
   @ApiOkResponse({ type: Floor })
-  async getFloorById(
-    @Param() getFloorByidDto: GetFloorByIdRequestDto,
-  ) {
+  async getFloorById(@Param() getFloorByidDto: GetFloorByIdRequestDto) {
     return this.floorService.findById(getFloorByidDto.id);
   }
 
@@ -128,10 +123,20 @@ export class FloorController {
   @ApiBearerAuth()
   @ApiOperation({ summary: '층 생성' })
   @ApiCreatedResponse({ type: Floor })
-  async createFloor(
-    @AuthUser() user: User,
-    @Body() createFloorRequestDto: CreateFloorRequestDto,
-  ) {
+  async createFloor(@AuthUser() user: User, @Body() createFloorRequestDto: CreateFloorRequestDto) {
     return this.floorService.createFloor(createFloorRequestDto);
+  }
+
+  @Put('/:id')
+  @ApiOperation({ summary: '층 수정' })
+  @ApiOkResponse({ type: UpdateFloorResponseDto })
+  async updateFloor(
+    @Param() updateFloorRequestParamDto: UpdateFloorRequestParamDto,
+    @Body() updateFloorRequestBodyDto: UpdateFloorRequestBodyDto,
+  ) {
+    return this.floorService.updateFloor({
+      ...updateFloorRequestParamDto,
+      ...updateFloorRequestBodyDto,
+    });
   }
 }
