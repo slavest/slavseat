@@ -12,6 +12,7 @@ import { ObjectStorageService } from '../object-storage/object-storage.service';
 import { CreateFloorRequestDto } from './dto/request/createFloorRequest.dto';
 import { UploadFloorImageRequestDto } from './dto/request/uploadFloorImageRequest.dto';
 import { Floor } from './entity/floor.entity';
+import { UpdateFloorRequestDto } from './dto/request/updateFloorRequest.dto';
 
 @Injectable()
 export class FloorService {
@@ -74,6 +75,10 @@ export class FloorService {
       where: { id },
       relations: { facilities: true, image: true },
     });
+  }
+
+  async updateFloor(updateFloorRequestDto: UpdateFloorRequestDto): Promise<Floor> {
+    const existFloor = 
   }
 
   // async findFloorBySeatId(seatId: number) {
