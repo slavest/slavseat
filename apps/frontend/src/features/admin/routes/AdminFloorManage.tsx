@@ -1,18 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  DragDropContext,
+  Draggable,
+  DraggableProvided,
+  DraggableStateSnapshot,
+  DropResult,
+  Droppable,
+  DroppableProvided,
+} from 'react-beautiful-dnd';
 import { toast } from 'react-toastify';
+
+import { Model } from '@slavseat/types';
 
 import { useCreateFloorMutation } from '@/shared/api/query/floor/create-floor';
 import { useGetAllFloorSummaryQuery } from '@/shared/api/query/floor/get-all-floor-summary';
 import { Button } from '@/shared/components/Button';
+import { cn } from '@/shared/utils/class.util';
 
 import { Box } from '../components/Box';
 import { useAdminAppStore } from '../stores/adminAppStore';
+import { reorder } from '../utils/array.util';
 
 export function AdminFloorManage() {
   const { setTitle } = useAdminAppStore();
   useEffect(() => setTitle('층 관리'), [setTitle]);
 
   const [floorName, setFloorName] = useState<string>('');
+  const [floorOrder, setFloorOrder] = useState<Model.FloorSummary[]>([]);
 
   const { mutate: createFloorMutation } = useCreateFloorMutation({
     onSuccess: () => {
@@ -23,6 +37,22 @@ export function AdminFloorManage() {
   });
 
   const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
+  useEffect(() => setFloorOrder(allFloorSummary ?? []), [allFloorSummary]);
+
+  const onDragEnd = useCallback((result: DropResult) => {
+    const { source, destination } = result;
+    // dropped outside the list
+    if (!destination || destination.index === source.index) {
+      return;
+    }
+
+    // no movement
+    if (destination.index === source.index) {
+      return;
+    }
+
+    setFloorOrder((prev) => reorder(prev, source.index, destination.index));
+  }, []);
 
   return (
     <div className="p-4">
@@ -32,21 +62,49 @@ export function AdminFloorManage() {
 
       <Box title="Floor 추가 폼">
         <input
-          className="px-2 py-1 border border-zinc-500 rounded-md text-sm"
-          type="text"
+          className="rounded-md border border-zinc-500 px-2 py-1 text-sm"
           placeholder="Floor 이름"
+          type="text"
           onChange={(e) => setFloorName(e.target.value)}
         />
-        <Button
-          variant="tertiary"
-          onClick={() => createFloorMutation({ name: floorName })}
-        >
+        <Button variant="tertiary" onClick={() => createFloorMutation({ name: floorName })}>
           Floor 추가
         </Button>
       </Box>
 
       <Box title="Floor 수정">
-        <span className="text-neutral-400">추가 예정</span>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <table>
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>name</th>
+              </tr>
+            </thead>
+            <Droppable droppableId="table">
+              {(droppableProvided: DroppableProvided) => (
+                <tbody ref={droppableProvided.innerRef} {...droppableProvided.droppableProps}>
+                  {floorOrder.map((floor, index) => (
+                    <Draggable key={floor.id} draggableId={floor.id.toString()} index={index}>
+                      {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                        <tr
+                          ref={provided.innerRef}
+                          className={cn({ 'bg-blue-400': snapshot.isDragging })}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <td>{floor.id}</td>
+                          <td>{floor.name}</td>
+                        </tr>
+                      )}
+                    </Draggable>
+                  ))}
+                  {droppableProvided.placeholder}
+                </tbody>
+              )}
+            </Droppable>
+          </table>
+        </DragDropContext>
       </Box>
     </div>
   );
