@@ -1,15 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
+import { OnDragEndResponder } from 'react-beautiful-dnd';
 
 import { DraggableTableColumn } from './types';
 
 interface DraggableTableContextState {
   data: any[];
   columns: DraggableTableColumn<unknown>[];
+  onDragEnd: OnDragEndResponder;
 }
 
 export const DraggableTableContext = React.createContext<DraggableTableContextState>({
   data: [],
   columns: [],
+  onDragEnd: () => {},
 });
 
 export interface DraggableTableContextProviderProps extends React.PropsWithChildren {
@@ -22,6 +25,8 @@ export function DraggableTableContextProvider({
   columns,
   children,
 }: DraggableTableContextProviderProps) {
+  const handleDragEnd = useCallback(() => {});
+
   return (
     <DraggableTableContext.Provider value={{ data, columns }}>
       {children}

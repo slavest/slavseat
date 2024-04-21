@@ -1,7 +1,7 @@
 import React from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 
-import { DraggableTableContextProvider, DraggableTableContextProviderProps } from '../context';
+import { DraggableTableContext, DraggableTableContextProvider, DraggableTableContextProviderProps } from '../context';
 
 interface RootProps
   extends DraggableTableContextProviderProps,
@@ -9,10 +9,14 @@ interface RootProps
 
 export function Root({ data, onDragEnd, ...rest }: RootProps) {
   return (
-    <DraggableTableContextProvider data={data} onDragEnd={}>
-      <DragDropContext>
+    <DraggableTableContextProvider data={data} onDragEnd={onDragEnd}>
+      <DraggableTableContext.Consumer>
+        {(context) =>
+      <DragDropContext onDragEnd={context.} >
         <table {...rest} />
       </DragDropContext>
+      }
+      </DraggableTableContext.Consumer>
     </DraggableTableContextProvider>
   );
 }
