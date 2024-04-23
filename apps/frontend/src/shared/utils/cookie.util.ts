@@ -1,7 +1,4 @@
-export const getParsedCookies = (): Record<
-  string,
-  string | undefined
-> => {
+export const getParsedCookies = (): Record<string, string | undefined> => {
   const cookieString = document.cookie;
   const cookies: Record<string, string> = {}; // 쿠키 이름과 값을 저장할 객체
   if (cookieString === '') return cookies;

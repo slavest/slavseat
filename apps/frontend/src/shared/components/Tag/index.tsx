@@ -10,7 +10,7 @@ const Tag = ({ color = 'green', className, ...rest }: TagProps) => {
   return (
     <span
       className={cn(
-        'inline-flex px-2 py-1 rounded-full',
+        'inline-flex rounded-full px-2 py-1',
         {
           'bg-red-400 text-white': color === 'red',
           'bg-green-400 text-white': color === 'green',

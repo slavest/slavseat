@@ -8,17 +8,13 @@ function Profile() {
 
   return (
     <div className="p-4">
-      <div className="text-zinc-500 text-sm">
-        로그인된 사용자 정보
-      </div>
-      <div className="inline-block p-4 border-dashed border-2 rounded-md border-zinc-500 space-x-2">
+      <div className="text-sm text-zinc-500">로그인된 사용자 정보</div>
+      <div className="inline-block space-x-2 rounded-md border-2 border-dashed border-zinc-500 p-4">
         <pre>
-          <code className="text-sm text-wrap">
-            {JSON.stringify(user, null, 2)}
-          </code>
+          <code className="text-wrap text-sm">{JSON.stringify(user, null, 2)}</code>
         </pre>
       </div>
-      <Button variant="secondary" size="sm" onClick={logout}>
+      <Button size="sm" variant="secondary" onClick={logout}>
         로그아웃
       </Button>
     </div>

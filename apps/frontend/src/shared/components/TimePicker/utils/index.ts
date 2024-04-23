@@ -1,6 +1,7 @@
+import React from 'react';
+
 const isTouchScreen =
-  typeof window !== 'undefined' &&
-  window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  typeof window !== 'undefined' && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
 export const inrange = (v: number, min: number, max: number) => {
   if (v < min) return min;
@@ -19,28 +20,20 @@ export function registDragEvent({
 }) {
   if (isTouchScreen) {
     return {
-      onTouchStart: (
-        touchEvent: React.TouchEvent<HTMLDivElement>,
-      ) => {
+      onTouchStart: (touchEvent: React.TouchEvent<HTMLDivElement>) => {
         if (stopPropagation) touchEvent.stopPropagation();
 
         const touchMoveHandler = (moveEvent: TouchEvent) => {
           if (moveEvent.cancelable) moveEvent.preventDefault();
 
-          const deltaX =
-            moveEvent.touches[0].pageX - touchEvent.touches[0].pageX;
-          const deltaY =
-            moveEvent.touches[0].pageY - touchEvent.touches[0].pageY;
+          const deltaX = moveEvent.touches[0].pageX - touchEvent.touches[0].pageX;
+          const deltaY = moveEvent.touches[0].pageY - touchEvent.touches[0].pageY;
           onDragChange?.(deltaX, deltaY);
         };
 
         const touchEndHandler = (moveEvent: TouchEvent) => {
-          const deltaX =
-            moveEvent.changedTouches[0].pageX -
-            touchEvent.changedTouches[0].pageX;
-          const deltaY =
-            moveEvent.changedTouches[0].pageY -
-            touchEvent.changedTouches[0].pageY;
+          const deltaX = moveEvent.changedTouches[0].pageX - touchEvent.changedTouches[0].pageX;
+          const deltaY = moveEvent.changedTouches[0].pageY - touchEvent.changedTouches[0].pageY;
           onDragEnd?.(deltaX, deltaY);
           document.removeEventListener('touchmove', touchMoveHandler);
         };
@@ -56,9 +49,7 @@ export function registDragEvent({
   }
 
   return {
-    onMouseDown: (
-      clickEvent: React.MouseEvent<Element, MouseEvent>,
-    ) => {
+    onMouseDown: (clickEvent: React.MouseEvent<Element, MouseEvent>) => {
       if (stopPropagation) clickEvent.stopPropagation();
 
       const mouseMoveHandler = (moveEvent: MouseEvent) => {

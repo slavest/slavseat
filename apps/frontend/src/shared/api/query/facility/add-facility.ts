@@ -13,8 +13,7 @@ export const useAddFacilityMutation = ({
 
   return useMutation({
     mutationKey: [addFacility.name],
-    mutationFn: (data: Parameters<typeof addFacility>[0]) =>
-      addFacility(data),
+    mutationFn: (data: Parameters<typeof addFacility>[0]) => addFacility(data),
     onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: [getAllFacility.name],

@@ -32,18 +32,12 @@ function FacilityGridEditor({
   onSelectChange,
 }: FacilityGridEditorProps) {
   const [selected, setSelected] = useControlled([], selectedProp);
-  const [facilities, setFacilities] = useControlled(
-    defaultFacilities,
-    facilitiesProp,
-  );
+  const [facilities, setFacilities] = useControlled(defaultFacilities, facilitiesProp);
 
   const getFacility = useCallback(
     (id: number | string): FacilitySummary => {
-      const facility = facilities
-        .filter((facility) => String(facility.id) === String(id))
-        .at(0);
-      if (!facility)
-        throw new Error('시설 정보를 읽는 중에 오류가 발생했습니다.');
+      const facility = facilities.filter((facility) => String(facility.id) === String(id)).at(0);
+      if (!facility) throw new Error('시설 정보를 읽는 중에 오류가 발생했습니다.');
 
       return facility;
     },
@@ -68,23 +62,17 @@ function FacilityGridEditor({
   );
 
   const handleChangeAdditionalData = useCallback(
-    (
-      id: number,
-      key: keyof Model.FacilitySummary,
-      value: string | number,
-    ) => {
-      const data: Model.FacilitySummary[] = facilities.map(
-        (facility) => {
-          if (facility.id === id) {
-            return {
-              ...facility,
-              [key]: value,
-            };
-          }
+    (id: number, key: keyof Model.FacilitySummary, value: string | number) => {
+      const data: Model.FacilitySummary[] = facilities.map((facility) => {
+        if (facility.id === id) {
+          return {
+            ...facility,
+            [key]: value,
+          };
+        }
 
-          return facility;
-        },
-      );
+        return facility;
+      });
 
       setFacilities(data);
       onChange?.(data);
@@ -95,9 +83,7 @@ function FacilityGridEditor({
   const handleClickFacility = useCallback(
     (facility: Model.FacilitySummary) => {
       if (mode === 'select') {
-        const index = selected.findIndex(
-          (item) => item.id === facility.id,
-        );
+        const index = selected.findIndex((item) => item.id === facility.id);
         if (index === -1) {
           const data = [...selected, facility];
           setSelected(data);
@@ -114,36 +100,32 @@ function FacilityGridEditor({
 
   return (
     <GridLayout
+      cols={100}
       compactType={null}
-      preventCollision={true}
+      containerPadding={[25, 25]}
+      isDraggable={mode === 'edit'}
+      isResizable={mode === 'edit'}
       layout={facilities.map((facility) => ({
         ...facility,
         i: String(facility.id),
       }))}
-      onLayoutChange={handleChangeGrid}
-      cols={100}
+      margin={[0, 0]}
+      preventCollision={true}
       rowHeight={50}
       width={5000}
-      margin={[0, 0]}
-      containerPadding={[25, 25]}
-      isDraggable={mode === 'edit'}
-      isResizable={mode === 'edit'}
+      onLayoutChange={handleChangeGrid}
     >
       {facilities.map((facility) => (
         <div key={facility.id} className="p-1">
           <div
             className={cn(
-              'w-full h-full inline-flex flex-col gap-2 justify-center items-center bg-neutral-50 border rounded-md select-none p-2 box-border',
+              'box-border inline-flex h-full w-full select-none flex-col items-center justify-center gap-2 rounded-md border bg-neutral-50 p-2',
               {
                 'cursor-pointer': mode === 'select',
                 'border-neutral-200':
-                  mode === 'edit' ||
-                  !selected.filter((item) => facility.id === item.id)
-                    .length,
+                  mode === 'edit' || !selected.filter((item) => facility.id === item.id).length,
                 'border-blue-500':
-                  mode === 'select' &&
-                  selected.filter((item) => facility.id === item.id)
-                    .length,
+                  mode === 'select' && selected.filter((item) => facility.id === item.id).length,
               },
             )}
             onClick={() => handleClickFacility(facility)}
@@ -151,43 +133,25 @@ function FacilityGridEditor({
             {mode === 'edit' && (
               <>
                 <input
-                  className="w-full px-1 border border-neutral-200 rounded text-sm"
+                  className="w-full rounded border border-neutral-200 px-1 text-sm"
                   value={facility.name}
+                  onChange={(e) => handleChangeAdditionalData(facility.id, 'name', e.target.value)}
                   onClickCapture={(e) => e.stopPropagation()}
-                  onChange={(e) =>
-                    handleChangeAdditionalData(
-                      facility.id,
-                      'name',
-                      e.target.value,
-                    )
-                  }
                 />
                 <select
-                  className="w-full border border-neutral-200 rounded text-sm"
+                  className="w-full rounded border border-neutral-200 text-sm"
                   value={facility.type}
                   onChange={(e) =>
-                    handleChangeAdditionalData(
-                      facility.id,
-                      'type',
-                      Number(e.target.value),
-                    )
+                    handleChangeAdditionalData(facility.id, 'type', Number(e.target.value))
                   }
                 >
-                  <option value={Model.FacilityType.MEETING_ROOM}>
-                    회의실
-                  </option>
-                  <option value={Model.FacilityType.SEAT}>
-                    좌석
-                  </option>
-                  <option value={Model.FacilityType.NONE}>
-                    기타
-                  </option>
+                  <option value={Model.FacilityType.MEETING_ROOM}>회의실</option>
+                  <option value={Model.FacilityType.SEAT}>좌석</option>
+                  <option value={Model.FacilityType.NONE}>기타</option>
                 </select>
               </>
             )}
-            {mode === 'select' && (
-              <Text fontSize="14">{facility.name}</Text>
-            )}
+            {mode === 'select' && <Text fontSize="14">{facility.name}</Text>}
           </div>
         </div>
       ))}

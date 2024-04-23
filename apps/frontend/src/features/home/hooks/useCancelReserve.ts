@@ -8,10 +8,7 @@ interface UseCancelReserveArgs {
   onError?: () => void;
 }
 
-export function useCancelReserve({
-  onSuccess,
-  onError,
-}: UseCancelReserveArgs) {
+export function useCancelReserve({ onSuccess, onError }: UseCancelReserveArgs) {
   const [loading, setLoading] = useState(false);
 
   const { mutate, isError } = useMutation({
@@ -28,10 +25,7 @@ export function useCancelReserve({
     onError,
   });
 
-  const values = useMemo(
-    () => ({ loading, isError, mutate }),
-    [isError, loading, mutate],
-  );
+  const values = useMemo(() => ({ loading, isError, mutate }), [isError, loading, mutate]);
 
   return values;
 }

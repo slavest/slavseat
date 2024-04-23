@@ -7,10 +7,7 @@ export const getWeek = (date: Date): number => {
 
   // 현재 날짜가 몇 일째인지 계산합니다.
   const dayOfYear =
-    Math.floor(
-      (date.getTime() - firstDayOfYear.getTime()) /
-        (24 * 60 * 60 * 1000),
-    ) + 1;
+    Math.floor((date.getTime() - firstDayOfYear.getTime()) / (24 * 60 * 60 * 1000)) + 1;
 
   // 현재 날짜가 몇 번째 주인지 계산합니다.
   let weekNumber = Math.ceil((dayOfYear + firstDayOfWeek) / 7);

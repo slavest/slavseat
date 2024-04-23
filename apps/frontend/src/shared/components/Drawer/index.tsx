@@ -10,25 +10,18 @@ interface DrawerProps {
 }
 
 // TODO: Trigger를 쓰고 싶을때는... 나중에 생각 해보도록 하자...
-export function Drawer({
-  children,
-  open,
-  onClose,
-}: PropsWithChildren<DrawerProps>) {
+export function Drawer({ children, open, onClose }: PropsWithChildren<DrawerProps>) {
   return (
     <VaulDrawer.Root open={open} onClose={onClose}>
       <VaulDrawer.Portal>
-        <VaulDrawer.Overlay
-          className="fixed inset-0 bg-black/5"
-          onClick={onClose}
-        />
+        <VaulDrawer.Overlay className="fixed inset-0 bg-black/5" onClick={onClose} />
         <VaulDrawer.Content
           className={cn(
             'fixed inset-x-0 bottom-0 z-50',
-            'max-w-[50rem] h-auto',
+            'h-auto max-w-[50rem]',
             'flex flex-col',
             'mx-auto p-8',
-            'bg-white rounded-t-2xl shadow-blur outline-none',
+            'rounded-t-2xl bg-white shadow-blur outline-none',
           )}
         >
           {children}
@@ -51,18 +44,11 @@ const FLOATING_DRAWER_CONTENT_CLASS = cn(
 
 interface FloatingDrawerProps extends DrawerProps {}
 
-function FloatingDrawerImpl({
-  children,
-  open,
-  onClose,
-}: PropsWithChildren<FloatingDrawerProps>) {
+function FloatingDrawerImpl({ children, open, onClose }: PropsWithChildren<FloatingDrawerProps>) {
   return (
     <VaulDrawer.Root open={open} onClose={onClose}>
       <VaulDrawer.Portal>
-        <VaulDrawer.Overlay
-          className={FLOATING_DRAWER_OVERLAY_CLASS}
-          onClick={onClose}
-        />
+        <VaulDrawer.Overlay className={FLOATING_DRAWER_OVERLAY_CLASS} onClick={onClose} />
         <VaulDrawer.Content className={FLOATING_DRAWER_CONTENT_CLASS}>
           {children}
         </VaulDrawer.Content>
@@ -78,9 +64,7 @@ function FloatingDrawerRoot(props: FloatingDrawerRootProps) {
   return <VaulDrawer.Root {...props} />;
 }
 
-type FloatingDrawerTriggerProps = ComponentProps<
-  typeof VaulDrawer.Trigger
->;
+type FloatingDrawerTriggerProps = ComponentProps<typeof VaulDrawer.Trigger>;
 
 function FloatingDrawerTrigger(props: FloatingDrawerTriggerProps) {
   return <VaulDrawer.Trigger {...props} />;
@@ -90,9 +74,7 @@ function FloatingDrawerChildren({ children }: PropsWithChildren) {
   return (
     <VaulDrawer.Portal>
       <VaulDrawer.Overlay className={FLOATING_DRAWER_OVERLAY_CLASS} />
-      <VaulDrawer.Content className={FLOATING_DRAWER_CONTENT_CLASS}>
-        {children}
-      </VaulDrawer.Content>
+      <VaulDrawer.Content className={FLOATING_DRAWER_CONTENT_CLASS}>{children}</VaulDrawer.Content>
     </VaulDrawer.Portal>
   );
 }

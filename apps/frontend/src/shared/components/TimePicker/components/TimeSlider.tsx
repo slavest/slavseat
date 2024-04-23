@@ -27,28 +27,23 @@ export function TimeSlider({
 
   const elementCount = useMemo(() => slideCount, [slideCount]);
 
-  const calculateStyle = useCallback(
-    (index: number): React.CSSProperties => {
-      // if (index === currentIndex) return { color: 'blue' };
+  const calculateStyle = useCallback((index: number): React.CSSProperties => {
+    // if (index === currentIndex) return { color: 'blue' };
 
-      // if (Math.abs(currentIndex - index) > viewHeight) {
-      //   return { color: 'red' };
-      // }
+    // if (Math.abs(currentIndex - index) > viewHeight) {
+    //   return { color: 'red' };
+    // }
 
-      return {};
-    },
-    [],
-  );
+    return {};
+  }, []);
 
   return (
     <div
+      className={cn('relative select-none overflow-hidden text-center')}
       data-vaul-no-drag={true}
       style={{
         height: `${elementHeight * viewHeight * 2 + elementHeight}px`,
       }}
-      className={cn(
-        'relative overflow-hidden select-none text-center',
-      )}
       {...registDragEvent({
         onDragChange: (_, deltaY) => {
           if (disabled) return;
@@ -57,9 +52,7 @@ export function TimeSlider({
         onDragEnd: (_, deltaY) => {
           if (disabled) return;
           const newIndex = inrange(
-            Math.round(
-              (elementHeight * currentIndex - deltaY) / elementHeight,
-            ),
+            Math.round((elementHeight * currentIndex - deltaY) / elementHeight),
             0,
             elementCount - 1,
           );
@@ -70,36 +63,32 @@ export function TimeSlider({
       })}
     >
       <div
+        className="absolute top-0 z-10 w-full bg-gradient-to-b from-white from-30%"
         data-vaul-no-drag={true}
-        className="absolute top-0 w-full bg-gradient-to-b from-white from-30% z-10"
         style={{ height: `${elementHeight * viewHeight}px` }}
       />
       <div
+        className="absolute bottom-0 z-10 w-full bg-gradient-to-t from-white from-30%"
         data-vaul-no-drag={true}
-        className="absolute bottom-0 w-full bg-gradient-to-t from-white from-30% z-10"
         style={{ height: `${elementHeight * viewHeight}px` }}
       />
       <div
         data-vaul-no-drag={true}
         style={{
           transform: `translateY(${
-            -(elementHeight * currentIndex) +
-            transY +
-            elementHeight * viewHeight
+            -(elementHeight * currentIndex) + transY + elementHeight * viewHeight
           }px)`,
-          transition: `transform ${
-            transY ? 0 : 150
-          }ms ease-in-out 0s`,
+          transition: `transform ${transY ? 0 : 150}ms ease-in-out 0s`,
         }}
       >
         {new Array(slideCount).fill(0).map((_, i) => (
           <div
+            key={i}
             data-vaul-no-drag={true}
             style={{
               height: `${elementHeight}px`,
               ...calculateStyle(i),
             }}
-            key={i}
           >
             {i.toString().padStart(2, '0')}
           </div>

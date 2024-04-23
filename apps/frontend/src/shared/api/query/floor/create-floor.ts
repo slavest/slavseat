@@ -1,10 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import {
-  createFloor,
-  getAllFloorSummary,
-  getFloorDetail,
-} from '@/shared/api/floor';
+import { createFloor, getAllFloorSummary, getFloorDetail } from '@/shared/api/floor';
 
 import { BaseMutation } from '../type';
 

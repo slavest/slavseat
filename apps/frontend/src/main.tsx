@@ -1,13 +1,7 @@
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-  RouterProvider,
-  createBrowserRouter,
-} from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { AdminFacilityEdit } from './features/admin/routes/AdminFacilityEdit.tsx';

@@ -8,8 +8,7 @@ import { cn } from '@/shared/utils/class.util';
 
 import { TimeSlider } from './components/TimeSlider';
 
-interface TimePickerProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+interface TimePickerProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled?: boolean;
   value?: string;
   onChangeHour?: (hour: number) => void;
@@ -56,26 +55,22 @@ export function TimePicker({
 
   return (
     <div
+      className={cn('flex items-center gap-2', { 'touch-none opacity-50': disabled }, className)}
       data-vaul-no-drag={true}
-      className={cn(
-        'flex gap-2 items-center',
-        { 'opacity-50 touch-none': disabled },
-        className,
-      )}
       {...rest}
     >
       <TimeSlider
+        disabled={disabled}
         slideCount={24}
         value={parse(time, formatHHMM, new Date()).getHours()}
         onChange={handleChangeHour}
-        disabled={disabled}
       />
       <span>:</span>
       <TimeSlider
+        disabled={disabled}
         slideCount={60}
         value={parse(time, formatHHMM, new Date()).getMinutes()}
         onChange={handleChangeMinute}
-        disabled={disabled}
       />
     </div>
   );

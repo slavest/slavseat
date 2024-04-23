@@ -16,11 +16,7 @@ interface TabProps {
   onChange?: (value: string | null) => void;
 }
 
-export function Tab({
-  items,
-  selected: selectedProp,
-  onChange,
-}: TabProps) {
+export function Tab({ items, selected: selectedProp, onChange }: TabProps) {
   const [selected, setSelected] = useControlled(null, selectedProp);
 
   const handleClickItem = useCallback(
@@ -38,17 +34,16 @@ export function Tab({
   return (
     <div
       className={cn(
-        'flex overflow-x-scroll gap-4 px-8 border-b border-neutral-200 touch-pan-x',
+        'flex touch-pan-x gap-4 overflow-x-scroll border-b border-neutral-200 px-8',
         hideScrollBar,
       )}
     >
       {items.map((item) => (
         <div
           key={item.value}
-          className={cn('px-2 py-3 text-nowrap font-medium', {
+          className={cn('text-nowrap px-2 py-3 font-medium', {
             'text-neutral-400': item.value !== selected,
-            'text-black border-b-2 border-black':
-              item.value === selected,
+            'border-b-2 border-black text-black': item.value === selected,
           })}
           onClick={() => handleClickItem(item)}
         >

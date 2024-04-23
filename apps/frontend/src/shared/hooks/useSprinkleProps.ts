@@ -1,14 +1,12 @@
 import { useMemo } from 'react';
 
+// eslint-disable-next-line no-unused-vars
 interface UseSprinkleProps {
   props: Record<string, unknown>;
   sprinklesSet: Set<string>;
 }
 
-export const useSprinkleProps = (
-  props: Record<string, unknown>,
-  sprinklesSet: Set<string>,
-) => {
+export const useSprinkleProps = (props: Record<string, unknown>, sprinklesSet: Set<string>) => {
   const { sprinkleProps, nativeProps } = useMemo(() => {
     return Object.entries(props).reduce(
       (acc, [key, value]) => {
