@@ -55,7 +55,7 @@ export function DraggableTable<T extends Record<string, any>>({
                   {(provided, snapshot) => (
                     <tr
                       ref={provided.innerRef}
-                      className={cn({ 'bg-blue-400': snapshot.isDragging })}
+                      className={cn({ 'table bg-blue-400': snapshot.isDragging })}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >

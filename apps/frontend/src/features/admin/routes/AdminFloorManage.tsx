@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   DragDropContext,
   Draggable,
@@ -21,6 +21,7 @@ import { cn } from '@/shared/utils/class.util';
 
 import { Box } from '../components/Box';
 import { DraggableTable } from '../components/DraggableTable';
+import { DraggableTableColumn } from '../components/DraggableTable/types';
 import { useAdminAppStore } from '../stores/adminAppStore';
 import { reorder } from '../utils/array.util';
 
@@ -43,29 +44,15 @@ export function AdminFloorManage() {
   const { mutate: updateFloorsMutation } = useUpdateFloorsMutation();
   useEffect(() => setFloorOrder(allFloorSummary ?? []), [allFloorSummary]);
 
-  const onDragEnd = useCallback(
-    (result: DropResult) => {
-      const { source, destination } = result;
-      // dropped outside the list
-      if (!destination || destination.index === source.index) {
-        return;
-      }
-
-      // no movement
-      if (destination.index === source.index) {
-        return;
-      }
-
-      if (!allFloorSummary) return;
-
-      const floors = reorder(allFloorSummary, source.index, destination.index).map(
-        (floor, index) => ({ ...floor, order: index }),
-      );
-
-      updateFloorsMutation({ floors });
-    },
-    [allFloorSummary, updateFloorsMutation],
+  const columns: DraggableTableColumn<Model.FloorSummary>[] = useMemo(
+    () => [
+      { dataKey: 'id', headerContent: 'id' },
+      { dataKey: 'name', headerContent: 'name' },
+    ],
+    [],
   );
+
+  const handleSubmitChanges = useCallback(() => {}, []);
 
   return (
     <div className="p-4">
@@ -89,14 +76,7 @@ export function AdminFloorManage() {
         {isFetching || !floorOrder ? (
           <Loading />
         ) : (
-          <DraggableTable
-            columns={[
-              { dataKey: 'id', headerContent: 'id' },
-              { dataKey: 'name', headerContent: 'name' },
-            ]}
-            data={floorOrder}
-            onDragEnd={setFloorOrder}
-          />
+          <DraggableTable columns={columns} data={floorOrder} onDragEnd={setFloorOrder} />
           // <DragDropContext onDragEnd={onDragEnd}>
           //   <table>
           //     <thead>
