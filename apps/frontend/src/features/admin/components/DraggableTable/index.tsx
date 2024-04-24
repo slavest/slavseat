@@ -39,11 +39,17 @@ export function DraggableTable<T extends Record<string, any>>({
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <table>
-        <thead>
-          <tr>
-            {columns.map((column, index) => (
-              <th key={index}>{column.headerContent}</th>
+      <table className="w-full table-fixed">
+        <thead className={cn('bg-neutral-700 text-white')}>
+          <tr className={cn('')}>
+            {columns.map(({ headerContent, dataKey, renderContent, ...rest }, index) => (
+              <th
+                key={index}
+                className={cn('px-2 py-1 text-left first:rounded-l-lg last:rounded-r-lg')}
+                {...rest}
+              >
+                {headerContent}
+              </th>
             ))}
           </tr>
         </thead>
@@ -55,12 +61,14 @@ export function DraggableTable<T extends Record<string, any>>({
                   {(provided, snapshot) => (
                     <tr
                       ref={provided.innerRef}
-                      className={cn({ 'table bg-blue-400': snapshot.isDragging })}
+                      className={cn('hover:bg-violet-100', {
+                        'table bg-violet-400 text-white': snapshot.isDragging,
+                      })}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >
                       {columns.map((column, index) => (
-                        <td key={index}>
+                        <td key={index} className="px-2 py-1">
                           {column.renderContent
                             ? column.renderContent(item)
                             : item[column.dataKey.toString()]}

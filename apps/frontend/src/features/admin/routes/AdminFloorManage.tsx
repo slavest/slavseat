@@ -18,10 +18,12 @@ import { useUpdateFloorsMutation } from '@/shared/api/query/floor/update-floors'
 import { Button } from '@/shared/components/Button';
 import { Loading } from '@/shared/components/Loading';
 import { cn } from '@/shared/utils/class.util';
+import { width } from '@/themes/tokens/width';
 
 import { Box } from '../components/Box';
 import { DraggableTable } from '../components/DraggableTable';
 import { DraggableTableColumn } from '../components/DraggableTable/types';
+import { ManageReserveMenu } from '../components/Dropdown/ManageReserveMenu';
 import { useAdminAppStore } from '../stores/adminAppStore';
 import { reorder } from '../utils/array.util';
 
@@ -48,6 +50,12 @@ export function AdminFloorManage() {
     () => [
       { dataKey: 'id', headerContent: 'id' },
       { dataKey: 'name', headerContent: 'name' },
+      {
+        dataKey: '',
+        headerContent: '',
+        renderContent: (item) => <ManageReserveMenu />,
+        width: '100px',
+      },
     ],
     [],
   );
@@ -72,47 +80,47 @@ export function AdminFloorManage() {
         </Button>
       </Box>
 
-      <Box title="Floor 수정">
-        {isFetching || !floorOrder ? (
-          <Loading />
-        ) : (
-          <DraggableTable columns={columns} data={floorOrder} onDragEnd={setFloorOrder} />
-          // <DragDropContext onDragEnd={onDragEnd}>
-          //   <table>
-          //     <thead>
-          //       <tr>
-          //         <th>id</th>
-          //         <th>name</th>
-          //       </tr>
-          //     </thead>
-          //     <Droppable droppableId="table">
-          //       {(droppableProvided: DroppableProvided) => (
-          //         <tbody ref={droppableProvided.innerRef} {...droppableProvided.droppableProps}>
-          //           {allFloorSummary
-          //             .sort((a, b) => a.order - b.order)
-          //             .map((floor, index) => (
-          //               <Draggable key={floor.id} draggableId={floor.id.toString()} index={index}>
-          //                 {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-          //                   <tr
-          //                     ref={provided.innerRef}
-          //                     className={cn({ 'bg-blue-400': snapshot.isDragging })}
-          //                     {...provided.draggableProps}
-          //                     {...provided.dragHandleProps}
-          //                   >
-          //                     <td>{floor.id}</td>
-          //                     <td>{floor.name}</td>
-          //                   </tr>
-          //                 )}
-          //               </Draggable>
-          //             ))}
-          //           {droppableProvided.placeholder}
-          //         </tbody>
-          //       )}
-          //     </Droppable>
-          //   </table>
-          // </DragDropContext>
-        )}
-      </Box>
+      {/* <Box title="Floor 수정"> */}
+      {isFetching || !floorOrder ? (
+        <Loading />
+      ) : (
+        <DraggableTable columns={columns} data={floorOrder} onDragEnd={setFloorOrder} />
+        // <DragDropContext onDragEnd={onDragEnd}>
+        //   <table>
+        //     <thead>
+        //       <tr>
+        //         <th>id</th>
+        //         <th>name</th>
+        //       </tr>
+        //     </thead>
+        //     <Droppable droppableId="table">
+        //       {(droppableProvided: DroppableProvided) => (
+        //         <tbody ref={droppableProvided.innerRef} {...droppableProvided.droppableProps}>
+        //           {allFloorSummary
+        //             .sort((a, b) => a.order - b.order)
+        //             .map((floor, index) => (
+        //               <Draggable key={floor.id} draggableId={floor.id.toString()} index={index}>
+        //                 {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+        //                   <tr
+        //                     ref={provided.innerRef}
+        //                     className={cn({ 'bg-blue-400': snapshot.isDragging })}
+        //                     {...provided.draggableProps}
+        //                     {...provided.dragHandleProps}
+        //                   >
+        //                     <td>{floor.id}</td>
+        //                     <td>{floor.name}</td>
+        //                   </tr>
+        //                 )}
+        //               </Draggable>
+        //             ))}
+        //           {droppableProvided.placeholder}
+        //         </tbody>
+        //       )}
+        //     </Droppable>
+        //   </table>
+        // </DragDropContext>
+      )}
+      {/* </Box> */}
     </div>
   );
 }

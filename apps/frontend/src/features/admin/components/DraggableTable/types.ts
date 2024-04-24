@@ -12,4 +12,5 @@ export interface DraggableTableColumn<T> {
   dataKey: FlattenKeys<T>;
   headerContent: React.ReactNode;
   renderContent?: (value: T) => React.ReactNode;
+  width?: number;
 }
