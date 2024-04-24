@@ -106,35 +106,20 @@ export function OverrideReserveConfirm({
     <div className={cn('flex flex-col gap-2')}>
       <div
         className={cn(
-          'w-full mb-4',
-          'grid grid-cols-[60%_40%] gap-y-2 gap-x-3 justify-start items-center',
+          'mb-4 w-full',
+          'grid grid-cols-[60%_40%] items-center justify-start gap-x-3 gap-y-2',
           'font-semibold',
         )}
       >
         <p>기존 예약 취소 하기</p>
-        <Checker
-          error={cancelError}
-          loading={cancelLoading}
-          start={isLoading}
-        />
+        <Checker error={cancelError} loading={cancelLoading} start={isLoading} />
 
         <p>새로운 예약 등록 하기</p>
-        <Checker
-          error={addError}
-          loading={addLoading}
-          start={isLoading}
-        />
+        <Checker error={addError} loading={addLoading} start={isLoading} />
       </div>
 
-      <Button
-        onClick={overrideReserve}
-        disabled={cancelError || addError}
-      >
-        {isLoading || cancelLoading || addLoading ? (
-          <Loading />
-        ) : (
-          '새로 예약하기'
-        )}
+      <Button onClick={overrideReserve} disabled={cancelError || addError}>
+        {isLoading || cancelLoading || addLoading ? <Loading /> : '새로 예약하기'}
       </Button>
     </div>
   );

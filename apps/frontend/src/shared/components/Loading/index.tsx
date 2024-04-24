@@ -3,8 +3,8 @@ import { CgSpinner } from 'react-icons/cg';
 
 export function Loading() {
   return (
-    <div className="w-full h-full grid place-content-center">
-      <CgSpinner className="animate-spin w-5 h-5" />
+    <div className="grid h-full w-full place-content-center">
+      <CgSpinner className="h-5 w-5 animate-spin" />
     </div>
   );
 }

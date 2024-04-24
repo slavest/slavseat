@@ -4,8 +4,7 @@ import { twMerge } from 'tailwind-merge';
 
 import { usePopoverContext } from '../context';
 
-export interface PopoverTriggerProps
-  extends React.HTMLAttributes<HTMLDivElement> {}
+export interface PopoverTriggerProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const Trigger = ({ className, ...rest }: PopoverTriggerProps) => {
   const { setAnchorEl, handleOpen } = usePopoverContext();
@@ -13,8 +12,8 @@ const Trigger = ({ className, ...rest }: PopoverTriggerProps) => {
   return (
     <div
       ref={(ref) => setAnchorEl(ref)}
-      onClick={handleOpen}
       className={twMerge(className)}
+      onClick={handleOpen}
       {...rest}
     />
   );

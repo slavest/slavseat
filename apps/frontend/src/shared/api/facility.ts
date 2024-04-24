@@ -3,9 +3,7 @@ import { Model } from '@slavseat/types';
 import { axiosInstance } from './axiosInstance';
 
 export const getAllFacility = async () => {
-  return axiosInstance
-    .get<Model.FacilityInfo[]>('/api/facility')
-    .then((res) => res.data);
+  return axiosInstance.get<Model.FacilityInfo[]>('/api/facility').then((res) => res.data);
 };
 
 export const addFacility = async ({
@@ -23,9 +21,7 @@ export const addFacility = async ({
     .then((res) => res.data);
 };
 
-export const updateFacility = async (
-  facilities: Model.FacilitySummary[],
-) => {
+export const updateFacility = async (facilities: Model.FacilitySummary[]) => {
   return axiosInstance
     .put<{ updated: number }>('/api/facility', { facilities })
     .then((res) => res.data);

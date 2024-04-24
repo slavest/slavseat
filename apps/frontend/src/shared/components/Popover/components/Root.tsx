@@ -1,9 +1,6 @@
 import React from 'react';
 
-import {
-  PopoverContextProvider,
-  PopoverProviderProps,
-} from '../context';
+import { PopoverContextProvider, PopoverProviderProps } from '../context';
 
 export interface RootProps extends PopoverProviderProps {}
 

@@ -14,16 +14,13 @@ export const ModalContext = createContext<ModalContextState>({
   closeModal: () => {},
 });
 
-export interface ModalContextProviderProps
-  extends React.PropsWithChildren {
+export interface ModalContextProviderProps extends React.PropsWithChildren {
   open?: boolean;
   closeOnBackdropClick?: boolean;
   onClose?: () => void;
 }
 
-export const ModalContextProvider: React.FC<
-  ModalContextProviderProps
-> = ({
+export const ModalContextProvider: React.FC<ModalContextProviderProps> = ({
   open: openProps,
   closeOnBackdropClick = true,
   onClose,

@@ -1,10 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useRef,
-  useState,
-} from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react';
 
 export const useControlled = <T = unknown>(
   defaultValue: T,
@@ -15,13 +9,12 @@ export const useControlled = <T = unknown>(
   const [state, setState] = useState<T>(defaultValue);
 
   const value = isControlled ? valueProp! : state;
-  const setValue: React.Dispatch<React.SetStateAction<T>> =
-    useCallback(
-      (newState) => {
-        !isControlled && setState(newState);
-      },
-      [isControlled],
-    );
+  const setValue: React.Dispatch<React.SetStateAction<T>> = useCallback(
+    (newState) => {
+      !isControlled && setState(newState);
+    },
+    [isControlled],
+  );
 
   return [value, setValue];
 };

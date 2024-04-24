@@ -1,8 +1,4 @@
-import React, {
-  ComponentProps,
-  PropsWithChildren,
-  useState,
-} from 'react';
+import React, { ComponentProps, PropsWithChildren, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { Model } from '@slavseat/types';
@@ -19,19 +15,9 @@ import { ReserveList } from '../components/ReserveList';
 import { useReserve } from '../hooks/useReserve';
 import { getSeatName } from '../utils/reserve.util';
 
-function Container({
-  children,
-  className,
-  ...attr
-}: ComponentProps<'div'>) {
+function Container({ children, className, ...attr }: ComponentProps<'div'>) {
   return (
-    <div
-      className={cn(
-        'w-full h-full bg-neutral-100 px-10 py-16',
-        className,
-      )}
-      {...attr}
-    >
+    <div className={cn('h-full w-full bg-neutral-100 px-10 py-16', className)} {...attr}>
       {children}
     </div>
   );
@@ -42,11 +28,7 @@ interface ContentProps {
   notData: boolean;
 }
 
-function Content({
-  children,
-  loading = false,
-  notData = false,
-}: PropsWithChildren<ContentProps>) {
+function Content({ children, loading = false, notData = false }: PropsWithChildren<ContentProps>) {
   if (loading) return <Loading />;
 
   if (notData) return <NotData notDataPrefix="좌석 정보가" />;
@@ -55,8 +37,7 @@ function Content({
 }
 
 function Reserve() {
-  const [selectedReserve, setSelectedReserve] =
-    useState<Model.ReserveInfo | null>(null);
+  const [selectedReserve, setSelectedReserve] = useState<Model.ReserveInfo | null>(null);
 
   const { user } = useUserStore();
 
@@ -86,9 +67,9 @@ function Reserve() {
   }
 
   return (
-    <Container className="flex flex-col h-full overflow-hidden">
+    <Container className="flex h-full flex-col overflow-hidden">
       <header className="mb-8">
-        <h1 className="w-full flex items-center flex-wrap text-2xl font-bold">
+        <h1 className="flex w-full flex-wrap items-center text-2xl font-bold">
           <p>{user?.name || <Loading />}</p>
           <p>님의 좌석 예약 현황</p>
         </h1>
@@ -103,14 +84,11 @@ function Reserve() {
 
       <ScrollArea className="">
         <section className="flex flex-col gap-y-8">
-          <Content
-            loading={isLoading}
-            notData={!alwayReserve && dateKeys.length < 1}
-          >
+          <Content loading={isLoading} notData={!alwayReserve && dateKeys.length < 1}>
             {alwayReserve && (
               <ReserveList
-                title="고정 좌석"
                 reserves={[alwayReserve]}
+                title="고정 좌석"
                 onClickItem={setSelectedReserve}
               />
             )}
@@ -119,8 +97,8 @@ function Reserve() {
               groupReserves?.[date] ? (
                 <ReserveList
                   key={date}
-                  title={date}
                   reserves={groupReserves[date]}
+                  title={date}
                   onClickItem={setSelectedReserve}
                 />
               ) : null,
@@ -130,10 +108,10 @@ function Reserve() {
       </ScrollArea>
 
       <CancelReserveDrawer
-        targetReserve={selectedReserve}
         loading={cancelLoading}
-        onClose={() => setSelectedReserve(null)}
+        targetReserve={selectedReserve}
         onClickCancel={(reserve) => cancelReserve(reserve.id)}
+        onClose={() => setSelectedReserve(null)}
       />
     </Container>
   );

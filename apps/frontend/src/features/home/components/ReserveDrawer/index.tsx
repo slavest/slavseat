@@ -46,29 +46,20 @@ export function ReserveDrawer({
   onSubmit,
 }: ReserveDrawerProps) {
   const [step, setStep] = useState<'info' | 'reserve'>('info');
-  const [reserveType, setReserveType] = useState<
-    'always' | 'period' | 'day'
-  >('day');
+  const [reserveType, setReserveType] = useState<'always' | 'period' | 'day'>('day');
 
-  const [start, setStart] = useState<Date>(
-    parse('08:00', formatHHMM, new Date()),
-  );
-  const [end, setEnd] = useState<Date>(
-    parse('17:00', formatHHMM, new Date()),
-  );
+  const [start, setStart] = useState<Date>(parse('08:00', formatHHMM, new Date()));
+  const [end, setEnd] = useState<Date>(parse('17:00', formatHHMM, new Date()));
 
   const setRange = useCallback((start: string, end: string) => {
     setStart(parse(start, formatHHMM, new Date()));
     setEnd(parse(end, formatHHMM, new Date()));
   }, []);
 
-  const handleSubmitForm = useCallback<
-    React.FormEventHandler<HTMLFormElement>
-  >(
+  const handleSubmitForm = useCallback<React.FormEventHandler<HTMLFormElement>>(
     (e) => {
       e.preventDefault();
-      if (!facility || !start)
-        return toast.error('예약 시간이 잘못되었습니다');
+      if (!facility || !start) return toast.error('예약 시간이 잘못되었습니다');
       const always = reserveType === 'always';
       if (!always && end && start.getTime() >= end.getTime())
         return toast.error('예약 시간이 잘못되었습니다');
@@ -100,10 +91,7 @@ export function ReserveDrawer({
   const isFutureReserved = useMemo(
     () =>
       Boolean(
-        reserves?.filter(
-          (reserve) =>
-            new Date(reserve.start).getTime() >= Date.now(),
-        ).length,
+        reserves?.filter((reserve) => new Date(reserve.start).getTime() >= Date.now()).length,
       ),
     [reserves],
   );
@@ -124,7 +112,7 @@ export function ReserveDrawer({
           }
         />
 
-        <div className="flex justify-between items-center text-2xl font-medium">
+        <div className="flex items-center justify-between text-2xl font-medium">
           <span>
             {facility?.name}
             {/* 현재 step에 따라 다른 텍스트 표시 */}
@@ -136,9 +124,7 @@ export function ReserveDrawer({
             <Toggle.Root
               className="m-auto mr-0"
               value={reserveType}
-              onChange={(v) =>
-                setReserveType(v as typeof reserveType)
-              }
+              onChange={(v) => setReserveType(v as typeof reserveType)}
             >
               <Toggle.Item value="day">종일</Toggle.Item>
               <Toggle.Item value="period">시간차</Toggle.Item>
@@ -163,12 +149,10 @@ export function ReserveDrawer({
               <div
                 key={reserve.id}
                 className={cn(
-                  'flex justify-between px-6 py-3.5 border border-neutral-150 rounded-[10px] shadow-blur-sm text-sm font-medium',
+                  'flex justify-between rounded-[10px] border border-neutral-150 px-6 py-3.5 text-sm font-medium shadow-blur-sm',
                   {
                     'opacity-50':
-                      reserve.end &&
-                      new Date(reserve.end) <= new Date() &&
-                      !reserve.always,
+                      reserve.end && new Date(reserve.end) <= new Date() && !reserve.always,
                   },
                 )}
               >
@@ -188,9 +172,9 @@ export function ReserveDrawer({
             ))}
           </div>
           <Button
-            variant="secondary"
-            size="full"
             className="mt-8"
+            size="full"
+            variant="secondary"
             onClick={() => setStep('reserve')}
           >
             예약 하기
@@ -200,34 +184,28 @@ export function ReserveDrawer({
 
       {/* reserve 스텝일때 표시할 내용 */}
       {step === 'reserve' && (
-        <form onSubmit={handleSubmitForm} data-vaul-no-drag={true}>
-          <div
-            className="flex my-10 gap-4 items-center justify-center"
-            data-vaul-no-drag={true}
-          >
+        <form data-vaul-no-drag={true} onSubmit={handleSubmitForm}>
+          <div className="my-10 flex items-center justify-center gap-4" data-vaul-no-drag={true}>
             {reserveType === 'day' ? (
               <>
-                <Toggle.Root
-                  className="h-[4rem] p-1.5 rounded-xl"
-                  defaultValue="85"
-                >
+                <Toggle.Root className="h-[4rem] rounded-xl p-1.5" defaultValue="85">
                   <Toggle.Item
+                    className="grid w-[5rem] place-content-center rounded-lg text-lg font-semibold"
                     value="85"
-                    className="w-[5rem] grid place-content-center text-lg font-semibold rounded-lg"
                     onClick={() => setRange('08:00', '17:00')}
                   >
                     8 To 5
                   </Toggle.Item>
                   <Toggle.Item
+                    className="grid w-[5rem] place-content-center rounded-lg text-lg font-semibold"
                     value="96"
-                    className="w-[5rem] grid place-content-center text-lg font-semibold rounded-lg"
                     onClick={() => setRange('09:00', '18:00')}
                   >
                     9 To 6
                   </Toggle.Item>
                   <Toggle.Item
+                    className="grid w-[5rem] place-content-center rounded-lg text-lg font-semibold"
                     value="107"
-                    className="w-[5rem] grid place-content-center text-lg font-semibold rounded-lg"
                     onClick={() => setRange('10:00', '19:00')}
                   >
                     10 To 7
@@ -246,11 +224,9 @@ export function ReserveDrawer({
                 <span className="text-sm">부터</span>
                 <TimePicker
                   className="text-lg"
-                  value={format(end, formatHHMM)}
-                  onChangeTime={(v) =>
-                    setEnd(parse(v, formatHHMM, new Date()))
-                  }
                   disabled={reserveType === 'always'}
+                  value={format(end, formatHHMM)}
+                  onChangeTime={(v) => setEnd(parse(v, formatHHMM, new Date()))}
                 />
               </>
             )}
@@ -258,8 +234,8 @@ export function ReserveDrawer({
 
           <div className="flex gap-3">
             <Button
+              className="flex w-12 items-center justify-center"
               variant="secondary"
-              className="w-12 flex justify-center items-center"
               onClick={(e) => {
                 e.preventDefault();
                 setStep('info');
@@ -268,12 +244,7 @@ export function ReserveDrawer({
               {/* 예약 현황 */}
               <IoMdArrowRoundBack />
             </Button>
-            <Button
-              variant="primary"
-              type="submit"
-              className="flex-1 text-sm"
-              disabled={loading}
-            >
+            <Button className="flex-1 text-sm" disabled={loading} type="submit" variant="primary">
               {loading ? <Loading /> : '좌석 예약'}
             </Button>
           </div>

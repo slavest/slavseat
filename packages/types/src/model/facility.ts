@@ -5,8 +5,7 @@ export const FacilityType = {
   SEAT: 1,
   MEETING_ROOM: 2,
 } as const;
-export type FacilityType =
-  (typeof FacilityType)[keyof typeof FacilityType];
+export type FacilityType = (typeof FacilityType)[keyof typeof FacilityType];
 
 export interface FacilityInfo {
   id: number;
@@ -19,5 +18,4 @@ export interface FacilityInfo {
   floor: Model.FloorInfo;
 }
 
-export interface FacilitySummary
-  extends Omit<FacilityInfo, 'floor'> {}
+export interface FacilitySummary extends Omit<FacilityInfo, 'floor'> {}

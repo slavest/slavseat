@@ -12,8 +12,7 @@ const ToggleContext = React.createContext<ToggleContextState>({
   onChange: () => {},
 });
 
-export interface ToggleContextProviderProps
-  extends Partial<ToggleContextState> {
+export interface ToggleContextProviderProps extends Partial<ToggleContextState> {
   children?: React.ReactNode;
   defaultValue?: string;
 }
@@ -35,9 +34,7 @@ export function ToggleContextProvider({
   );
 
   return (
-    <ToggleContext.Provider
-      value={{ value, onChange: handleChangeToggle }}
-    >
+    <ToggleContext.Provider value={{ value, onChange: handleChangeToggle }}>
       {children}
     </ToggleContext.Provider>
   );
@@ -46,8 +43,6 @@ export function ToggleContextProvider({
 export function useToggleContext() {
   const context = useContext(ToggleContext);
   if (context === undefined)
-    throw new Error(
-      'useToggleContext must be used within a ToggleContextProviderProps',
-    );
+    throw new Error('useToggleContext must be used within a ToggleContextProviderProps');
   return context;
 }

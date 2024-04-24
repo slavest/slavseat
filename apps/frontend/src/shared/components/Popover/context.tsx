@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { useControlled } from '@/shared/hooks/useControlled';
 
@@ -10,14 +10,13 @@ interface PopoverContextState {
   setAnchorEl: (el: HTMLElement | null) => void;
 }
 
-export const PopoverContext =
-  React.createContext<PopoverContextState>({
-    open: false,
-    handleOpen: () => {},
-    handleClose: () => {},
-    anchorEl: null,
-    setAnchorEl: (el: HTMLElement | null) => {},
-  });
+export const PopoverContext = React.createContext<PopoverContextState>({
+  open: false,
+  handleOpen: () => {},
+  handleClose: () => {},
+  anchorEl: null,
+  setAnchorEl: (el: HTMLElement | null) => {},
+});
 
 export interface PopoverProviderProps
   extends Pick<Partial<PopoverContextState>, 'open' | 'anchorEl'> {
@@ -58,9 +57,7 @@ export const PopoverContextProvider = ({
 export const usePopoverContext = () => {
   const context = React.useContext(PopoverContext);
   if (context === undefined) {
-    throw new Error(
-      'usePopoverContext must be used within a PopoverProvider',
-    );
+    throw new Error('usePopoverContext must be used within a PopoverProvider');
   }
   return context;
 };

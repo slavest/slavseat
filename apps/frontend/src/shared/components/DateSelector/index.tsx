@@ -9,8 +9,7 @@ import { cn } from '@/shared/utils/class.util';
 import { DateItem } from './components/DateItem';
 import { getStartOfWeek } from './utils/date';
 
-interface DatePickerProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
+interface DatePickerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
   selected?: Date;
   onSelect?: (date: Date) => void;
 }
@@ -21,10 +20,7 @@ export function DateSelector({
   onSelect,
   ...rest
 }: DatePickerProps) {
-  const [selected, setSelected] = useControlled(
-    new Date(),
-    selectedProps,
-  );
+  const [selected, setSelected] = useControlled(new Date(), selectedProps);
   const [week, setWeek] = useState(getWeek(new Date()));
 
   const handleClickDate = useCallback(
@@ -36,17 +32,12 @@ export function DateSelector({
   );
 
   const dates = useMemo(() => {
-    const startDate = new Date(
-      getStartOfWeek(week).getTime() - 86400000,
-    );
+    const startDate = new Date(getStartOfWeek(week).getTime() - 86400000);
 
     return [
       startDate,
       ...new Array(6).fill(0).reduce((acc, _, i) => {
-        return [
-          ...acc,
-          new Date(getStartOfWeek(week).getTime() + 86400000 * i),
-        ];
+        return [...acc, new Date(getStartOfWeek(week).getTime() + 86400000 * i)];
       }, []),
     ] as Date[];
   }, [week]);
@@ -59,7 +50,7 @@ export function DateSelector({
   return (
     <div
       className={cn(
-        'py-2 px-2 bg-neutral-100 rounded-2xl flex justify-between items-center',
+        'flex items-center justify-between rounded-2xl bg-neutral-100 px-2 py-2',
         className,
       )}
       {...rest}
@@ -70,11 +61,8 @@ export function DateSelector({
           <DateItem
             key={date.getTime()}
             date={date}
+            disabled={!isSameDate(date, new Date()) && Date.now() >= date.getTime()}
             selected={isSameDate(date, selected)}
-            disabled={
-              !isSameDate(date, new Date()) &&
-              Date.now() >= date.getTime()
-            }
             onClick={() => handleClickDate(date)}
           />
         ))}

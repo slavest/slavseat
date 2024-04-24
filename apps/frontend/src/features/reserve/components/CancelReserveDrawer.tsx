@@ -26,37 +26,30 @@ export function CancelReserveDrawer({
 }: CancelReserveDrawerProps) {
   return (
     <Drawer open={!!targetReserve} onClose={onClose}>
-      <div className={cn('w-full h-full', 'flex flex-col')}>
+      <div className={cn('h-full w-full', 'flex flex-col')}>
         {targetReserve ? (
           <div className="flex flex-col gap-y-3">
             <div className="flex items-center justify-between gap-x-2">
               <div>
-                <p className="text-xl font-semibold">
-                  {getYYYYMMDD(targetReserve.start)}
-                </p>
+                <p className="text-xl font-semibold">{getYYYYMMDD(targetReserve.start)}</p>
 
                 <p>
                   {targetReserve.always
                     ? `고정 좌석`
-                    : `${getHHMM(
-                        targetReserve.start,
-                        (hh, mm) => `${hh}시 ${mm}분`,
-                      )} ~ ${getHHMM(
+                    : `${getHHMM(targetReserve.start, (hh, mm) => `${hh}시 ${mm}분`)} ~ ${getHHMM(
                         targetReserve.end,
                         (hh, mm) => `${hh}시 ${mm}분`,
                       )}`}
                 </p>
               </div>
 
-              <h4 className="text-xl font-semibold">
-                {getSeatName(targetReserve)}
-              </h4>
+              <h4 className="text-xl font-semibold">{getSeatName(targetReserve)}</h4>
             </div>
 
             <Button
-              variant="secondary"
               className="w-full"
               disabled={loading}
+              variant="secondary"
               onClick={() => onClickCancel(targetReserve)}
             >
               {loading ? <Loading /> : '예약 취소 하기'}

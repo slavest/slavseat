@@ -13,10 +13,7 @@ export function getSeatName(reserve: Model.ReserveInfo) {
   return `${reserve.facility.floor.name} - ${reserve.facility.name}`;
 }
 
-export function sortReserveByDate(
-  a: Model.ReserveInfo,
-  b: Model.ReserveInfo,
-) {
+export function sortReserveByDate(a: Model.ReserveInfo, b: Model.ReserveInfo) {
   if (a.always) return -1;
   return new Date(b.start).getTime() - new Date(a.start).getTime();
 }

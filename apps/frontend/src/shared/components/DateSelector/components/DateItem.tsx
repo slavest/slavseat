@@ -21,7 +21,7 @@ export function DateItem({
   return (
     <div
       className={cn(
-        'w-10 h-10 text-center flex flex-col items-center justify-center rounded-[10px]',
+        'flex h-10 w-10 flex-col items-center justify-center rounded-[10px] text-center',
         {
           'bg-primary text-white': selected,
           'opacity-50': disabled,
