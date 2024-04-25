@@ -113,6 +113,11 @@ export class ReserveService {
             start: LessThanOrEqual(start),
             end: MoreThanOrEqual(end),
           },
+          dateSearch && {
+            user: { id: userId },
+            start: LessThanOrEqual(start),
+            always: true,
+          },
           always && {
             user: { id: userId },
             start: MoreThanOrEqual(start),

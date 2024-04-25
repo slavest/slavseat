@@ -42,7 +42,6 @@ function Home() {
   const { mutate: addReserveMutation, loading: mutateLoading } = useAddReserveMutation({
     onSuccess: () => setSelectedFacility(undefined),
     onError: (error) => {
-      console.log('error?', error);
       if (error.response?.status === 409) {
         const existsReserve = error.response.data as unknown as Model.ReserveInfo;
 
@@ -79,6 +78,13 @@ function Home() {
       setSelectedFloor(allFloorSummary.at(0)?.id ?? null);
     }
   }, [allFloorSummary]);
+
+  useEffect(() => {
+    const week = Date.now() + 1000 * 60 * 60 * 24 * 7;
+    if (selectedDate.getTime() > week) {
+      toast.info('1주일 뒤 날짜는 미리 예약되지 않습니다!', { autoClose: 700 });
+    }
+  }, [selectedDate]);
 
   return (
     <div className="relative flex h-full flex-col">
