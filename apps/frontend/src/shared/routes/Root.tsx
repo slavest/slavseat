@@ -36,10 +36,35 @@ function TopContent() {
 function AndroidGuide() {
   return (
     <section
-      className="flex h-[calc(100dvh)] w-full flex-col items-center justify-center gap-y-4"
+      className="mb-6 flex min-h-[calc(100dvh)] w-full flex-col items-center justify-center gap-y-4 border-b px-4 py-4"
       id="android"
     >
-      안드로이드 환경 PWA 설치 설명
+      <h2 className="text-4xl font-bold">Android PWA 가이드</h2>
+
+      <div className="flex flex-col gap-16">
+        <section id="ios_step_1">
+          <div className="space-y-4">
+            <div className="flex gap-4">
+              <img alt="Android Step 1" className="w-80" src="/Android_Step_1.PNG" />
+              <img alt="Android Step 2" className="w-80" src="/Android_Step_2.PNG" />
+            </div>
+            <div className="w-full text-center text-2xl text-red-500">
+              우상단 메뉴 클릭 {'->'} 홈 화면에 추가
+            </div>
+          </div>
+        </section>
+
+        <div className="space-y-4">
+          <div className="flex gap-4">
+            <img alt="Android Step 3" className="w-80" src="/Android_Step_3.PNG" />
+            <img alt="Android Step 4" className="w-80" src="/Android_Step_4.PNG" />
+          </div>
+          <div className="w-full text-center text-2xl text-red-500">
+            설치 버튼 {'->'} 홈 화면에 Booksy
+          </div>
+        </div>
+      </div>
+
       <a className="rounded-lg border bg-neutral-100 px-8 py-4 shadow-sm" href="#top">
         돌아가기
       </a>
@@ -50,9 +75,11 @@ function AndroidGuide() {
 function IosGuide() {
   return (
     <section
-      className="flex h-[calc(100dvh)] w-full flex-col items-center justify-center gap-y-4"
+      className="flex min-h-[calc(100dvh)] w-full flex-col items-center justify-center gap-y-4 px-4 py-4"
       id="ios"
     >
+      <h2 className="text-4xl font-bold">IOS PWA 가이드</h2>
+
       <div className="flex flex-col gap-16">
         <section id="ios_step_1">
           <div className="space-y-4">

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FaCheck } from 'react-icons/fa6';
 import { GoDash } from 'react-icons/go';
 import { IoMdClose } from 'react-icons/io';
@@ -21,9 +21,11 @@ interface CheckerProps {
 }
 
 function Checker({ loading, start, error }: CheckerProps) {
+  const cacheStart = useRef(false);
+  cacheStart.current = cacheStart.current || start;
   if (error) return <IoMdClose className="text-red-600" />;
 
-  if (!start) {
+  if (!cacheStart.current) {
     return <GoDash />;
   }
 
@@ -80,7 +82,6 @@ export function OverrideReserveConfirm({
     mutate: cancelReserve,
   } = useCancelReserve({
     onSuccess: () => {
-      setLazy(1000);
       addReserve(reserveData);
     },
     onError: () => {
@@ -115,10 +116,10 @@ export function OverrideReserveConfirm({
         <Checker error={cancelError} loading={cancelLoading} start={isLoading} />
 
         <p>새로운 예약 등록 하기</p>
-        <Checker error={addError} loading={addLoading} start={isLoading} />
+        <Checker error={addError} loading={cancelLoading || addLoading} start={isLoading} />
       </div>
 
-      <Button onClick={overrideReserve} disabled={cancelError || addError}>
+      <Button disabled={cancelError || addError} onClick={overrideReserve}>
         {isLoading || cancelLoading || addLoading ? <Loading /> : '새로 예약하기'}
       </Button>
     </div>
