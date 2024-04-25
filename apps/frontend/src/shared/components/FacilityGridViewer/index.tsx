@@ -65,7 +65,7 @@ function FacilityGridViewer({
       if (status === Status.ABLE_RESERVE) return <Badge status={status} />;
 
       // TODO: 일단 로직 하드코딩
-      return <Badge status={status}>{username?.slice(0, 3)}</Badge>;
+      return <Badge status={status}>{username?.split('/').at(0)?.trim()}</Badge>;
     },
     [getReserveInfo],
   );
