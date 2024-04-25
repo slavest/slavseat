@@ -49,6 +49,10 @@ export class ReserveService {
     if (dateSearch && start.getTime() >= end.getTime())
       throw new BadRequestException(`시작 날짜는 종료 날짜보다 같거나 클 수 없습니다.`);
 
+    const oneWeek = Date.now() + 1000 * 60 * 60 * 24 * 7;
+    if (start.getTime() > oneWeek || (end && end.getTime() > oneWeek))
+      throw new BadRequestException('최대 일주일 후 까지만 예약이 가능합니다.');
+
     // if (start.getTime() < Date.now())
     //   throw new BadRequestException('지난 시간은 예약할 수 없습니다.');
 
