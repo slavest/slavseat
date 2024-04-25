@@ -82,7 +82,7 @@ function Home() {
   useEffect(() => {
     const week = Date.now() + 1000 * 60 * 60 * 24 * 7;
     if (selectedDate.getTime() > week) {
-      toast.info('1주일 뒤 날짜는 미리 예약할 수 없습니다!', { autoClose: 300 });
+      toast.info('1주일 뒤 날짜는 미리 예약되지 않습니다!', { autoClose: 700 });
     }
   }, [selectedDate]);
 
