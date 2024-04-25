@@ -11,16 +11,12 @@ import { cn } from '@/shared/utils/class.util';
 
 import './index.css';
 
-interface FacilityGridViewerProps
-  extends GridLayout.ReactGridLayoutProps {
+interface FacilityGridViewerProps extends GridLayout.ReactGridLayoutProps {
   facilities: Model.FacilitySummary[];
   reserves: Model.ReserveInfo[];
   selected?: number[];
   onClickFacility?: (facility: Model.FacilitySummary) => void;
-  onItemRender?: (
-    facility: Model.FacilitySummary,
-    ref: HTMLDivElement | null,
-  ) => void;
+  onItemRender?: (facility: Model.FacilitySummary, ref: HTMLDivElement | null) => void;
 }
 
 function FacilityGridViewer({
@@ -37,18 +33,12 @@ function FacilityGridViewer({
   const width = 5000;
 
   const getReserveInfo = useCallback(
-    (
-      facility: Model.FacilitySummary,
-    ): { username: string | null; status: Status } => {
-      const filteredReserves = reserves.filter(
-        (r) => r.facility.id === facility.id,
-      );
+    (facility: Model.FacilitySummary): { username: string | null; status: Status } => {
+      const filteredReserves = reserves.filter((r) => r.facility.id === facility.id);
 
       const now = new Date();
       const usingReserve = filteredReserves.find(
-        (r) =>
-          new Date(r.start) <= now &&
-          (r.always || !r.end || now <= new Date(r.end)),
+        (r) => new Date(r.start) <= now && (r.always || !r.end || now <= new Date(r.end)),
       );
       if (usingReserve)
         return {
@@ -56,15 +46,11 @@ function FacilityGridViewer({
           status: usingReserve.always ? Status.ALWAYS : Status.USING,
         };
 
-      const waitReserve = filteredReserves.find(
-        (r) => new Date(r.start) >= now,
-      );
+      const waitReserve = filteredReserves.find((r) => new Date(r.start) >= now);
       if (waitReserve)
         return {
           username: waitReserve.user.name,
-          status: waitReserve.always
-            ? Status.ALWAYS
-            : Status.RESERVED,
+          status: waitReserve.always ? Status.ALWAYS : Status.RESERVED,
         };
 
       return { username: null, status: Status.ABLE_RESERVE };
@@ -76,8 +62,7 @@ function FacilityGridViewer({
     (facility: Model.FacilitySummary) => {
       const { username, status } = getReserveInfo(facility);
 
-      if (status === Status.ABLE_RESERVE)
-        return <Badge status={status} />;
+      if (status === Status.ABLE_RESERVE) return <Badge status={status} />;
 
       // TODO: 일단 로직 하드코딩
       return <Badge status={status}>{username?.slice(0, 3)}</Badge>;
@@ -86,31 +71,28 @@ function FacilityGridViewer({
   );
 
   const widthStyle = useMemo(() => {
-    const maxHorizontal = facilities.reduce(
-      (acc, { x }) => Math.max(acc, x),
-      0,
-    );
+    const maxHorizontal = facilities.reduce((acc, { x }) => Math.max(acc, x), 0);
 
     return maxHorizontal * (width / cols) + (width / cols) * 2;
   }, [facilities]);
 
   return (
     <GridLayout
+      className={cn('relative', className)}
+      cols={cols}
       compactType={null}
-      preventCollision={true}
+      containerPadding={[0, 0]}
+      isDraggable={false}
+      isResizable={false}
       layout={facilities.map(({ id, ...facility }) => ({
         ...facility,
         i: String(id),
       }))}
-      cols={cols}
-      rowHeight={50}
-      width={width}
       margin={[0, 0]}
-      containerPadding={[0, 0]}
-      isResizable={false}
-      isDraggable={false}
-      className={cn('relative', className)}
+      preventCollision={true}
+      rowHeight={50}
       style={{ width: widthStyle, ...style }}
+      width={width}
       {...rest}
     >
       {facilities.map((facility) => (
@@ -122,17 +104,14 @@ function FacilityGridViewer({
           <div
             ref={(ref) => onItemRender?.(facility, ref)}
             className={cn(
-              'w-full h-full flex justify-center items-center p-2 bg-neutral-50 border border-neutral-200 rounded-md select-none box-border',
+              'box-border flex h-full w-full select-none items-center justify-center rounded-md border border-neutral-200 bg-neutral-50 p-2',
               { 'border-black': selected?.includes(facility.id) },
             )}
           >
-            <div className="flex flex-col gap-2 justify-center items-center">
-              <Text className="text-sm font-medium">
-                {facility.name}
-              </Text>
+            <div className="flex flex-col items-center justify-center gap-2">
+              <Text className="text-sm font-medium">{facility.name}</Text>
 
-              {facility.type === Model.FacilityType.SEAT &&
-                renderBadge(facility)}
+              {facility.type === Model.FacilityType.SEAT && renderBadge(facility)}
             </div>
           </div>
         </div>

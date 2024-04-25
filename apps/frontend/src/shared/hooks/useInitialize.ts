@@ -18,8 +18,7 @@ export const useInitialize = () => {
   const { setUser } = useUserStore();
 
   useEffect(() => {
-    if (window.matchMedia('(display-mode: standalone)').matches)
-      setIsPWA(true);
+    if (window.matchMedia('(display-mode: standalone)').matches) setIsPWA(true);
     else setIsPWA(false);
 
     const userAgent = navigator.userAgent;
@@ -38,8 +37,7 @@ export const useInitialize = () => {
       })
       .catch(() => {
         console.error('로그인된 유저 정보를 불러올 수 없습니다.');
-        if (location.pathname !== '/login')
-          navigate(`/login?callbackUrl=${location.pathname}`);
+        if (location.pathname !== '/login') navigate(`/login?callbackUrl=${location.pathname}`);
       })
       .finally(() => {
         setInitialized(true);

@@ -8,10 +8,7 @@ export interface ReactPortalProps {
   wrapperId?: string;
 }
 
-const ReactPortal = ({
-  children,
-  wrapperId = 'react-portal-wrapper',
-}: ReactPortalProps) => {
+const ReactPortal = ({ children, wrapperId = 'react-portal-wrapper' }: ReactPortalProps) => {
   const [element, setElement] = useState<HTMLElement>();
 
   useEffect(() => {

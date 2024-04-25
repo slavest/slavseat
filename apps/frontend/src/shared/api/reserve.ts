@@ -21,16 +21,14 @@ export const getReserveListByDate = async (date: Date) => {
 };
 
 export const getReserveListByUser = async () => {
-  return axiosInstance
-    .get<Model.ReserveInfo[]>('/api/reserve/user')
-    .then(
-      (res) =>
-        res.data.map((reserve) => ({
-          ...reserve,
-          start: new Date(reserve.start),
-          end: reserve.end ? new Date(reserve.end) : null,
-        })) as Model.ReserveInfo[],
-    );
+  return axiosInstance.get<Model.ReserveInfo[]>('/api/reserve/user').then(
+    (res) =>
+      res.data.map((reserve) => ({
+        ...reserve,
+        start: new Date(reserve.start),
+        end: reserve.end ? new Date(reserve.end) : null,
+      })) as Model.ReserveInfo[],
+  );
 };
 
 export const addReserve = async (data: {
@@ -39,16 +37,14 @@ export const addReserve = async (data: {
   always: boolean;
   facilityId: number;
 }) => {
-  return axiosInstance
-    .post<Model.ReserveInfo>('/api/reserve', data)
-    .then(
-      (res) =>
-        ({
-          ...res.data,
-          start: new Date(res.data.start),
-          end: res.data.end ? new Date(res.data.end) : null,
-        }) as Model.ReserveInfo,
-    );
+  return axiosInstance.post<Model.ReserveInfo>('/api/reserve', data).then(
+    (res) =>
+      ({
+        ...res.data,
+        start: new Date(res.data.start),
+        end: res.data.end ? new Date(res.data.end) : null,
+      }) as Model.ReserveInfo,
+  );
 };
 
 export const addAdminReserve = async (data: {
@@ -58,16 +54,14 @@ export const addAdminReserve = async (data: {
   always: boolean;
   facilityId: number;
 }) => {
-  return axiosInstance
-    .post<Model.ReserveInfo>('/api/reserve/admin', data)
-    .then(
-      (res) =>
-        ({
-          ...res.data,
-          start: new Date(res.data.start),
-          end: res.data.end ? new Date(res.data.end) : null,
-        }) as Model.ReserveInfo,
-    );
+  return axiosInstance.post<Model.ReserveInfo>('/api/reserve/admin', data).then(
+    (res) =>
+      ({
+        ...res.data,
+        start: new Date(res.data.start),
+        end: res.data.end ? new Date(res.data.end) : null,
+      }) as Model.ReserveInfo,
+  );
 };
 
 export const removeReserve = async (reserveId: number) => {

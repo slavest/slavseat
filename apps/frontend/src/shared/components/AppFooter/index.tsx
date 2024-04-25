@@ -9,20 +9,10 @@ import { ReserveIcon } from '@/assets/icons/Reserve';
 import { Locations } from '@/shared/constants/location.constant';
 import { cn } from '@/shared/utils/class.util';
 
-function FooterRoot({
-  children,
-  className,
-  ...rest
-}: ComponentProps<'footer'>) {
+function FooterRoot({ children, className, ...rest }: ComponentProps<'footer'>) {
   return (
-    <footer
-      className={cn(
-        'min-h-[var(--var-footer-height)] border-t',
-        className,
-      )}
-      {...rest}
-    >
-      <ul className="w-full h-full grid grid-cols-5">{children}</ul>
+    <footer className={cn('min-h-[var(--var-footer-height)] border-t', className)} {...rest}>
+      <ul className="grid h-full w-full grid-cols-5">{children}</ul>
     </footer>
   );
 }
@@ -32,17 +22,11 @@ interface FooterButtonProps {
   onClick?: () => void;
 }
 
-function FooterButton({
-  children,
-  active = false,
-  onClick,
-}: PropsWithChildren<FooterButtonProps>) {
+function FooterButton({ children, active = false, onClick }: PropsWithChildren<FooterButtonProps>) {
   return (
     <li
-      className={`flex flex-col items-center justify-center gap-1 text-xl rounded-2xl ${
-        active
-          ? 'bg-neutral-100 text-neutral-950'
-          : 'text-neutral-500'
+      className={`flex flex-col items-center justify-center gap-1 rounded-2xl text-xl ${
+        active ? 'bg-neutral-100 text-neutral-950' : 'text-neutral-500'
       }`}
       onClick={onClick}
     >
@@ -66,9 +50,7 @@ export function AppFooter({ onClickPlusButton }: AppFooterProps) {
         onClick={() => navigate(Locations.HOME)}
       >
         <HomeIcon />
-        <p className="text-[0.6rem] leading-[0.8rem] font-semibold">
-          홈
-        </p>
+        <p className="text-[0.6rem] font-semibold leading-[0.8rem]">홈</p>
       </FooterButton>
 
       <FooterButton
@@ -76,15 +58,13 @@ export function AppFooter({ onClickPlusButton }: AppFooterProps) {
         onClick={() => navigate(Locations.RESERVE)}
       >
         <ReserveIcon />
-        <p className="text-[0.6rem] leading-[0.8rem] font-semibold">
-          예약
-        </p>
+        <p className="text-[0.6rem] font-semibold leading-[0.8rem]">예약</p>
       </FooterButton>
 
       <FooterButton onClick={onClickPlusButton}>
         <article
           className={cn(
-            'text-white bg-primary p-2 rounded-full mb-2 transition-transform',
+            'mb-2 rounded-full bg-primary p-2 text-white transition-transform',
             'active:scale-110',
           )}
         >
@@ -97,9 +77,7 @@ export function AppFooter({ onClickPlusButton }: AppFooterProps) {
         onClick={() => navigate(Locations.FAVORITE)}
       >
         <FavoriteIcon />
-        <p className="text-[0.6rem] leading-[0.8rem] font-semibold">
-          즐겨찾기
-        </p>
+        <p className="text-[0.6rem] font-semibold leading-[0.8rem]">즐겨찾기</p>
       </FooterButton>
 
       <FooterButton
@@ -107,9 +85,7 @@ export function AppFooter({ onClickPlusButton }: AppFooterProps) {
         onClick={() => navigate(Locations.PROFILE)}
       >
         <ProfileIcon />
-        <p className="text-[0.6rem] leading-[0.8rem] font-semibold">
-          프로필
-        </p>
+        <p className="text-[0.6rem] font-semibold leading-[0.8rem]">프로필</p>
       </FooterButton>
     </FooterRoot>
   );

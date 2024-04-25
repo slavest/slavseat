@@ -1,7 +1,4 @@
-export function debounceAsync<
-  T,
-  Callback extends (...args: any[]) => Promise<T>,
->(
+export function debounceAsync<T, Callback extends (...args: any[]) => Promise<T>>(
   callback: Callback,
   wait: number,
 ): (...args: Parameters<Callback>) => Promise<T> {

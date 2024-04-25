@@ -1,14 +1,7 @@
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 
-import {
-  getReserveListByUser,
-  removeReserve,
-} from '@/shared/api/reserve';
+import { getReserveListByUser, removeReserve } from '@/shared/api/reserve';
 
 import { checkUsing, groupDataByDate } from '../utils/reserve.util';
 
@@ -38,10 +31,7 @@ function useCancelReserve({ onSuccess }: UseCancelReserveArgs) {
     },
   });
 
-  const values = useMemo(
-    () => ({ loading, mutate }),
-    [loading, mutate],
-  );
+  const values = useMemo(() => ({ loading, mutate }), [loading, mutate]);
 
   return values;
 }
@@ -57,10 +47,9 @@ export function useReserve({ onCancelSuccess }: UseReserveArgs) {
   });
 
   // 예약 취소
-  const { mutate: cancelReserve, loading: cancelLoading } =
-    useCancelReserve({
-      onSuccess: onCancelSuccess,
-    });
+  const { mutate: cancelReserve, loading: cancelLoading } = useCancelReserve({
+    onSuccess: onCancelSuccess,
+  });
 
   // 고정 좌석 예약 정보
   const alwayReserve = useMemo(() => {
@@ -69,17 +58,12 @@ export function useReserve({ onCancelSuccess }: UseReserveArgs) {
 
   // 날짜별 예약 정보
   const groupReserves = useMemo(
-    () =>
-      data
-        ? groupDataByDate(data.filter((reserve) => !reserve.always))
-        : null,
+    () => (data ? groupDataByDate(data.filter((reserve) => !reserve.always)) : null),
     [data],
   );
 
   const usingReserves = useMemo(() => {
-    const filterdReserve = data?.filter((reserve) =>
-      checkUsing(reserve),
-    );
+    const filterdReserve = data?.filter((reserve) => checkUsing(reserve));
 
     if (!filterdReserve || filterdReserve.length < 1) return null;
 

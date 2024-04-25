@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Navigate,
-  useLocation,
-  useSearchParams,
-} from 'react-router-dom';
+import { Navigate, useLocation, useSearchParams } from 'react-router-dom';
 
 import MicrosoftIcon from '@/assets/MicrosoftIcon.svg';
 import { login } from '@/shared/api/auth';
@@ -20,18 +16,17 @@ function Login() {
 
   const [loading, setLoading] = useState(false);
 
-  if (user !== null)
-    return <Navigate to={params.get('callbackUrl') ?? '/'} />;
+  if (user !== null) return <Navigate to={params.get('callbackUrl') ?? '/'} />;
 
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-center">
+    <div className="flex h-screen w-screen flex-col items-center justify-center">
       <div className="flex flex-col items-center gap-8">
         <div className="flex flex-col items-center gap-4">
-          <LogoWithoutNameIcon className="w-14 h-14 mx-auto" />
+          <LogoWithoutNameIcon className="mx-auto h-14 w-14" />
           <span className="text-xl font-bold">로그인</span>
         </div>
         <button
-          className="flex justify-center items-center gap-3 w-60 h-11 rounded-2xl text-sm font-medium bg-black text-white active:bg-neutral-700 transition-colors"
+          className="flex h-11 w-60 items-center justify-center gap-3 rounded-2xl bg-black text-sm font-medium text-white transition-colors active:bg-neutral-700"
           onClick={() => {
             setLoading(true);
             login('microsoft', params.get('callbackUrl') ?? '/');
@@ -41,11 +36,7 @@ function Login() {
             <Loading />
           ) : (
             <>
-              <img
-                src={MicrosoftIcon}
-                className="w-6 h-6"
-                alt="ms social icon"
-              />
+              <img alt="ms social icon" className="h-6 w-6" src={MicrosoftIcon} />
               <span>MS 계정으로 계속하기</span>
             </>
           )}

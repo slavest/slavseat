@@ -10,23 +10,13 @@ interface ScrollAreaProps {
 
 function ScrollArea({ children, className }: ScrollAreaProps) {
   return (
-    <RadixScrollArea.Root
-      className={cn('w-full h-full overflow-hidden', className)}
-    >
-      <RadixScrollArea.Viewport className="w-full h-full">
-        {children}
-      </RadixScrollArea.Viewport>
-      <RadixScrollArea.Scrollbar
-        className="flex flex-col w-4 px-1.5 py-2"
-        orientation="vertical"
-      >
-        <RadixScrollArea.Thumb className="bg-neutral-400 rounded-full" />
+    <RadixScrollArea.Root className={cn('h-full w-full overflow-hidden', className)}>
+      <RadixScrollArea.Viewport className="h-full w-full">{children}</RadixScrollArea.Viewport>
+      <RadixScrollArea.Scrollbar className="flex w-4 flex-col px-1.5 py-2" orientation="vertical">
+        <RadixScrollArea.Thumb className="rounded-full bg-neutral-400" />
       </RadixScrollArea.Scrollbar>
-      <RadixScrollArea.Scrollbar
-        className="flex h-4 px-2 py-1.5"
-        orientation="horizontal"
-      >
-        <RadixScrollArea.Thumb className="bg-neutral-400 rounded-full" />
+      <RadixScrollArea.Scrollbar className="flex h-4 px-2 py-1.5" orientation="horizontal">
+        <RadixScrollArea.Thumb className="rounded-full bg-neutral-400" />
       </RadixScrollArea.Scrollbar>
       <RadixScrollArea.Corner />
     </RadixScrollArea.Root>

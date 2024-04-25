@@ -6,8 +6,7 @@ import ReactPortal from '@/shared/components/Portal';
 
 import { usePopoverContext } from '../context';
 
-export interface PopoverContentProps
-  extends React.HTMLAttributes<HTMLDivElement> {}
+export interface PopoverContentProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const Content = ({ className, ...rest }: PopoverContentProps) => {
   const { open, handleClose, anchorEl } = usePopoverContext();
@@ -30,12 +29,12 @@ const Content = ({ className, ...rest }: PopoverContentProps) => {
     <ReactPortal wrapperId="react-popover-portal">
       <div
         ref={ref}
-        tabIndex={-1}
         className={twMerge(className, open ? 'block' : 'hidden')}
+        style={{ ...getAnchorPos() }}
+        tabIndex={-1}
         onBlur={() => {
           handleClose();
         }}
-        style={{ ...getAnchorPos() }}
         {...rest}
       />
     </ReactPortal>

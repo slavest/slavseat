@@ -30,16 +30,11 @@ const badgeText = {
   [Status.ALWAYS]: '고정석',
 };
 
-export function Badge({
-  status,
-  children,
-  className,
-  ...rest
-}: BadgeProps) {
+export function Badge({ status, children, className, ...rest }: BadgeProps) {
   return (
     <div
       className={cn(
-        'inline-block text-xs font-base rounded-2xl px-2.5 py-1 text-white',
+        'font-base inline-block rounded-2xl px-2.5 py-1 text-xs text-white',
         badgeStyle[status],
         className,
       )}

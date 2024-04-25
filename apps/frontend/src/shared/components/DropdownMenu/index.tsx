@@ -3,6 +3,7 @@ import React, { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
 
 import { cn } from '@/shared/utils/class.util';
 
+// eslint-disable-next-line react-refresh/only-export-components
 const Content = forwardRef<
   ElementRef<typeof RadixDropdownMenu.Content>,
   ComponentPropsWithoutRef<typeof RadixDropdownMenu.Content>
@@ -17,6 +18,7 @@ const Content = forwardRef<
 });
 Content.displayName = 'DropdownMenu.Content';
 
+// eslint-disable-next-line react-refresh/only-export-components
 const Item = forwardRef<
   ElementRef<typeof RadixDropdownMenu.Item>,
   ComponentPropsWithoutRef<typeof RadixDropdownMenu.Item>

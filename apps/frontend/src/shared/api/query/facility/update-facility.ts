@@ -1,9 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import {
-  getAllFacility,
-  updateFacility,
-} from '@/shared/api/facility';
+import { getAllFacility, updateFacility } from '@/shared/api/facility';
 import { getFloorDetail } from '@/shared/api/floor';
 
 import { BaseMutation } from '../type';
@@ -16,8 +13,7 @@ export const useUpdateFacilityMutation = ({
 
   return useMutation({
     mutationKey: [updateFacility.name],
-    mutationFn: (data: Parameters<typeof updateFacility>[0]) =>
-      updateFacility(data),
+    mutationFn: (data: Parameters<typeof updateFacility>[0]) => updateFacility(data),
     onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: [getAllFacility.name],

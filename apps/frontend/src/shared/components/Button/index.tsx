@@ -22,8 +22,8 @@ export const Button = ({
     <button
       className={cn(
         'px-3 py-3',
-        'rounded-2xl cursor-pointer font-medium transition-colors',
-        'disabled:opacity-75 disabled:cursor-default',
+        'cursor-pointer rounded-2xl font-medium transition-colors',
+        'disabled:cursor-default disabled:opacity-75',
         {
           'bg-primary text-white active:bg-neutral-300 disabled:active:bg-primary':
             variant === 'primary',

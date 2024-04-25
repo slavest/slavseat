@@ -1,17 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 
-import {
-  addReserve,
-  getReserveListByDate,
-  getReserveListByUser,
-} from '../../reserve';
+import { addReserve, getReserveListByDate, getReserveListByUser } from '../../reserve';
 import { BaseMutation } from '../type';
 
-export const useAddReserveMutation = ({
-  onSuccess,
-  onError,
-}: BaseMutation<typeof addReserve>) => {
+export const useAddReserveMutation = ({ onSuccess, onError }: BaseMutation<typeof addReserve>) => {
   const [loading, setLoading] = useState(false);
 
   const queryClient = useQueryClient();
@@ -37,10 +30,7 @@ export const useAddReserveMutation = ({
     },
   });
 
-  const values = useMemo(
-    () => ({ loading, isError, mutate }),
-    [isError, loading, mutate],
-  );
+  const values = useMemo(() => ({ loading, isError, mutate }), [isError, loading, mutate]);
 
   return values;
 };
