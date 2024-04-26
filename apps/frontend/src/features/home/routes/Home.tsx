@@ -80,7 +80,7 @@ function Home() {
   }, [allFloorSummary]);
 
   useEffect(() => {
-    const week = Date.now() + 1000 * 60 * 60 * 24 * 7;
+    const week = Date.now() + 1000 * 60 * 60 * 24 * 8;
     if (selectedDate.getTime() > week) {
       toast.info('1주일 뒤 날짜는 미리 예약되지 않습니다!', { autoClose: 700 });
     }
