@@ -14,6 +14,7 @@ import { FloatingDrawer } from '@/shared/components/Drawer';
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
 import { Loading } from '@/shared/components/Loading';
 import { Tab } from '@/shared/components/Tab';
+import { useUserStore } from '@/shared/stores/userStore';
 
 import { ReserveData, ReserveDrawer } from '../components/ReserveDrawer';
 import { ExistReserveNotice } from '../components/ReserveDrawer/DrawerContents/ExistReserveNotice';
@@ -21,6 +22,7 @@ import { OverrideReserveConfirm } from '../components/ReserveDrawer/DrawerConten
 import { SeatCounter } from '../components/SeatCounter';
 
 function Home() {
+  const { user } = useUserStore();
   const [drawerStep, setDrawerStep] = useState<'overrideNotice' | 'override'>('overrideNotice');
 
   const [existReserve, setExistReserve] = useState<Model.ReserveInfo | null>(null);
@@ -44,6 +46,10 @@ function Home() {
     onError: (error) => {
       if (error.response?.status === 409) {
         const existsReserve = error.response.data as unknown as Model.ReserveInfo;
+        if (existReserve?.user.id !== user?.id) {
+          toast.error('해당 좌석은 예약되어 있습니다.');
+          return;
+        }
 
         setExistReserve(existsReserve);
         return;
