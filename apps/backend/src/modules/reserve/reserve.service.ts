@@ -130,7 +130,7 @@ export class ReserveService {
         ].filter((item) => item !== undefined),
         relations: { facility: true, user: true },
       });
-      if (existReserve.always)
+      if (existReserve && existReserve.always)
         throw new BadRequestException('고정석 사용자는 새 예약을 할 수 없습니다.');
 
       if (existReserve) throw new ConflictException(existReserve);
