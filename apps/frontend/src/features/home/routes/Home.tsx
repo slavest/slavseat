@@ -46,7 +46,7 @@ function Home() {
     onError: (error) => {
       if (error.response?.status === 409) {
         const _existsReserve = error.response.data as unknown as Model.ReserveInfo;
-        if (_existsReserve?.user.id !== user?.id) {
+        if (!_existsReserve.user || !user || _existsReserve.user.id !== user.id) {
           toast.error('해당 좌석은 예약되어 있습니다.');
           return;
         }
