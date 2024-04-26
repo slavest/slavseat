@@ -12,9 +12,6 @@ on:
       - turbo.json
       - tsconfig.json
 
-env:
-  GITHUB_TOKEN: ${{ secrets.PAC_TOKEN }}
-
 jobs:
   # Build Apps
   backend-build:
