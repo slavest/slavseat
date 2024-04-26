@@ -25,7 +25,7 @@ function TopContent() {
         >
           Android PWA 설치하기
         </a>
-        <a className="rounded-lg border bg-neutral-100 px-8 py-4 shadow-sm" href="#ios_step_1">
+        <a className="rounded-lg border bg-neutral-100 px-8 py-4 shadow-sm" href="#ios">
           iOS PWA 설치하기
         </a>
       </div>
