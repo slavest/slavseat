@@ -30,6 +30,7 @@ export function ViewFacilityInGrid({ facilities, targetFacility }: ViewFacilityI
         disablePadding
         maxScale={1}
         minScale={0.5}
+        panning={{ velocityDisabled: true }}
         onInit={(ref) => {
           ref.zoomToElement(facilityElementRef.current[targetFacility.id]);
         }}
