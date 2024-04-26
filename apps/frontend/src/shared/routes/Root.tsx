@@ -25,7 +25,7 @@ function TopContent() {
         >
           Android PWA 설치하기
         </a>
-        <a className="rounded-lg border bg-neutral-100 px-8 py-4 shadow-sm" href="#ios_step_1">
+        <a className="rounded-lg border bg-neutral-100 px-8 py-4 shadow-sm" href="#ios">
           iOS PWA 설치하기
         </a>
       </div>
@@ -78,7 +78,7 @@ function IosGuide() {
       className="flex min-h-[calc(100dvh)] w-full flex-col items-center justify-center gap-y-4 px-4 py-4"
       id="ios"
     >
-      <h2 className="text-4xl font-bold">IOS PWA 가이드</h2>
+      <h2 className="text-4xl font-bold">iOS PWA 가이드</h2>
 
       <div className="flex flex-col gap-16">
         <section id="ios_step_1">

@@ -153,7 +153,13 @@ function CreateReserveSelectStep({ onSubmit }: CreateReserveSelectStepProps) {
 
       <div className="h-[25rem] w-[25rem]">
         {createFloorDetail && reservesByDate && (
-          <TransformWrapper centerOnInit disablePadding maxScale={1} minScale={0.5}>
+          <TransformWrapper
+            centerOnInit
+            disablePadding
+            maxScale={1}
+            minScale={0.5}
+            panning={{ velocityDisabled: true }}
+          >
             <TransformComponent wrapperStyle={{ width: '100%', height: '100%' }}>
               <FacilityGridViewer
                 facilities={createFloorDetail.facilities}
