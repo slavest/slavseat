@@ -45,13 +45,13 @@ function Home() {
     onSuccess: () => setSelectedFacility(undefined),
     onError: (error) => {
       if (error.response?.status === 409) {
-        const existsReserve = error.response.data as unknown as Model.ReserveInfo;
-        if (existReserve?.user.id !== user?.id) {
+        const _existsReserve = error.response.data as unknown as Model.ReserveInfo;
+        if (_existsReserve?.user.id !== user?.id) {
           toast.error('해당 좌석은 예약되어 있습니다.');
           return;
         }
 
-        setExistReserve(existsReserve);
+        setExistReserve(_existsReserve);
         return;
       }
 
