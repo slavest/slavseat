@@ -1,0 +1,48 @@
+name: Production Deploy # Github Action 페이지 좌측 리스트에 표시될 이름
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - apps/front/**
+      - packages/**
+      - .github/workflows/**
+      - package.json
+      - pnpm-lock.yaml
+      - turbo.json
+      - tsconfig.json
+
+env:
+  GITHUB_TOKEN: ${{ secrets.PAC_TOKEN }}
+
+
+jobs:
+  # Build Apps
+  frontend-build:
+    name: Frontend Build
+    secrets: inherit
+    uses: ./.github/workflows/node-build-reuseable.yaml
+    with:
+      type: frontend
+      env: production
+
+  # Deploy Apps
+  frontend-docker-build:
+    name: Frontend Docker Build
+    needs: [frontend-build]
+    secrets: inherit
+    uses: ./.github/workflows/docker-build-reuseable.yaml
+    with:
+      type: frontend
+      env: production
+
+  # Run semantic release
+  semantic-release:
+    name: Semantic Release Run
+    needs: [frontend-docker-build]
+    secrets: inherit
+    uses: ./.github/workflows/semantic-release-reuseable.yaml
+    with:
+      type: frontend
+      env: production
+    
