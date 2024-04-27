@@ -10,29 +10,35 @@ import { useGetFloorDetailQuery } from '@/shared/api/query/floor/get-floor-detai
 import { useAddReserveMutation } from '@/shared/api/query/reserve/add-reserve';
 import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
 import { DateSelector } from '@/shared/components/DateSelector';
-import { FloatingDrawer } from '@/shared/components/Drawer';
+import { Drawer, FloatingDrawer } from '@/shared/components/Drawer';
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
 import { Loading } from '@/shared/components/Loading';
 import { Tab } from '@/shared/components/Tab';
 import { useUserStore } from '@/shared/stores/userStore';
 
-import { ReserveData, ReserveDrawer } from '../components/ReserveDrawer';
+import {
+  AddReserveForm,
+  ReserveData,
+} from '../components/ReserveDrawer/DrawerContents/AddReserveForm';
 import { ExistReserveNotice } from '../components/ReserveDrawer/DrawerContents/ExistReserveNotice';
 import { OverrideReserveConfirm } from '../components/ReserveDrawer/DrawerContents/OverrideReserveConfirm';
+import { ReserveInfomation } from '../components/ReserveDrawer/DrawerContents/ReserveInfomation';
 import { SeatCounter } from '../components/SeatCounter';
 
 function Home() {
   const { user } = useUserStore();
-  const [drawerStep, setDrawerStep] = useState<'overrideNotice' | 'override'>('overrideNotice');
+  const [reserveStep, setReserveStep] = useState<'info' | 'reserve'>('info');
+  const [overrideStep, setOverrideStep] = useState<'overrideNotice' | 'override'>('overrideNotice');
 
   const [existReserve, setExistReserve] = useState<Model.ReserveInfo | null>(null);
   const [newReserveData, setNewReserveData] = useState<ReserveData | null>(null);
 
   const [selectedFacility, setSelectedFacility] = useState<Model.FacilitySummary>();
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedFloor, setSelectedFloor] = useState<number | null>(null);
 
   const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
+
+  const [selectedFloor, setSelectedFloor] = useState<number | null>(null);
   const { data: floorDetail, isLoading: isFloorDetailLoading } = useGetFloorDetailQuery(
     selectedFloor!,
     {
@@ -76,7 +82,7 @@ function Home() {
   const resetOverrideReserve = useCallback(() => {
     setExistReserve(null);
     setNewReserveData(null);
-    setDrawerStep('overrideNotice');
+    setOverrideStep('overrideNotice');
   }, []);
 
   useEffect(() => {
@@ -111,6 +117,7 @@ function Home() {
           />
         )}
       </div>
+
       {floorDetail && !isFloorDetailLoading && !isReserveLoading ? (
         <TransformWrapper
           centerOnInit
@@ -134,14 +141,38 @@ function Home() {
 
       <SeatCounter floorInfo={floorDetail} reserveInfos={reservesByDate} />
 
-      <ReserveDrawer
-        facility={selectedFacility}
-        loading={mutateLoading}
+      <Drawer
         open={!existReserve && !!selectedFacility && !!reservesByDate}
-        reserves={reservesByDate?.filter((reserve) => reserve.facility.id === selectedFacility?.id)}
-        onClose={() => setSelectedFacility(undefined)}
-        onSubmit={handleSubmitReserve}
-      />
+        onClose={() => {
+          setReserveStep('info');
+          setSelectedFacility(undefined);
+        }}
+      >
+        {
+          {
+            info: (
+              <ReserveInfomation
+                facility={selectedFacility}
+                reserves={reservesByDate?.filter(
+                  (reserve) => reserve.facility.id === selectedFacility?.id,
+                )}
+                onClickOk={() => setReserveStep('reserve')}
+              />
+            ),
+            reserve: (
+              <AddReserveForm
+                facility={selectedFacility}
+                loading={mutateLoading}
+                reserves={reservesByDate?.filter(
+                  (reserve) => reserve.facility.id === selectedFacility?.id,
+                )}
+                onClickPrev={() => setReserveStep('info')}
+                onSubmit={handleSubmitReserve}
+              />
+            ),
+          }[reserveStep]
+        }
+      </Drawer>
 
       <FloatingDrawer open={!!existReserve} onClose={resetOverrideReserve}>
         {!existReserve || !newReserveData ? (
@@ -152,7 +183,7 @@ function Home() {
               <ExistReserveNotice
                 existReserve={existReserve}
                 onClickCancel={() => setExistReserve(null)}
-                onClickOk={() => setDrawerStep('override')}
+                onClickOk={() => setOverrideStep('override')}
               />
             ),
             override: (
@@ -163,7 +194,7 @@ function Home() {
                 onFinish={resetOverrideReserve}
               />
             ),
-          }[drawerStep]
+          }[overrideStep]
         )}
       </FloatingDrawer>
     </div>

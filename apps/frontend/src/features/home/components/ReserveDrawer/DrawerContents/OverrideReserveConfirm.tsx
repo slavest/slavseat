@@ -12,7 +12,7 @@ import { Button } from '@/shared/components/Button';
 import { Loading } from '@/shared/components/Loading';
 import { cn } from '@/shared/utils/class.util';
 
-import { ReserveData } from '..';
+import { ReserveData } from './AddReserveForm';
 
 interface CheckerProps {
   loading: boolean;
