@@ -9,9 +9,6 @@ on:
         type: string
         required: true
 
-env:
-  GITHUB_TOKEN: ${{ secrets.PAC_TOKEN }}
-
 jobs:
   semantic-release:
    name: Semantic Release
