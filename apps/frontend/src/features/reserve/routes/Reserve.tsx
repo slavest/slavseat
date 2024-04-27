@@ -54,6 +54,9 @@ function Reserve() {
       toast.success('예약이 취소되었습니다.');
       setSelectedReserve(null);
     },
+    onCancelError: (error) => {
+      toast.error(error.response?.data?.message ?? '예약 취소에 실패했습니다.');
+    },
   });
 
   const dateKeys = groupReserves ? Object.keys(groupReserves) : [];

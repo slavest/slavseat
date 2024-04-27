@@ -1,15 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 
+import { AxiosError } from 'axios';
+
+import { BaseMutation } from '@/shared/api/query/type';
 import { getReserveListByUser, removeReserve } from '@/shared/api/reserve';
 
 import { checkUsing, groupDataByDate } from '../utils/reserve.util';
 
 interface UseCancelReserveArgs {
   onSuccess?: ({ removed }: { removed: number }) => void;
+  onError?: (error: AxiosError) => void;
 }
 
-function useCancelReserve({ onSuccess }: UseCancelReserveArgs) {
+function useCancelReserve({ onSuccess, onError }: BaseMutation<typeof removeReserve>) {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
 
@@ -22,6 +26,7 @@ function useCancelReserve({ onSuccess }: UseCancelReserveArgs) {
 
       onSuccess?.(data);
     },
+    onError,
     onMutate: () => {
       console.log('onMutate');
       setLoading(true);
@@ -37,10 +42,11 @@ function useCancelReserve({ onSuccess }: UseCancelReserveArgs) {
 }
 
 interface UseReserveArgs {
-  onCancelSuccess?: UseCancelReserveArgs['onSuccess'];
+  onCancelSuccess?: Parameters<typeof useCancelReserve>[0]['onSuccess'];
+  onCancelError?: Parameters<typeof useCancelReserve>[0]['onError'];
 }
 
-export function useReserve({ onCancelSuccess }: UseReserveArgs) {
+export function useReserve({ onCancelSuccess, onCancelError }: UseReserveArgs) {
   const { data, isLoading, isError } = useQuery({
     queryKey: [getReserveListByUser.name],
     queryFn: () => getReserveListByUser(),
@@ -49,6 +55,7 @@ export function useReserve({ onCancelSuccess }: UseReserveArgs) {
   // 예약 취소
   const { mutate: cancelReserve, loading: cancelLoading } = useCancelReserve({
     onSuccess: onCancelSuccess,
+    onError: onCancelError,
   });
 
   // 고정 좌석 예약 정보
