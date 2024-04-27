@@ -1,12 +1,7 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { AdminGuard } from '../auth/guard/admin.guard';
+import { AdminGuard } from '../admin/guard/admin.guard';
 import { AuthUserGuard } from '../auth/guard/auth-user.guard';
 import { SearchUserByNameRequestDto } from './dto/request/searchUserByName';
 import { User } from './entity/user.entity';
@@ -23,11 +18,7 @@ export class UserController {
   @ApiBearerAuth()
   @ApiOperation({ summary: '유저 이름 검색' })
   @ApiCreatedResponse({ type: User, isArray: true })
-  searchUserByName(
-    @Query() serachuserBynameRequestDto: SearchUserByNameRequestDto,
-  ) {
-    return this.userService.searchUserByName(
-      serachuserBynameRequestDto.name,
-    );
+  searchUserByName(@Query() serachuserBynameRequestDto: SearchUserByNameRequestDto) {
+    return this.userService.searchUserByName(serachuserBynameRequestDto.name);
   }
 }

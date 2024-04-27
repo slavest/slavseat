@@ -19,8 +19,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
+import { AdminGuard } from '../admin/guard/admin.guard';
 import { AuthUser } from '../auth/decorator/auth-user.decorator';
-import { AdminGuard } from '../auth/guard/admin.guard';
 import { AuthUserGuard } from '../auth/guard/auth-user.guard';
 import { User } from '../user/entity/user.entity';
 import { FacilitySummaryDto } from './dto/facilitySummary.dto';
@@ -63,9 +63,7 @@ export class FacilityController {
   @ApiBearerAuth()
   @ApiOperation({ summary: '시설 정보 수정' })
   @ApiOkResponse({ type: UpdateFacilityResponseDto })
-  async updateFacility(
-    @Body() updateFacilityDto: UpdateFacilityRequestDto,
-  ) {
+  async updateFacility(@Body() updateFacilityDto: UpdateFacilityRequestDto) {
     return this.facilityService.updateFacility(updateFacilityDto);
   }
 
@@ -75,9 +73,7 @@ export class FacilityController {
   @ApiBearerAuth()
   @ApiOperation({ summary: '시설 정보 삭제' })
   @ApiOkResponse({ type: RemoveFacilityResponseDto })
-  async removeFacility(
-    @Body() removeFacilityDto: RemoveFacilityRequestDto,
-  ) {
+  async removeFacility(@Body() removeFacilityDto: RemoveFacilityRequestDto) {
     return this.facilityService.removeFacility(removeFacilityDto);
   }
 }

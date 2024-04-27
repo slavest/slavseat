@@ -27,8 +27,8 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 
+import { AdminGuard } from '../admin/guard/admin.guard';
 import { AuthUser } from '../auth/decorator/auth-user.decorator';
-import { AdminGuard } from '../auth/guard/admin.guard';
 import { AuthUserGuard } from '../auth/guard/auth-user.guard';
 import { ObjectStorageService } from '../object-storage/object-storage.service';
 import { User } from '../user/entity/user.entity';
@@ -85,10 +85,7 @@ export class FloorController {
     file: Express.Multer.File,
     @Param() uploadFloorImageRequestDto: UploadFloorImageRequestDto,
   ) {
-    return this.floorService.addImageToFloor(
-      uploadFloorImageRequestDto,
-      file,
-    );
+    return this.floorService.addImageToFloor(uploadFloorImageRequestDto, file);
   }
 
   @Get('/:id/image')
@@ -98,17 +95,11 @@ export class FloorController {
     @Param() getFloorImageRequestDto: GetFloorImageRequestDto,
   ) {
     console.log(getFloorImageRequestDto);
-    const floor = await this.floorService.findById(
-      getFloorImageRequestDto.id,
-    );
+    const floor = await this.floorService.findById(getFloorImageRequestDto.id);
     if (!floor) throw new NotFoundException(`floor not found`);
-    if (!floor.image)
-      throw new NotFoundException(`floor image not found`);
+    if (!floor.image) throw new NotFoundException(`floor image not found`);
 
-    const data = await this.objectStorageService.getObjectUrlById(
-      floor.image.id,
-      60 * 10,
-    );
+    const data = await this.objectStorageService.getObjectUrlById(floor.image.id, 60 * 10);
 
     return response.redirect(data);
   }
@@ -116,9 +107,7 @@ export class FloorController {
   @Get('/:id')
   @ApiOperation({ summary: '단일 층 조회' })
   @ApiOkResponse({ type: Floor })
-  async getFloorById(
-    @Param() getFloorByidDto: GetFloorByIdRequestDto,
-  ) {
+  async getFloorById(@Param() getFloorByidDto: GetFloorByIdRequestDto) {
     return this.floorService.findById(getFloorByidDto.id);
   }
 
@@ -128,10 +117,7 @@ export class FloorController {
   @ApiBearerAuth()
   @ApiOperation({ summary: '층 생성' })
   @ApiCreatedResponse({ type: Floor })
-  async createFloor(
-    @AuthUser() user: User,
-    @Body() createFloorRequestDto: CreateFloorRequestDto,
-  ) {
+  async createFloor(@AuthUser() user: User, @Body() createFloorRequestDto: CreateFloorRequestDto) {
     return this.floorService.createFloor(createFloorRequestDto);
   }
 }

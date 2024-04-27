@@ -28,6 +28,7 @@ coverage
 out/
 build
 dist
+dev-dist
 
 
 # Debug
