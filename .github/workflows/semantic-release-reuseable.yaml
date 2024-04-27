@@ -9,6 +9,9 @@ on:
         type: string
         required: true
 
+env:
+  GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}
+
 jobs:
   semantic-release:
    name: Semantic Release
