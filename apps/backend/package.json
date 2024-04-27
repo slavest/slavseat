@@ -73,7 +73,6 @@
     "eslint-config-slavseat": "workspace:*",
     "jest": "^29.5.0",
     "nodemon": "^3.0.3",
-    "redis-memory-server": "^0.10.0",
     "source-map-support": "^0.5.21",
     "sqlite3": "^5.1.7",
     "supertest": "^6.3.4",
