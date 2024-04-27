@@ -162,6 +162,8 @@ export class ReserveService {
     });
 
     if (!exist) throw new NotFoundException('reserve not found');
+    if (!isAdmin && exist.always)
+      throw new BadRequestException('고정석 예약자는 예약을 취소할 수 없습니다.');
 
     const removeResult = await this.reserveRepository.delete(exist.id);
     return { removed: removeResult.affected ?? 0 };
