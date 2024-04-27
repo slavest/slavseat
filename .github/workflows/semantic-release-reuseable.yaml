@@ -55,6 +55,6 @@ jobs:
       - name: Run Semantic Release
         run: pnpm -rc --workspace-concurrency=1 --filter ${{ inputs.type }} exec -- pnpm --no-install semantic-release -e semantic-release-monorepo --tag-format='${PNPM_PACKAGE_NAME}@\${version}'
         env:
-          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
         
