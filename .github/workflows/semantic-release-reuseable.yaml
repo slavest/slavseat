@@ -9,8 +9,6 @@ on:
         type: string
         required: true
 
-env:
-  GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}
 
 jobs:
   semantic-release:
@@ -55,5 +53,8 @@ jobs:
         run: pnpm install --frozen-lock
 
       - name: Run Semantic Release
-        run: pnpm -rc --workspace-concurrency=1 --filter ${{ inputs.type }} exec -- pnpm --no-install semantic-release -e semantic-release-monorepo --tag-format='${PNPM_PACKAGE_NAME}@\${version}'
+        run: pnpm -rc --workspace-concurreny=1 --filter ${{ inputs.type }} exec -- pnpm --no-install semantic-release -e semantic-release-monorepo --tag-format='${PNPM_PACKAGE_NAME}@\${version}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}
+          
         
