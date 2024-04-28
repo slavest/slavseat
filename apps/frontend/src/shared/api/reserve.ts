@@ -31,12 +31,14 @@ export const getReserveListByUser = async () => {
   );
 };
 
-export const addReserve = async (data: {
+export interface ReserveData {
   start: Date;
   end?: Date | null;
   always: boolean;
   facilityId: number;
-}) => {
+}
+
+export const addReserve = async (data: ReserveData) => {
   return axiosInstance.post<Model.ReserveInfo>('/api/reserve', data).then(
     (res) =>
       ({

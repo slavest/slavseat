@@ -62,6 +62,7 @@ export function DateSelector({
             key={date.getTime()}
             date={date}
             disabled={!isSameDate(date, new Date()) && Date.now() >= date.getTime()}
+            selectable={date.getTime() <= Date.now() + 1000 * 60 * 60 * 24 * 7}
             selected={isSameDate(date, selected)}
             onClick={() => handleClickDate(date)}
           />

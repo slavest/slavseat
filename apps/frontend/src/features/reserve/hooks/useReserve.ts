@@ -1,17 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 
-import { AxiosError } from 'axios';
-
 import { BaseMutation } from '@/shared/api/query/type';
 import { getReserveListByUser, removeReserve } from '@/shared/api/reserve';
 
 import { checkUsing, groupDataByDate } from '../utils/reserve.util';
-
-interface UseCancelReserveArgs {
-  onSuccess?: ({ removed }: { removed: number }) => void;
-  onError?: (error: AxiosError) => void;
-}
 
 function useCancelReserve({ onSuccess, onError }: BaseMutation<typeof removeReserve>) {
   const queryClient = useQueryClient();

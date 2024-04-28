@@ -101,6 +101,11 @@ export class ReserveService {
             facility: { id: facilityId },
             start: MoreThanOrEqual(start),
           },
+          always && {
+            facility: { id: facilityId },
+            start: LessThanOrEqual(start),
+            always: true,
+          },
           dateSearch && {
             user: { id: userId },
             start: Between(start, end),
@@ -131,9 +136,6 @@ export class ReserveService {
         ].filter((item) => item !== undefined),
         relations: { facility: true, user: true },
       });
-      if (existReserve && existReserve.always)
-        throw new BadRequestException('고정석 사용자는 새 예약을 할 수 없습니다.');
-
       if (existReserve) throw new ConflictException(existReserve);
 
       const reserve = this.reserveRepository.create({
@@ -161,7 +163,7 @@ export class ReserveService {
       user: !isAdmin && { id: user.id },
     });
 
-    if (!exist) throw new NotFoundException('reserve not found');
+    if (!exist) throw new NotFoundException('취소할 수 있는 예약이 아닙니다.');
     if (!isAdmin && exist.always)
       throw new BadRequestException('고정석 예약자는 예약을 취소할 수 없습니다.');
 

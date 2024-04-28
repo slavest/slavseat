@@ -1,18 +1,18 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { FaCheck } from 'react-icons/fa6';
 import { GoDash } from 'react-icons/go';
 import { IoMdClose } from 'react-icons/io';
 import { toast } from 'react-toastify';
 
-import { Model } from '@slavseat/types';
-
 import { useCancelReserve } from '@/features/home/hooks/useCancelReserve';
+import {
+  useReserveDispatchContext,
+  useReserveMaterialContext,
+} from '@/features/home/hooks/useReserveContext';
 import { useAddReserveMutation } from '@/shared/api/query/reserve/add-reserve';
 import { Button } from '@/shared/components/Button';
 import { Loading } from '@/shared/components/Loading';
 import { cn } from '@/shared/utils/class.util';
-
-import { ReserveData } from '..';
 
 interface CheckerProps {
   loading: boolean;
@@ -32,30 +32,9 @@ function Checker({ loading, start, error }: CheckerProps) {
   return loading ? <Loading /> : <FaCheck className="text-primary" />;
 }
 
-interface OverrideReserveComfirmProps {
-  existReserve: Model.ReserveInfo;
-  reserveData: ReserveData;
-  onFinish: () => void;
-  onFail: () => void;
-}
-
-export function OverrideReserveConfirm({
-  existReserve,
-  reserveData,
-  onFinish,
-  onFail,
-}: OverrideReserveComfirmProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [finish, setFinish] = useState(false);
-
-  const setLazy = useCallback((ms: number) => {
-    const mockLoading = new Promise((resolve) => {
-      setTimeout(() => resolve(true), ms);
-    });
-
-    setIsLoading(true);
-    mockLoading.then(() => setIsLoading(false));
-  }, []);
+export function OverrideReserveConfirm() {
+  const { exist } = useReserveMaterialContext();
+  const dispatch = useReserveDispatchContext();
 
   const {
     mutate: addReserve,
@@ -63,16 +42,17 @@ export function OverrideReserveConfirm({
     isError: addError,
   } = useAddReserveMutation({
     onSuccess: () => {
-      setFinish(true);
+      toast.success('예약을 완료했습니다!');
+      dispatch({ type: 'SUCCESS_OVERRIDE_RESERVE' });
     },
     onError: (error) => {
       toast.error(
         error.response?.status === 409
-          ? '이미 예약중인 좌석이 존재합니다!'
+          ? '좌석 상태를 다시 한번 확인해주세요.'
           : '예약을 실패했습니다.',
       );
 
-      onFail();
+      dispatch({ type: 'FAIL_OVERRIDE_RESERVE' });
     },
   });
 
@@ -82,26 +62,22 @@ export function OverrideReserveConfirm({
     mutate: cancelReserve,
   } = useCancelReserve({
     onSuccess: () => {
-      addReserve(reserveData);
+      if (!exist) return;
+
+      addReserve(exist.reserveFormData);
     },
     onError: () => {
       toast.error('예약 취소를 실패했습니다.');
 
-      onFail();
+      dispatch({ type: 'FAIL_OVERRIDE_RESERVE' });
     },
   });
 
   const overrideReserve = useCallback(async () => {
-    setLazy(1500);
-    cancelReserve(existReserve.id);
-  }, [cancelReserve, existReserve.id, setLazy]);
+    if (!exist) return;
 
-  useEffect(() => {
-    if (finish && !isLoading) {
-      toast.success('예약을 완료했습니다!');
-      onFinish();
-    }
-  }, [finish, isLoading, onFinish]);
+    cancelReserve(exist.existsReserve.id);
+  }, [cancelReserve, exist]);
 
   return (
     <div className={cn('flex flex-col gap-2')}>
@@ -113,14 +89,14 @@ export function OverrideReserveConfirm({
         )}
       >
         <p>기존 예약 취소 하기</p>
-        <Checker error={cancelError} loading={cancelLoading} start={isLoading} />
+        <Checker error={cancelError} loading={cancelLoading} start={cancelLoading} />
 
         <p>새로운 예약 등록 하기</p>
-        <Checker error={addError} loading={cancelLoading || addLoading} start={isLoading} />
+        <Checker error={addError} loading={cancelLoading || addLoading} start={cancelLoading} />
       </div>
 
       <Button disabled={cancelError || addError} onClick={overrideReserve}>
-        {isLoading || cancelLoading || addLoading ? <Loading /> : '새로 예약하기'}
+        {cancelLoading || addLoading ? <Loading /> : '새로 예약하기'}
       </Button>
     </div>
   );
