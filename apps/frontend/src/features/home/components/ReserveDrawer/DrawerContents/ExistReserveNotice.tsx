@@ -1,21 +1,21 @@
 import React from 'react';
 
-import { Model } from '@slavseat/types';
-
+import {
+  useReserveDispatchContext,
+  useReserveMaterialContext,
+} from '@/features/home/hooks/useReserveContext';
 import { Button } from '@/shared/components/Button';
+import { Loading } from '@/shared/components/Loading';
 import { cn } from '@/shared/utils/class.util';
 
-interface ExistsReserveNoticeProps {
-  existReserve: Model.ReserveInfo;
-  onClickCancel: () => void;
-  onClickOk: () => void;
-}
+export function ExistReserveNotice() {
+  const { exist } = useReserveMaterialContext();
+  const dispatch = useReserveDispatchContext();
 
-export function ExistReserveNotice({
-  existReserve,
-  onClickCancel,
-  onClickOk,
-}: ExistsReserveNoticeProps) {
+  if (!exist) {
+    return <Loading />;
+  }
+
   return (
     <div className={cn('flex flex-col gap-2')}>
       <p>
@@ -24,8 +24,8 @@ export function ExistReserveNotice({
       </p>
 
       <p className={cn('text-lg text-red-500')}>
-        <span className={cn('font-bold')}>{existReserve.facility.name}</span> 예약을 취소하고 새로
-        예약을 진행할까요?
+        <span className={cn('font-bold')}>{exist.existsReserve.facility.name}</span> 예약을 취소하고
+        새로 예약을 진행할까요?
       </p>
 
       <p className="mb-2 text-xs text-neutral-400">
@@ -33,10 +33,23 @@ export function ExistReserveNotice({
       </p>
 
       <div className="flex items-center gap-x-2">
-        <Button className="w-1/2" variant="secondary" onClick={onClickCancel}>
+        <Button
+          className="w-1/2"
+          variant="secondary"
+          onClick={() => dispatch({ type: 'CANCEL_OVERRIDE_RESERVE' })}
+        >
           취소
         </Button>
-        <Button className="w-1/2" onClick={onClickOk}>
+        <Button
+          className="w-1/2"
+          onClick={() =>
+            dispatch({
+              type: 'READY_OVERRIDE_RESERVE',
+              reserveFormData: exist.reserveFormData,
+              existsReserve: exist.existsReserve,
+            })
+          }
+        >
           확인
         </Button>
       </div>
