@@ -4,10 +4,12 @@ import { Model } from '@slavseat/types';
 
 import { ReserveData } from '@/shared/api/reserve';
 
-type Step = 'info' | 'addReserve' | 'overrideNotice' | 'overrideReserve';
+type DrawerStep = 'info' | 'addReserve';
+type FloatingDrawerStep = 'overrideNotice' | 'overrideReserve' | 'alwayUserNotice';
 
 export interface ReserveMaterial {
-  step: Step;
+  drawerStep: DrawerStep;
+  floatingDrawerStep: FloatingDrawerStep;
   selectedDate: Date;
   selectedFacility?: Model.FacilitySummary;
   exist?: {
@@ -43,7 +45,8 @@ export type ReserveAction =
     };
 
 const initialMaterial: ReserveMaterial = {
-  step: 'info',
+  drawerStep: 'info',
+  floatingDrawerStep: 'overrideNotice',
   selectedDate: new Date(),
 };
 
@@ -54,33 +57,52 @@ function materialReducer(state: ReserveMaterial, action: ReserveAction): Reserve
     case 'SELECT_FACILITY':
       return { ...state, selectedFacility: action.facility };
     case 'READY_ADD_RESERVE':
-      return { ...state, step: 'addReserve' };
+      return { ...state, drawerStep: 'addReserve' };
     case 'SUCCESS_ADD_RESERVE':
-      return { ...state, step: 'info', selectedFacility: undefined };
+      return { ...state, drawerStep: 'info', selectedFacility: undefined };
     case 'CANCEL_ADD_RESERVE':
       return {
         ...state,
-        step: state.step === 'overrideNotice' ? 'overrideNotice' : 'info',
+        drawerStep: 'info',
         selectedFacility: undefined,
       };
     case 'CONFLICT_RESERVE':
       return {
         ...state,
-        step: 'overrideNotice',
+        drawerStep: 'info',
+        floatingDrawerStep: action.existsReserve.always ? 'alwayUserNotice' : 'overrideNotice',
         exist: { existsReserve: action.existsReserve, reserveFormData: action.reserveFormData },
       };
     case 'CANCEL_OVERRIDE_RESERVE':
-      return { ...state, step: 'info', exist: undefined, selectedFacility: undefined };
+      return {
+        ...state,
+        drawerStep: 'info',
+        floatingDrawerStep: 'overrideNotice',
+        exist: undefined,
+        selectedFacility: undefined,
+      };
     case 'READY_OVERRIDE_RESERVE':
       return {
         ...state,
-        step: 'overrideReserve',
+        floatingDrawerStep: 'overrideReserve',
         exist: { existsReserve: action.existsReserve, reserveFormData: action.reserveFormData },
       };
     case 'FAIL_OVERRIDE_RESERVE':
-      return { ...state, step: 'info', exist: undefined, selectedFacility: undefined };
+      return {
+        ...state,
+        drawerStep: 'info',
+        floatingDrawerStep: 'overrideNotice',
+        exist: undefined,
+        selectedFacility: undefined,
+      };
     case 'SUCCESS_OVERRIDE_RESERVE':
-      return { ...state, step: 'info', exist: undefined, selectedFacility: undefined };
+      return {
+        ...state,
+        drawerStep: 'info',
+        floatingDrawerStep: 'overrideNotice',
+        exist: undefined,
+        selectedFacility: undefined,
+      };
     default:
       break;
   }
