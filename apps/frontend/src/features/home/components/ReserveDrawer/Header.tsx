@@ -2,11 +2,13 @@ import React, { PropsWithChildren } from 'react';
 
 import { Model } from '@slavseat/types';
 
+import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
 import { Badge, Status } from '@/shared/components/Badge';
+
+import { useReserveMaterialContext } from '../../hooks/useReserveContext';
 
 type ReserveDrawerHeaderProps = PropsWithChildren<{
   title: string;
-  reserves: Model.ReserveInfo[];
 }>;
 
 const isCurrentReserve = (reserve: Model.ReserveInfo) =>
@@ -15,7 +17,14 @@ const isCurrentReserve = (reserve: Model.ReserveInfo) =>
     reserve.end === undefined ||
     (reserve.end && new Date(reserve.end).getTime() >= Date.now()));
 
-export function ReserveDrawerHeader({ title, reserves, children }: ReserveDrawerHeaderProps) {
+export function ReserveDrawerHeader({ title, children }: ReserveDrawerHeaderProps) {
+  const { selectedFacility, selectedDate } = useReserveMaterialContext();
+  const { data: reservesByDate } = useGetReserveByDate(selectedDate);
+
+  const reserves = reservesByDate?.filter(
+    (reserve) => reserve.facility.id === selectedFacility?.id,
+  );
+
   const currentReserve = reserves?.filter(isCurrentReserve).at(0);
   const isFutureReserved = Boolean(
     reserves?.filter((reserve) => new Date(reserve.start).getTime() >= Date.now()).length,

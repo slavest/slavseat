@@ -1,75 +1,104 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
+import { useForm } from 'react-hook-form';
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import { toast } from 'react-toastify';
 
 import { Model } from '@slavseat/types';
 import { format, parse } from 'date-fns';
 
+import {
+  useReserveDispatchContext,
+  useReserveMaterialContext,
+} from '@/features/home/hooks/useReserveContext';
+import { useAddReserveMutation } from '@/shared/api/query/reserve/add-reserve';
 import { Button } from '@/shared/components/Button';
 import { Loading } from '@/shared/components/Loading';
 import { TimePicker } from '@/shared/components/TimePicker';
 import { Toggle } from '@/shared/components/Toggle';
 import { formatHHMM } from '@/shared/constants/date.constant';
+import { useUserStore } from '@/shared/stores/userStore';
 
 import { ReserveDrawerHeader } from '../Header';
 
-export interface ReserveData {
+export interface ReserveSchema {
+  reserveType: 'always' | 'period' | 'day';
   start: Date;
-  end?: Date;
-  always: boolean;
-  facilityId: number;
-}
-
-interface AddReserveFormProps {
+  end: Date;
   facility?: Model.FacilitySummary;
-  reserves?: Model.ReserveInfo[];
-  loading?: boolean;
-  onClickPrev?: () => void;
-  onSubmit?: (data: ReserveData) => void;
 }
 
-export function AddReserveForm({
-  facility,
-  reserves,
-  loading,
-  onClickPrev,
-  onSubmit,
-}: AddReserveFormProps) {
-  const [reserveType, setReserveType] = useState<'always' | 'period' | 'day'>('day');
+export function AddReserveForm() {
+  const { user } = useUserStore();
+  const { selectedFacility } = useReserveMaterialContext();
+  const dispatch = useReserveDispatchContext();
+  const { watch, setValue } = useForm<ReserveSchema>({
+    values: {
+      reserveType: 'day',
+      start: parse('08:00', formatHHMM, new Date()),
+      end: parse('17:00', formatHHMM, new Date()),
+      facility: selectedFacility,
+    },
+  });
 
-  const [start, setStart] = useState<Date>(parse('08:00', formatHHMM, new Date()));
-  const [end, setEnd] = useState<Date>(parse('17:00', formatHHMM, new Date()));
+  const start = watch('start');
+  const end = watch('end');
+  const reserveType = watch('reserveType');
 
-  const setRange = useCallback((start: string, end: string) => {
-    setStart(parse(start, formatHHMM, new Date()));
-    setEnd(parse(end, formatHHMM, new Date()));
-  }, []);
+  const setRange = useCallback(
+    (start: string, end: string) => {
+      setValue('start', parse(start, formatHHMM, new Date()));
+      setValue('end', parse(end, formatHHMM, new Date()));
+    },
+    [setValue],
+  );
+
+  const { mutate: addReserveMutation, loading } = useAddReserveMutation({
+    onSuccess: () => dispatch({ type: 'SUCCESS_ADD_RESERVE' }),
+    onError: (error, value) => {
+      if (error.response?.status === 409) {
+        const existsReserve = error.response.data as unknown as Model.ReserveInfo;
+        if (!existsReserve.user || !user || existsReserve.user.id !== user.id) {
+          toast.error('해당 좌석은 예약되어 있습니다.');
+          return;
+        }
+
+        dispatch({
+          type: 'CONFLICT_RESERVE',
+          existsReserve,
+          reserveFormData: value,
+        });
+        return;
+      }
+
+      toast.error(error.response?.data.message.replace('.', '.\n') || '에러가 발생 했습니다.');
+    },
+  });
 
   const handleSubmitForm = useCallback<React.FormEventHandler<HTMLFormElement>>(
     (e) => {
       e.preventDefault();
-      if (!facility || !start) return toast.error('예약 시간이 잘못되었습니다');
+      if (!selectedFacility || !start) return toast.error('예약 시간이 잘못되었습니다');
       const always = reserveType === 'always';
       if (!always && end && start.getTime() >= end.getTime())
         return toast.error('예약 시간이 잘못되었습니다');
 
-      return onSubmit?.({
+      return addReserveMutation({
         start,
         end,
         always,
-        facilityId: facility.id,
+        facilityId: selectedFacility.id,
       });
     },
-    [end, facility, onSubmit, reserveType, start],
+    [selectedFacility, start, reserveType, end, addReserveMutation],
   );
 
   return (
     <>
-      <ReserveDrawerHeader reserves={reserves || []} title={`${facility?.name || '...'} 예약`}>
+      <ReserveDrawerHeader title={`${selectedFacility?.name || '...'} 예약`}>
         <Toggle.Root
           className="m-auto mr-0"
           value={reserveType}
-          onChange={(v) => setReserveType(v as typeof reserveType)}
+          onChange={(v) => setValue('reserveType', v as typeof reserveType)}
         >
           <Toggle.Item value="day">종일</Toggle.Item>
           <Toggle.Item value="period">시간차</Toggle.Item>
@@ -111,7 +140,7 @@ export function AddReserveForm({
                 className="text-lg"
                 value={format(start, formatHHMM)}
                 onChangeTime={(v) => {
-                  setStart(parse(v, formatHHMM, new Date()));
+                  setValue('start', parse(v, formatHHMM, new Date()));
                 }}
               />
               <span className="text-sm">부터</span>
@@ -119,7 +148,7 @@ export function AddReserveForm({
                 className="text-lg"
                 disabled={reserveType === 'always'}
                 value={format(end, formatHHMM)}
-                onChangeTime={(v) => setEnd(parse(v, formatHHMM, new Date()))}
+                onChangeTime={(v) => setValue('end', parse(v, formatHHMM, new Date()))}
               />
             </>
           )}
@@ -132,7 +161,7 @@ export function AddReserveForm({
             variant="secondary"
             onClick={(e) => {
               e.preventDefault();
-              onClickPrev?.();
+              dispatch({ type: 'CANCEL_ADD_RESERVE' });
             }}
           >
             {/* 예약 현황 */}
