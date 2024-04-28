@@ -38,6 +38,7 @@
     "class-validator": "^0.14.1",
     "cookie-parser": "^1.4.6",
     "cross-env": "^7.0.3",
+    "date-fns": "^3.6.0",
     "dotenv": "^16.4.1",
     "ioredis": "^5.3.2",
     "joi": "^17.12.1",
@@ -56,12 +57,12 @@
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
-    "@slavseat/semantic-release-config": "workspace:*",
-    "@slavseat/prettier-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
     "@nestjs/cli": "^10.3.1",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
+    "@repo/typescript-config": "workspace:*",
+    "@slavseat/prettier-config": "workspace:*",
+    "@slavseat/semantic-release-config": "workspace:*",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.2",
     "@types/multer": "^1.4.11",

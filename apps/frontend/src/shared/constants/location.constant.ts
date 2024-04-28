@@ -19,6 +19,11 @@ export const Locations = {
       ROOT: '/admin/reserve',
       MANAGE: '/admin/reserve/manage',
     },
+    STATISTICS: {
+      ROOT: '/admin/statistics',
+      RESERVE: '/admin/statistics/reserve',
+    },
   },
 };
+// eslint-disable-next-line no-redeclare
 export type Locations = (typeof Locations)[keyof typeof Locations];
