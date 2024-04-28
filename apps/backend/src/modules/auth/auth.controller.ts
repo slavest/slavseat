@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Query,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Post, Query, Res, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiCookieAuth,
@@ -19,10 +12,7 @@ import { RefreshToken } from '../jwt/decorator/refresh-token.decorator';
 import { JwtRefreshGuard } from '../jwt/guard/jwt-refresh.guard';
 import { JwtService } from '../jwt/jwt.service';
 import { User } from '../user/entity/user.entity';
-import {
-  ACCESS_TOKEN_COOKIE,
-  REFRESH_TOKEN_COOKIE,
-} from './auth.constant';
+import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from './auth.constant';
 import { OAuthState } from './auth.interface';
 import { AuthService } from './auth.service';
 import { AuthUser } from './decorator/auth-user.decorator';
@@ -50,14 +40,10 @@ export class AuthController {
   @ApiOperation({
     summary: 'Microsoft OAuth 로그인',
   })
-  async azureAdLogin(
-    @Res() res: Response,
-    @Query() oauthState: OAuthStateDto,
-  ) {
-    const authorizationURL = this.authService.getAuthorizationURL(
-      'microsoft',
-      { state: oauthState },
-    );
+  async azureAdLogin(@Res() res: Response, @Query() oauthState: OAuthStateDto) {
+    const authorizationURL = this.authService.getAuthorizationURL('microsoft', {
+      state: oauthState,
+    });
 
     res.redirect(authorizationURL);
     return res.end();
@@ -72,17 +58,17 @@ export class AuthController {
   ) {
     const { redirectBackTo } = JSON.parse(state) as OAuthState;
 
-    const user = await this.authService.getOAuthUser(
-      'microsoft',
-      code,
-    );
+    const user = await this.authService.getOAuthUser('microsoft', code);
 
     const accessToken = this.jwtService.createAccessToken(user);
     const refreshToken = this.jwtService.createRefreshToken(user);
 
-    res.cookie(ACCESS_TOKEN_COOKIE, accessToken);
+    res.cookie(ACCESS_TOKEN_COOKIE, accessToken, {
+      expires: new Date(Date.now() + this.jwtService.getAccesExpires() * 1000),
+    });
     res.cookie(REFRESH_TOKEN_COOKIE, refreshToken, {
       httpOnly: true,
+      expires: new Date(Date.now() + this.jwtService.getRefreshExpires() * 1000),
     });
     res.redirect(redirectBackTo);
     return res.end();
@@ -105,14 +91,12 @@ export class AuthController {
     description: 'Cookie에 accessToken을 포함하여 응답합니다.',
   })
   @ApiOkResponse()
-  async issueAccessToken(
-    @Res() res: Response,
-    @RefreshToken() refreshToken: string,
-  ) {
-    const accessToken =
-      this.jwtService.createAccessTokenFromRefreshToken(refreshToken);
+  async issueAccessToken(@Res() res: Response, @RefreshToken() refreshToken: string) {
+    const accessToken = this.jwtService.createAccessTokenFromRefreshToken(refreshToken);
 
-    res.cookie(ACCESS_TOKEN_COOKIE, accessToken);
+    res.cookie(ACCESS_TOKEN_COOKIE, accessToken, {
+      expires: new Date(Date.now() + this.jwtService.getAccesExpires() * 1000),
+    });
     return res.end();
   }
 }

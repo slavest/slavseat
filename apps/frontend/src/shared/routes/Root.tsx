@@ -3,6 +3,8 @@ import { FaBoltLightning } from 'react-icons/fa6';
 import { Outlet } from 'react-router-dom';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 
+import { useWindowSize } from 'usehooks-ts';
+
 import { useInitialize } from '@/shared/hooks/useInitialize';
 
 import { AppFooter } from '../components/AppFooter';
@@ -119,11 +121,11 @@ function IosGuide() {
     </section>
   );
 }
-
 function Root() {
   const { initialized } = useInitialize();
   const { isPWA, deviceOS } = useAppStore();
   const [isOpenShortcut, setIsOpenShortcut] = useState(false);
+  const { width } = useWindowSize();
 
   const openShortcut = () => setIsOpenShortcut(true);
   const closeShortcut = () => setIsOpenShortcut(false);
@@ -144,11 +146,15 @@ function Root() {
           hideScrollBar,
         )}
       >
-        <TopContent />
+        {width >= 1280 && (
+          <>
+            <TopContent />
 
-        <AndroidGuide />
+            <AndroidGuide />
 
-        <IosGuide />
+            <IosGuide />
+          </>
+        )}
       </div>
 
       <div

@@ -7,12 +7,9 @@ import { Region } from 'oci-common';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath:
-        process.env.NODE_ENV !== 'test' ? '.env' : '.env.test',
+      envFilePath: process.env.NODE_ENV !== 'test' ? '.env' : '.env.test',
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string()
-          .valid('development', 'production', 'test')
-          .required(),
+        NODE_ENV: Joi.string().valid('development', 'production', 'test').required(),
         PORT: Joi.number().default(3001),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.number().required(),
@@ -45,15 +42,13 @@ import { Region } from 'oci-common';
             return value;
           }),
         JWT_SECRET: Joi.string().required(),
-        JWT_ACCESS_EXPIRES: Joi.string().default('1m'),
-        JWT_REFRESH_EXPIRES: Joi.string().default('7d'),
+        JWT_ACCESS_EXPIRES: Joi.number().default(60),
+        JWT_REFRESH_EXPIRES: Joi.number().default(604800),
         MS_CALLBACK_URL: Joi.string().required(),
         MS_CLIENT_ID: Joi.string().required(),
         MS_CLIENT_SECRET: Joi.string().required(),
         MS_TENANT_ID: Joi.string(),
-        ADMINS: Joi.string().custom((value) =>
-          String(value).split(','),
-        ),
+        ADMINS: Joi.string().custom((value) => String(value).split(',')),
       }),
     }),
   ],

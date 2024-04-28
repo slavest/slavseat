@@ -102,6 +102,10 @@ export class ReserveService {
             start: MoreThanOrEqual(start),
           },
           dateSearch && {
+            facility: { id: facilityId },
+            start: LessThanOrEqual(start),
+          },
+          dateSearch && {
             user: { id: userId },
             start: Between(start, end),
           },
@@ -161,7 +165,7 @@ export class ReserveService {
       user: !isAdmin && { id: user.id },
     });
 
-    if (!exist) throw new NotFoundException('reserve not found');
+    if (!exist) throw new NotFoundException('취소할 수 있는 예약이 아닙니다.');
     if (!isAdmin && exist.always)
       throw new BadRequestException('고정석 예약자는 예약을 취소할 수 없습니다.');
 
