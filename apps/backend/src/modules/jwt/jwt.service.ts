@@ -12,29 +12,33 @@ export class JwtService {
     private readonly configService: ConfigService,
   ) {}
 
-  createAccessToken(user: User | TokenBaseInfo, expiresIn?: string) {
+  getAccesExpires() {
+    return this.configService.getOrThrow<number>('JWT_ACCESS_EXPIRES');
+  }
+
+  getRefreshExpires() {
+    return this.configService.getOrThrow<number>('JWT_REFRESH_EXPIRES');
+  }
+
+  createAccessToken(user: User | TokenBaseInfo, expiresIn?: number) {
     const payload = {
       id: user.id,
       email: user.email,
     };
 
     return this.nestJwtService.sign(payload, {
-      expiresIn:
-        expiresIn ||
-        this.configService.getOrThrow('JWT_ACCESS_EXPIRES'),
+      expiresIn: expiresIn || this.getAccesExpires(),
     });
   }
 
-  createRefreshToken(user: User | TokenBaseInfo, expiresIn?: string) {
+  createRefreshToken(user: User | TokenBaseInfo, expiresIn?: number) {
     const payload = {
       id: user.id,
       email: user.email,
     };
 
     return this.nestJwtService.sign(payload, {
-      expiresIn:
-        expiresIn ||
-        this.configService.getOrThrow('JWT_REFRESH_EXPIRES'),
+      expiresIn: expiresIn || this.getRefreshExpires(),
     });
   }
 
@@ -46,8 +50,7 @@ export class JwtService {
   }
 
   decodeToken(token: string) {
-    return (this.nestJwtService.decode(token) ||
-      {}) as Partial<Payload>;
+    return (this.nestJwtService.decode(token) || {}) as Partial<Payload>;
   }
 
   validateToken(token: string) {
