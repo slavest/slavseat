@@ -11,6 +11,7 @@ import { FacilityModule } from './modules/facility/facility.module';
 import { FloorModule } from './modules/floor/floor.module';
 import { JwtModule } from './modules/jwt/jwt.module';
 import { ReserveModule } from './modules/reserve/reserve.module';
+import { StatisticsModule } from './modules/statistics/statistics.module';
 import { UserModule } from './modules/user/user.module';
 
 @Module({
@@ -24,6 +25,7 @@ import { UserModule } from './modules/user/user.module';
     UserModule,
     JwtModule,
     AdminModule,
+    StatisticsModule,
   ],
   providers: [
     {
