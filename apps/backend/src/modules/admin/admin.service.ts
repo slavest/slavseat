@@ -6,6 +6,6 @@ export class AdminService {
   constructor(private readonly configService: ConfigService) {}
 
   isAdmin(email: string) {
-    return this.configService.get<string[] | undefined>('admins')?.includes(email) ?? false;
+    return this.configService.get<string[] | undefined>('ADMINS')?.includes(email) ?? false;
   }
 }
