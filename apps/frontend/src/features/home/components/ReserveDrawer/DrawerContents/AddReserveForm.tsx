@@ -29,9 +29,9 @@ export interface ReserveSchema {
 
 export function AddReserveForm() {
   const { user } = useUserStore();
-  const { selectedFacility } = useReserveMaterialContext();
+  const { selectedFacility, selectedDate } = useReserveMaterialContext();
   const dispatch = useReserveDispatchContext();
-  const { watch, setValue } = useForm<ReserveSchema>({
+  const { watch, setValue, getValues } = useForm<ReserveSchema>({
     values: {
       reserveType: 'day',
       start: parse('08:00', formatHHMM, new Date()),
@@ -77,10 +77,20 @@ export function AddReserveForm() {
   const handleSubmitForm = useCallback<React.FormEventHandler<HTMLFormElement>>(
     (e) => {
       e.preventDefault();
+      const start = getValues('start');
+      const end = getValues('end');
+      const reserveType = getValues('reserveType');
+
       if (!selectedFacility || !start) return toast.error('예약 시간이 잘못되었습니다');
       const always = reserveType === 'always';
       if (!always && end && start.getTime() >= end.getTime())
         return toast.error('예약 시간이 잘못되었습니다');
+
+      start.setMonth(selectedDate.getMonth());
+      start.setDate(selectedDate.getDate());
+
+      end.setMonth(selectedDate.getMonth());
+      end.setDate(selectedDate.getDate());
 
       return addReserveMutation({
         start,
@@ -89,7 +99,7 @@ export function AddReserveForm() {
         facilityId: selectedFacility.id,
       });
     },
-    [selectedFacility, start, reserveType, end, addReserveMutation],
+    [getValues, selectedFacility, selectedDate, addReserveMutation],
   );
 
   return (

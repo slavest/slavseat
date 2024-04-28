@@ -14,6 +14,7 @@ import { Loading } from '@/shared/components/Loading';
 import { Tab } from '@/shared/components/Tab';
 
 import { AddReserveForm } from '../components/ReserveDrawer/DrawerContents/AddReserveForm';
+import { AlwayUserNotice } from '../components/ReserveDrawer/DrawerContents/AlwayUserNotice';
 import { ExistReserveNotice } from '../components/ReserveDrawer/DrawerContents/ExistReserveNotice';
 import { OverrideReserveConfirm } from '../components/ReserveDrawer/DrawerContents/OverrideReserveConfirm';
 import { ReserveInfomation } from '../components/ReserveDrawer/DrawerContents/ReserveInfomation';
@@ -63,6 +64,7 @@ function Home() {
             onSelect={(date) => reserveDispatch({ type: 'SELECT_DATE', date })}
           />
         </div>
+
         {allFloorSummary && (
           <Tab
             items={allFloorSummary.map((floor) => ({
@@ -114,7 +116,7 @@ function Home() {
             {
               info: <ReserveInfomation />,
               addReserve: <AddReserveForm />,
-            }[reserveMaterial.step as 'info' | 'addReserve']
+            }[reserveMaterial.drawerStep]
           }
         </Drawer>
 
@@ -126,7 +128,8 @@ function Home() {
             {
               overrideNotice: <ExistReserveNotice />,
               overrideReserve: <OverrideReserveConfirm />,
-            }[reserveMaterial.step as 'overrideNotice' | 'overrideReserve']
+              alwayUserNotice: <AlwayUserNotice />,
+            }[reserveMaterial.floatingDrawerStep]
           }
         </FloatingDrawer>
       </DrawerProvider>
