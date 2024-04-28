@@ -12,6 +12,7 @@ import { Redis } from 'ioredis';
 import { sleep } from 'src/libs/utils/common';
 import { Between, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 
+import { AdminService } from '../admin/admin.service';
 import { FacilityService } from '../facility/facility.service';
 import { User } from '../user/entity/user.entity';
 import { UserService } from '../user/user.service';
@@ -33,7 +34,7 @@ export class ReserveService {
     private readonly facilityService: FacilityService,
     private readonly userService: UserService,
     private readonly redisService: RedisService,
-    private readonly configService: ConfigService,
+    private readonly adminService: AdminService,
   ) {
     this.redisClient = this.redisService.getClient();
   }
@@ -153,20 +154,16 @@ export class ReserveService {
   ): Promise<RemoveReserveResponseDto> {
     const user = await this.userService.findById(userId);
     if (!user) throw new NotFoundException('유저를 찾을 수 없습니다.');
-    const admins = this.configService.get('ADMINS') as string[] | undefined;
-    let exist: Reserve;
+    const isAdmin = this.adminService.isAdmin(user.email);
 
-    if (admins?.includes(user.email)) {
-      exist = await this.reserveRepository.findOneBy({
-        id: removeReserveDto.id,
-      });
-    } else {
-      exist = await this.reserveRepository.findOneBy({
-        id: removeReserveDto.id,
-        user: { id: user.id },
-      });
-    }
+    const exist = await this.reserveRepository.findOneBy({
+      id: removeReserveDto.id,
+      user: !isAdmin && { id: user.id },
+    });
+
     if (!exist) throw new NotFoundException('reserve not found');
+    if (!isAdmin && exist.always)
+      throw new BadRequestException('고정석 예약자는 예약을 취소할 수 없습니다.');
 
     const removeResult = await this.reserveRepository.delete(exist.id);
     return { removed: removeResult.affected ?? 0 };
