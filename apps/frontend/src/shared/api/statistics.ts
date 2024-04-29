@@ -7,7 +7,7 @@ export function getRecentDailyReserveStatistics() {
     .get<Model.DailyStatistics[]>('/api/statistics/reserve/daily', {
       params: {
         start: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
-        end: new Date(),
+        end: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
       },
     })
     .then((res) => res.data)
