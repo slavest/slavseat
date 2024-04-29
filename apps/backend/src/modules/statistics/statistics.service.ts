@@ -12,13 +12,14 @@ export class StatisticsService {
 
   async getReserveStatistics(start: Date, end: Date) {
     const from = format(start, 'yyyy-MM-dd');
-    const to = format(end.getTime() + 1000 * 60 * 60 * 24, 'yyyy-MM-dd'); // 0,0,0 시간 보정
+    const to = format(end.getTime(), 'yyyy-MM-dd'); // 0,0,0 시간 보정
 
     const result: DailyStatisticsDto[] = await this.reserveRepository
       .createQueryBuilder()
       .select('COUNT(*)', 'count')
-      .addSelect('DATE(start)', 'date')
-      .where('start >= :from and end <= :to', { from, to })
+      .addSelect("DATE(CONVERT_TZ(start, '+00:00', '+09:00'))", 'date')
+      .where("DATE(CONVERT_TZ(start, '+00:00', '+09:00')) >= :from", { from })
+      .andWhere("DATE(CONVERT_TZ(end, '+00:00', '+09:00')) <= :to", { to })
       .andWhere('always is :always', { always: false })
       .groupBy('date')
       .orderBy('date', 'ASC')
