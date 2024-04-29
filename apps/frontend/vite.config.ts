@@ -12,11 +12,7 @@ export default defineConfig({
     vanillaExtractPlugin(),
     VitePWA({
       base: '/',
-      includeAssets: [
-        'booksy.svg',
-        'booksy-app-256.png',
-        'booksy-app-512.png',
-      ],
+      includeAssets: ['booksy.svg', 'booksy-app-256.png', 'booksy-app-512.png'],
       manifest: {
         name: 'Booksy 좌석예약',
         short_name: 'Booksy',
@@ -53,13 +49,12 @@ export default defineConfig({
       },
       workbox: {
         navigateFallbackDenylist: [/^\/api/],
+        cleanupOutdatedCaches: true,
       },
     }),
   ],
   resolve: {
-    alias: [
-      { find: '@', replacement: path.resolve(__dirname, 'src') },
-    ],
+    alias: [{ find: '@', replacement: path.resolve(__dirname, 'src') }],
   },
   server: {
     proxy: {
