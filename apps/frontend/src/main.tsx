@@ -68,9 +68,9 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  </React.StrictMode>,
+  // <React.StrictMode> // https://github.com/atlassian/react-beautiful-dnd/issues/2399#issuecomment-1111169234
+  <QueryClientProvider client={queryClient}>
+    <RouterProvider router={router} />
+  </QueryClientProvider>,
+  // </React.StrictMode>,
 );
