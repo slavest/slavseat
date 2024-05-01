@@ -67,10 +67,12 @@ function Home() {
 
         {allFloorSummary && (
           <Tab
-            items={allFloorSummary.map((floor) => ({
-              value: floor.id.toString(),
-              label: floor.name,
-            }))}
+            items={allFloorSummary
+              .filter((floor) => !floor.disabled)
+              .map((floor) => ({
+                value: floor.id.toString(),
+                label: floor.name,
+              }))}
             selected={selectedFloor?.toString() ?? null}
             onChange={(v) => v && setSelectedFloor(+v)}
           />

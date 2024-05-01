@@ -37,15 +37,25 @@ export function EditFloorModal({ floorId, onSubmit, ...rest }: EditFloorModalPro
         {isLoading || !data ? (
           <Loading />
         ) : (
-          <div className="space-y-1">
-            <div className="text-xs text-neutral-400">이름</div>
-            <input
-              className="rounded-md border border-neutral-400 p-1 text-sm focus:outline-purple-600"
-              defaultValue={data.name}
-              type="text"
-              onChange={(e) => handleUpdateField('name', e.target.value)}
-            />
-          </div>
+          <>
+            <div className="space-y-1">
+              <div className="text-xs text-neutral-400">이름</div>
+              <input
+                className="rounded-md border border-neutral-400 p-1 text-sm focus:outline-purple-600"
+                defaultValue={data.name}
+                type="text"
+                onChange={(e) => handleUpdateField('name', e.target.value)}
+              />
+            </div>
+            <div className="space-y-1">
+              <div className="text-xs text-neutral-400">비활성</div>
+              <input
+                defaultChecked={data.disabled}
+                type="checkbox"
+                onChange={(e) => handleUpdateField('disabled', e.target.checked)}
+              />
+            </div>
+          </>
         )}
         <div className="flex w-full justify-end">
           <button
