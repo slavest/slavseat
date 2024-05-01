@@ -107,6 +107,16 @@ export class ReserveService {
             always: true,
           },
           dateSearch && {
+            facility: { id: facilityId },
+            start: LessThanOrEqual(start),
+            always: true,
+          },
+          dateSearch && {
+            facility: { id: facilityId },
+            start: LessThanOrEqual(end),
+            always: true,
+          },
+          dateSearch && {
             user: { id: userId },
             start: Between(start, end),
           },
