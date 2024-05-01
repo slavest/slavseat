@@ -9,6 +9,7 @@ import {
   Param,
   ParseFilePipe,
   Post,
+  Put,
   Res,
   UploadedFile,
   UseGuards,
@@ -36,7 +37,13 @@ import { FloorSummaryDto } from './dto/floorSummary.dto';
 import { CreateFloorRequestDto } from './dto/request/createFloorRequest.dto';
 import { GetFloorByIdRequestDto } from './dto/request/getFloorByIdRequest.dto';
 import { GetFloorImageRequestDto } from './dto/request/getFloorImageRequest.dto';
+import {
+  UpdateFloorRequestBodyDto,
+  UpdateFloorRequestParamDto,
+} from './dto/request/updateFloorRequest.dto';
+import { UpdateFloorsRequestDto } from './dto/request/updateFloorsRequest.dto';
 import { UploadFloorImageRequestDto } from './dto/request/uploadFloorImageRequest.dto';
+import { UpdateFloorResponseDto } from './dto/response/updateFloorResponse.dto';
 import { Floor } from './entity/floor.entity';
 import { FloorService } from './floor.service';
 
@@ -119,5 +126,25 @@ export class FloorController {
   @ApiCreatedResponse({ type: Floor })
   async createFloor(@AuthUser() user: User, @Body() createFloorRequestDto: CreateFloorRequestDto) {
     return this.floorService.createFloor(createFloorRequestDto);
+  }
+
+  @Put('/:id')
+  @ApiOperation({ summary: '단일 층 수정' })
+  @ApiOkResponse({ type: UpdateFloorResponseDto })
+  async updateFloor(
+    @Param() updateFloorRequestParamDto: UpdateFloorRequestParamDto,
+    @Body() updateFloorRequestBodyDto: UpdateFloorRequestBodyDto,
+  ) {
+    return this.floorService.updateFloor({
+      ...updateFloorRequestParamDto,
+      ...updateFloorRequestBodyDto,
+    });
+  }
+
+  @Put()
+  @ApiOperation({ summary: '다중 층 수정' })
+  @ApiOkResponse({ type: UpdateFloorResponseDto })
+  async updateFloors(@Body() updateFloorsRequestDto: UpdateFloorsRequestDto) {
+    return this.floorService.updateFloors(updateFloorsRequestDto);
   }
 }

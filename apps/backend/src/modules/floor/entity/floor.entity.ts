@@ -1,22 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Model } from '@slavseat/types';
 import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsNumber,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsArray, IsNumber, IsString, ValidateNested } from 'class-validator';
 import { Facility } from 'src/modules/facility/entity/facility.entity';
 import { ObjectMeta } from 'src/modules/object-storage/entity/objectMeta.entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Floor implements Model.FloorInfo {
@@ -50,4 +38,9 @@ export class Floor implements Model.FloorInfo {
   })
   @Type(() => ObjectMeta)
   image: ObjectMeta;
+
+  @Column({ nullable: false })
+  @ApiProperty({ description: '배치 순서' })
+  @IsNumber()
+  order: number;
 }
