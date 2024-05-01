@@ -63,7 +63,7 @@ export class ReserveService {
     const facility = await this.facilityService.findOneById(facilityId);
     if (!facility) throw new NotFoundException(`시설을 찾을 수 없습니다.`);
 
-    if (facility.type !== Model.FacilityType.SEAT)
+    if (facility.type !== Model.FacilityType.SEAT || facility.floor.disabled)
       throw new BadRequestException('예약이 불가능한 시설입니다.');
 
     const lockKey = getFacilityLockKey(facility.id);
