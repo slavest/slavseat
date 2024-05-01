@@ -48,8 +48,8 @@ export function AdminFloorManage() {
 
   const columns: DraggableTableColumn<Model.FloorSummary>[] = useMemo(
     () => [
-      { dataKey: 'id', headerContent: 'id' },
-      { dataKey: 'name', headerContent: 'name' },
+      { dataKey: 'id', headerContent: 'ID', width: '100px' },
+      { dataKey: 'name', headerContent: '이름' },
       {
         dataKey: '',
         headerContent: '',
@@ -80,47 +80,11 @@ export function AdminFloorManage() {
         </Button>
       </Box>
 
-      {/* <Box title="Floor 수정"> */}
       {isFetching || !floorOrder ? (
         <Loading />
       ) : (
         <DraggableTable columns={columns} data={floorOrder} onDragEnd={setFloorOrder} />
-        // <DragDropContext onDragEnd={onDragEnd}>
-        //   <table>
-        //     <thead>
-        //       <tr>
-        //         <th>id</th>
-        //         <th>name</th>
-        //       </tr>
-        //     </thead>
-        //     <Droppable droppableId="table">
-        //       {(droppableProvided: DroppableProvided) => (
-        //         <tbody ref={droppableProvided.innerRef} {...droppableProvided.droppableProps}>
-        //           {allFloorSummary
-        //             .sort((a, b) => a.order - b.order)
-        //             .map((floor, index) => (
-        //               <Draggable key={floor.id} draggableId={floor.id.toString()} index={index}>
-        //                 {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-        //                   <tr
-        //                     ref={provided.innerRef}
-        //                     className={cn({ 'bg-blue-400': snapshot.isDragging })}
-        //                     {...provided.draggableProps}
-        //                     {...provided.dragHandleProps}
-        //                   >
-        //                     <td>{floor.id}</td>
-        //                     <td>{floor.name}</td>
-        //                   </tr>
-        //                 )}
-        //               </Draggable>
-        //             ))}
-        //           {droppableProvided.placeholder}
-        //         </tbody>
-        //       )}
-        //     </Droppable>
-        //   </table>
-        // </DragDropContext>
       )}
-      {/* </Box> */}
     </div>
   );
 }

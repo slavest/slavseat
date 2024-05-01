@@ -68,7 +68,7 @@ export function DraggableTable<T extends Record<string, any>>({
                       {...provided.dragHandleProps}
                     >
                       {columns.map((column, index) => (
-                        <td key={index} className="px-2 py-1">
+                        <td key={index} className="px-2 py-1" width={column.width}>
                           {column.renderContent
                             ? column.renderContent(item)
                             : item[column.dataKey.toString()]}

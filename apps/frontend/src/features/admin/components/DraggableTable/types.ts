@@ -9,7 +9,7 @@ type FlattenKeys<T> = T extends object | Array<never>
   : never;
 
 export interface DraggableTableColumn<T> {
-  dataKey: FlattenKeys<T>;
+  dataKey: FlattenKeys<T> | (string & NonNullable<unknown>);
   headerContent: React.ReactNode;
   renderContent?: (value: T) => React.ReactNode;
   width?: number;
