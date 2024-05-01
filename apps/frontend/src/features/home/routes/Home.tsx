@@ -40,7 +40,7 @@ function Home() {
 
   useEffect(() => {
     if (allFloorSummary) {
-      setSelectedFloor(allFloorSummary.at(0)?.id ?? null);
+      setSelectedFloor(allFloorSummary.filter((floor) => !floor.disabled).at(0)?.id ?? null);
     }
   }, [allFloorSummary]);
 
