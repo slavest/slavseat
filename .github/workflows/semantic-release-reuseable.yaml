@@ -1,0 +1,60 @@
+name: Semantic Release
+on:
+  workflow_call:
+    inputs:
+      env:
+        type: string
+        required: false
+      type:
+        type: string
+        required: true
+
+
+jobs:
+  semantic-release:
+   name: Semantic Release
+   environment: ${{ inputs.env }}
+   runs-on: ubuntu-latest
+   steps:
+      # Checkout Repository
+      - name: Check out source code
+        uses: actions/checkout@v2.1.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.X'
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Get hashed ref name
+        run: |
+          hashedString=$(echo -n "your_string_to_hash" | sha256sum | awk '{print $1}')
+          echo "REF_NAME_SHA=$hashedString" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lock
+
+      - name: Run Semantic Release
+        run: pnpm -rc --workspace-concurrency=1 --filter ${{ inputs.type }} exec -- pnpm --no-install semantic-release -e semantic-release-monorepo --tag-format='${PNPM_PACKAGE_NAME}@\${version}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+        

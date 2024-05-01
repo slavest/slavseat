@@ -12,6 +12,7 @@ import { Redis } from 'ioredis';
 import { sleep } from 'src/libs/utils/common';
 import { Between, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 
+import { AdminService } from '../admin/admin.service';
 import { FacilityService } from '../facility/facility.service';
 import { User } from '../user/entity/user.entity';
 import { UserService } from '../user/user.service';
@@ -33,7 +34,7 @@ export class ReserveService {
     private readonly facilityService: FacilityService,
     private readonly userService: UserService,
     private readonly redisService: RedisService,
-    private readonly configService: ConfigService,
+    private readonly adminService: AdminService,
   ) {
     this.redisClient = this.redisService.getClient();
   }
@@ -48,6 +49,10 @@ export class ReserveService {
 
     if (dateSearch && start.getTime() >= end.getTime())
       throw new BadRequestException(`시작 날짜는 종료 날짜보다 같거나 클 수 없습니다.`);
+
+    const oneWeek = Date.now() + 1000 * 60 * 60 * 24 * 8;
+    if (start.getTime() > oneWeek || (end && end.getTime() > oneWeek))
+      throw new BadRequestException('최대 일주일 후 까지만 예약이 가능합니다.');
 
     // if (start.getTime() < Date.now())
     //   throw new BadRequestException('지난 시간은 예약할 수 없습니다.');
@@ -96,6 +101,21 @@ export class ReserveService {
             facility: { id: facilityId },
             start: MoreThanOrEqual(start),
           },
+          always && {
+            facility: { id: facilityId },
+            start: LessThanOrEqual(start),
+            always: true,
+          },
+          dateSearch && {
+            facility: { id: facilityId },
+            start: LessThanOrEqual(start),
+            always: true,
+          },
+          dateSearch && {
+            facility: { id: facilityId },
+            start: LessThanOrEqual(end),
+            always: true,
+          },
           dateSearch && {
             user: { id: userId },
             start: Between(start, end),
@@ -109,6 +129,11 @@ export class ReserveService {
             start: LessThanOrEqual(start),
             end: MoreThanOrEqual(end),
           },
+          dateSearch && {
+            user: { id: userId },
+            start: LessThanOrEqual(start),
+            always: true,
+          },
           always && {
             user: { id: userId },
             start: MoreThanOrEqual(start),
@@ -119,7 +144,7 @@ export class ReserveService {
             always: true,
           },
         ].filter((item) => item !== undefined),
-        relations: { facility: true },
+        relations: { facility: true, user: true },
       });
       if (existReserve) throw new ConflictException(existReserve);
 
@@ -141,20 +166,16 @@ export class ReserveService {
   ): Promise<RemoveReserveResponseDto> {
     const user = await this.userService.findById(userId);
     if (!user) throw new NotFoundException('유저를 찾을 수 없습니다.');
-    const admins = this.configService.get('ADMINS') as string[] | undefined;
-    let exist: Reserve;
+    const isAdmin = this.adminService.isAdmin(user.email);
 
-    if (admins?.includes(user.email)) {
-      exist = await this.reserveRepository.findOneBy({
-        id: removeReserveDto.id,
-      });
-    } else {
-      exist = await this.reserveRepository.findOneBy({
-        id: removeReserveDto.id,
-        user: { id: user.id },
-      });
-    }
-    if (!exist) throw new NotFoundException('reserve not found');
+    const exist = await this.reserveRepository.findOneBy({
+      id: removeReserveDto.id,
+      user: !isAdmin && { id: user.id },
+    });
+
+    if (!exist) throw new NotFoundException('취소할 수 있는 예약이 아닙니다.');
+    if (!isAdmin && exist.always)
+      throw new BadRequestException('고정석 예약자는 예약을 취소할 수 없습니다.');
 
     const removeResult = await this.reserveRepository.delete(exist.id);
     return { removed: removeResult.affected ?? 0 };

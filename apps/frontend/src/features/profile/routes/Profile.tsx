@@ -17,6 +17,7 @@ function Profile() {
       <Button size="sm" variant="secondary" onClick={logout}>
         로그아웃
       </Button>
+      <div className="text-neutral-400">캐시 테스트 2</div>
     </div>
   );
 }

@@ -28,8 +28,8 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 
+import { AdminGuard } from '../admin/guard/admin.guard';
 import { AuthUser } from '../auth/decorator/auth-user.decorator';
-import { AdminGuard } from '../auth/guard/admin.guard';
 import { AuthUserGuard } from '../auth/guard/auth-user.guard';
 import { ObjectStorageService } from '../object-storage/object-storage.service';
 import { User } from '../user/entity/user.entity';

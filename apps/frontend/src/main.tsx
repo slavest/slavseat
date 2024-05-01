@@ -9,6 +9,7 @@ import { AdminFacilityView } from './features/admin/routes/AdminFacilityView.tsx
 import { AdminFloorManage } from './features/admin/routes/AdminFloorManage.tsx';
 import { AdminHome } from './features/admin/routes/AdminHome.tsx';
 import { AdminReserveManage } from './features/admin/routes/AdminReserveManage.tsx';
+import { AdminReserveStatistics } from './features/admin/routes/AdminReserveStatistics.tsx';
 import { AdminRoot } from './features/admin/routes/AdminRoot.tsx';
 import Favorite from './features/favorite/routes/Favorite.tsx';
 import Home from './features/home/routes/Home.tsx';
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: Locations.ADMIN.RESERVE.MANAGE,
         element: <AdminReserveManage />,
+      },
+      {
+        path: Locations.ADMIN.STATISTICS.RESERVE,
+        element: <AdminReserveStatistics />,
       },
     ],
   },
