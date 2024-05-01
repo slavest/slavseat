@@ -12,7 +12,7 @@ export const getFloorDetail = async (floorId: number) => {
   return axiosInstance.get<Model.FloorInfo>(`/api/floor/${floorId}`).then((res) => res.data);
 };
 
-export const createFloor = async (data: { name: string }) => {
+export const createFloor = async (data: { name: string; disabled: boolean }) => {
   return axiosInstance
     .post<Model.FloorInfo>('/api/floor', { ...data, order: -1 })
     .then((res) => res.data);
