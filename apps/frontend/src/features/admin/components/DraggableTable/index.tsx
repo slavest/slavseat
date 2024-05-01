@@ -42,7 +42,7 @@ export function DraggableTable<T extends Record<string, any>>({
       <table className="w-full table-fixed">
         <thead className={cn('bg-neutral-700 text-white')}>
           <tr className={cn('')}>
-            {columns.map(({ headerContent, dataKey, renderContent, ...rest }, index) => (
+            {columns.map(({ headerContent, dataKey: _, renderContent: __, ...rest }, index) => (
               <th
                 key={index}
                 className={cn('px-2 py-1 text-left first:rounded-l-lg last:rounded-r-lg')}
