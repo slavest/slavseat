@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Model } from '@slavseat/types';
 import { Type } from 'class-transformer';
-import { IsArray, IsNumber, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsNumber, IsString, ValidateNested } from 'class-validator';
 import { Facility } from 'src/modules/facility/entity/facility.entity';
 import { ObjectMeta } from 'src/modules/object-storage/entity/objectMeta.entity';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
@@ -43,4 +43,9 @@ export class Floor implements Model.FloorInfo {
   @ApiProperty({ description: '배치 순서' })
   @IsNumber()
   order: number;
+
+  @Column({ nullable: false })
+  @ApiProperty({ description: '비활성화 여부' })
+  @IsBoolean()
+  disabled: boolean;
 }

@@ -6,10 +6,6 @@ import { Repository } from 'typeorm';
 
 import { ObjectStorageService } from '../object-storage/object-storage.service';
 import { CreateFloorRequestDto } from './dto/request/createFloorRequest.dto';
-import {
-  UpdateFloorRequestBodyDto,
-  UpdateFloorRequestParamDto,
-} from './dto/request/updateFloorRequest.dto';
 import { UpdateFloorDto, UpdateFloorsRequestDto } from './dto/request/updateFloorsRequest.dto';
 import { UploadFloorImageRequestDto } from './dto/request/uploadFloorImageRequest.dto';
 import { UpdateFloorResponseDto } from './dto/response/updateFloorResponse.dto';
