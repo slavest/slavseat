@@ -103,7 +103,10 @@ export function AdminFloorManage() {
             type="text"
             onChange={(e) => setFloorName(e.target.value)}
           />
-          <Button variant="tertiary" onClick={() => createFloorMutation({ name: floorName })}>
+          <Button
+            variant="tertiary"
+            onClick={() => createFloorMutation({ name: floorName, disabled: true })}
+          >
             Floor 추가
           </Button>
         </Box>
