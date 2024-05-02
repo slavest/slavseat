@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom/client';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { registerSW } from 'virtual:pwa-register';
+
 import { AdminFacilityEdit } from './features/admin/routes/AdminFacilityEdit.tsx';
 import { AdminFacilityView } from './features/admin/routes/AdminFacilityView.tsx';
 import { AdminFloorManage } from './features/admin/routes/AdminFloorManage.tsx';
@@ -22,6 +24,19 @@ import './shared/styles/app.css';
 import './shared/styles/global-style.css.ts';
 
 const queryClient = new QueryClient();
+
+const intervalMS = 60 * 1000;
+
+const updateSW = registerSW({
+  onRegistered(r) {
+    r &&
+      setInterval(() => {
+        r.update();
+      }, intervalMS);
+  },
+});
+
+updateSW();
 
 const router = createBrowserRouter([
   {

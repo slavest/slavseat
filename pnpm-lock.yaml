@@ -372,7 +372,10 @@ importers:
         version: 5.0.12
       vite-plugin-pwa:
         specifier: ^0.19.7
-        version: 0.19.7(vite@5.0.12)(workbox-build@7.0.0)(workbox-window@7.0.0)
+        version: 0.19.7(vite@5.0.12)(workbox-build@7.0.0)(workbox-window@7.1.0)
+      workbox-window:
+        specifier: ^7.1.0
+        version: 7.1.0
 
   packages/eslint-config-slavest:
     dependencies:
@@ -8704,6 +8707,12 @@ packages:
   /highlight.js@10.7.3:
     resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
 
+  /hoist-non-react-statics@3.3.2:
+    resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
+    dependencies:
+      react-is: 16.13.1
+    dev: false
+
   /hook-std@3.0.0:
     resolution: {integrity: sha512-jHRQzjSDzMtFy34AGj1DN+vq54WVuhSvKgrHf0OMiFQTwDD4L/qqofVEWjLOBMTn5+lCD3fPg32W9yOfnEJTTw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
@@ -8719,12 +8728,6 @@ packages:
     dependencies:
       lru-cache: 10.2.0
     dev: true
-
-  /hoist-non-react-statics@3.3.2:
-    resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
-    dependencies:
-      react-is: 16.13.1
-    dev: false
 
   /html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
@@ -10342,14 +10345,14 @@ packages:
       fs-monkey: 1.0.5
     dev: true
 
+  /memoize-one@5.2.1:
+    resolution: {integrity: sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==}
+    dev: false
+
   /meow@12.1.1:
     resolution: {integrity: sha512-BhXM0Au22RwUneMPwSCnyhTOizdWoIEPU9sp0Aqa1PnDMR5Wv2FGXYDjuzJEIX+Eo2Rb8xuYe5jrnm5QowQFkw==}
     engines: {node: '>=16.10'}
     dev: true
-
-  /memoize-one@5.2.1:
-    resolution: {integrity: sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==}
-    dev: false
 
   /merge-descriptors@1.0.1:
     resolution: {integrity: sha512-cCi6g3/Zr1iqQi6ySbseM1Xvooa98N0w31jzUYrXPX2xqObmFGHJ0tQ5u74H3mVh7wLouTseZyYIq39g8cNp1w==}
@@ -11638,13 +11641,13 @@ packages:
   /queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
-  /ramda@0.27.2:
-    resolution: {integrity: sha512-SbiLPU40JuJniHexQSAgad32hfwd+DRUdwF2PlVuI5RZD0/vahUco7R8vD86J/tcEKKF9vZrUVwgtmGCqlCKyA==}
-    dev: true
-
   /raf-schd@4.0.3:
     resolution: {integrity: sha512-tQkJl2GRWh83ui2DiPTJz9wEiMN20syf+5oKfB03yYP7ioZcJwsIK8FjrtLwH1m7C7e+Tt2yYBlrOpdT+dyeIQ==}
     dev: false
+
+  /ramda@0.27.2:
+    resolution: {integrity: sha512-SbiLPU40JuJniHexQSAgad32hfwd+DRUdwF2PlVuI5RZD0/vahUco7R8vD86J/tcEKKF9vZrUVwgtmGCqlCKyA==}
+    dev: true
 
   /randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -14092,7 +14095,7 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-pwa@0.19.7(vite@5.0.12)(workbox-build@7.0.0)(workbox-window@7.0.0):
+  /vite-plugin-pwa@0.19.7(vite@5.0.12)(workbox-build@7.0.0)(workbox-window@7.1.0):
     resolution: {integrity: sha512-18TECxoGPQE7tVZzKxbf5Icrl5688n1JGMPSgGotTsh89vLDxevY7ICfD3CFVfonZXh8ckuyJXg0NXE5+FAl2A==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -14109,7 +14112,7 @@ packages:
       pretty-bytes: 6.1.1
       vite: 5.0.12
       workbox-build: 7.0.0
-      workbox-window: 7.0.0
+      workbox-window: 7.1.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -14418,6 +14421,10 @@ packages:
     resolution: {integrity: sha512-81JkAAZtfVP8darBpfRTovHg8DGAVrKFgHpOArZbdFd78VqHr5Iw65f2guwjE2NlCFbPFDoez3D3/6ZvhI/rwQ==}
     dev: true
 
+  /workbox-core@7.1.0:
+    resolution: {integrity: sha512-5KB4KOY8rtL31nEF7BfvU7FMzKT4B5TkbYa2tzkS+Peqj0gayMT9SytSFtNzlrvMaWgv6y/yvP9C0IbpFjV30Q==}
+    dev: true
+
   /workbox-expiration@7.0.0:
     resolution: {integrity: sha512-MLK+fogW+pC3IWU9SFE+FRStvDVutwJMR5if1g7oBJx3qwmO69BNoJQVaMXq41R0gg3MzxVfwOGKx3i9P6sOLQ==}
     dependencies:
@@ -14494,6 +14501,13 @@ packages:
     dependencies:
       '@types/trusted-types': 2.0.7
       workbox-core: 7.0.0
+    dev: true
+
+  /workbox-window@7.1.0:
+    resolution: {integrity: sha512-ZHeROyqR+AS5UPzholQRDttLFqGMwP0Np8MKWAdyxsDETxq3qOAyXvqessc3GniohG6e0mAqSQyKOHmT8zPF7g==}
+    dependencies:
+      '@types/trusted-types': 2.0.7
+      workbox-core: 7.1.0
     dev: true
 
   /wrap-ansi@6.2.0:

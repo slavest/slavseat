@@ -1,16 +1,11 @@
 {
   "compilerOptions": {
+    "types": ["vite-plugin-pwa/client"],
     "jsx": "react",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
   "extends": "@repo/typescript-config/vite.json",
-  "include": [
-    "src",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "include": ["src", "**/*.ts", "**/*.tsx"]
 }

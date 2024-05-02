@@ -51,6 +51,7 @@ export default defineConfig({
         navigateFallbackDenylist: [/^\/api/],
         cleanupOutdatedCaches: true,
       },
+      registerType: 'autoUpdate',
     }),
   ],
   resolve: {
