@@ -19,7 +19,8 @@ export function SeatCounter({ floorInfo, reserveInfos }: SeatCounterProps) {
       ? floorInfo.facilities.filter((facility) => facility.type === FacilityType.SEAT).length
       : 0;
 
-    const usingSeatCount = reserveInfos?.length || 0;
+    const usingSeatCount =
+      reserveInfos?.filter((reserve) => reserve.facility.floor.id === floorInfo?.id)?.length || 0;
 
     const restSeatCount = !floorInfo || !reserveInfos ? 0 : allSeatCount - usingSeatCount;
 
