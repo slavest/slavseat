@@ -41,7 +41,7 @@ export function Tab({ items, selected: selectedProp, onChange }: TabProps) {
       {items.map((item) => (
         <div
           key={item.value}
-          className={cn('text-nowrap px-2 py-3 font-medium', {
+          className={cn('text-nowrap px-2 py-3 font-medium', 'cursor-pointer', {
             'text-neutral-400': item.value !== selected,
             'border-b-2 border-black text-black': item.value === selected,
           })}

@@ -104,7 +104,12 @@ function FacilityGridViewer({
           <div
             ref={(ref) => onItemRender?.(facility, ref)}
             className={cn(
-              'box-border flex h-full w-full select-none items-center justify-center rounded-md border border-neutral-200 bg-neutral-50 p-2',
+              'h-full w-full',
+              'box-border p-2',
+              'flex items-center justify-center',
+              'select-none',
+              'rounded-md border border-neutral-200 bg-neutral-50',
+              'cursor-pointer',
               { 'border-black': selected?.includes(facility.id) },
             )}
           >
