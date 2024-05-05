@@ -13,7 +13,6 @@ import { AdminHome } from './features/admin/routes/AdminHome.tsx';
 import { AdminReserveManage } from './features/admin/routes/AdminReserveManage.tsx';
 import { AdminReserveStatistics } from './features/admin/routes/AdminReserveStatistics.tsx';
 import { AdminRoot } from './features/admin/routes/AdminRoot.tsx';
-import Favorite from './features/favorite/routes/Favorite.tsx';
 import Home from './features/home/routes/Home.tsx';
 import Login from './features/login/routes/Login.tsx';
 import Profile from './features/profile/routes/Profile.tsx';
@@ -45,7 +44,6 @@ const router = createBrowserRouter([
     children: [
       { path: Locations.HOME, element: <Home /> },
       { path: Locations.RESERVE, element: <Reserve /> },
-      { path: Locations.FAVORITE, element: <Favorite /> },
       { path: Locations.PROFILE, element: <Profile /> },
     ],
   },

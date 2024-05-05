@@ -31,7 +31,12 @@ interface ContentProps {
 function Content({ children, loading = false, notData = false }: PropsWithChildren<ContentProps>) {
   if (loading) return <Loading />;
 
-  if (notData) return <NotData notDataPrefix="좌석 정보가" />;
+  if (notData)
+    return (
+      <div className="pt-12">
+        <NotData notDataPrefix="좌석 정보가" />
+      </div>
+    );
 
   return children;
 }
