@@ -1,9 +1,7 @@
 import React, { ComponentProps, PropsWithChildren } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { FavoriteIcon } from '@/assets/icons/Favorite';
 import { HomeIcon } from '@/assets/icons/Home';
-import { PlusIcon } from '@/assets/icons/Plus';
 import { ProfileIcon } from '@/assets/icons/Profile';
 import { ReserveIcon } from '@/assets/icons/Reserve';
 import { Locations } from '@/shared/constants/location.constant';
@@ -12,7 +10,7 @@ import { cn } from '@/shared/utils/class.util';
 function FooterRoot({ children, className, ...rest }: ComponentProps<'footer'>) {
   return (
     <footer className={cn('min-h-[var(--var-footer-height)] border-t', className)} {...rest}>
-      <ul className="grid h-full w-full grid-cols-5">{children}</ul>
+      <ul className="grid h-full w-full grid-cols-3">{children}</ul>
     </footer>
   );
 }
@@ -35,11 +33,7 @@ function FooterButton({ children, active = false, onClick }: PropsWithChildren<F
   );
 }
 
-interface AppFooterProps {
-  onClickPlusButton?: () => void;
-}
-
-export function AppFooter({ onClickPlusButton }: AppFooterProps) {
+export function AppFooter() {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -58,26 +52,7 @@ export function AppFooter({ onClickPlusButton }: AppFooterProps) {
         onClick={() => navigate(Locations.RESERVE)}
       >
         <ReserveIcon />
-        <p className="text-[0.6rem] font-semibold leading-[0.8rem]">예약</p>
-      </FooterButton>
-
-      <FooterButton onClick={onClickPlusButton}>
-        <article
-          className={cn(
-            'mb-2 rounded-full bg-primary p-2 text-white transition-transform',
-            'active:scale-110',
-          )}
-        >
-          <PlusIcon />
-        </article>
-      </FooterButton>
-
-      <FooterButton
-        active={location.pathname === Locations.FAVORITE}
-        onClick={() => navigate(Locations.FAVORITE)}
-      >
-        <FavoriteIcon />
-        <p className="text-[0.6rem] font-semibold leading-[0.8rem]">즐겨찾기</p>
+        <p className="text-[0.6rem] font-semibold leading-[0.8rem]">내 예약</p>
       </FooterButton>
 
       <FooterButton
