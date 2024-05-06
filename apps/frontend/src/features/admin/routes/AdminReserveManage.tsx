@@ -6,7 +6,6 @@ import { Model } from '@slavseat/types';
 import { format, formatDate, parse } from 'date-fns';
 
 import { useGetAllFloorSummaryQuery } from '@/shared/api/query/floor/get-all-floor-summary';
-import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
 import { useGetReserveByRangeDate } from '@/shared/api/query/reserve/get-reserve-by-range-date';
 import { RangeParams } from '@/shared/api/reserve';
 import { ColumnType, Table } from '@/shared/components/Table';
@@ -19,6 +18,7 @@ import {
   ManageReserveMenuActionType,
 } from '../components/Dropdown/ManageReserveMenu';
 import { CreateReserveModal } from '../components/Modal/CreateReserveModal';
+import { ReserveExcelDownload } from '../components/ReserveExcelDownload';
 import { useCancelReserveMutation } from '../hooks/cancel-reserve';
 import { useAdminAppStore } from '../stores/adminAppStore';
 
@@ -141,7 +141,7 @@ export function AdminReserveManage() {
 
   return (
     <div className="flex h-[calc(100vh_-_var(--var-admin-header-height))] flex-col gap-4 overflow-hidden p-4">
-      <div className="flex gap-4">
+      <div className={cn('flex gap-4', 'bg-white', 'rounded-lg', 'shadow-sm')}>
         <Box fullWidth className="flex-1" innerClassName={cn('flex gap-4')} title="필터">
           <span>
             <div className="text-xs">날짜</div>
@@ -205,16 +205,20 @@ export function AdminReserveManage() {
         </Box>
 
         <Box title="동작">
-          <button
-            className="rounded-xl bg-violet-600 px-4 py-2 text-white"
-            onClick={() => setAdminReserveModalOpen(true)}
-          >
-            새 예약
-          </button>
+          <div className="flex items-center gap-x-4">
+            <ReserveExcelDownload columns={columns} data={filteredReserveList} />
+
+            <button
+              className="rounded-xl bg-violet-600 px-4 py-2 text-white"
+              onClick={() => setAdminReserveModalOpen(true)}
+            >
+              새 예약
+            </button>
+          </div>
         </Box>
       </div>
       {/* <ScrollArea> */}
-      <div className="flex-1">
+      <div className={cn('flex-1', 'bg-white', 'rounded-lg', 'shadow-sm')}>
         <Table fillHeight columns={columns} data={filteredReserveList} rowHeight={40} />
       </div>
       {/* </ScrollArea> */}
