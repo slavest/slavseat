@@ -1,14 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { ReactZoomPanPinchContentRef } from 'react-zoom-pan-pinch';
 
 import { Model } from '@slavseat/types';
 import { format, formatDate, parse } from 'date-fns';
 
 import { useGetAllFloorSummaryQuery } from '@/shared/api/query/floor/get-all-floor-summary';
 import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
+import { useGetReserveByRangeDate } from '@/shared/api/query/reserve/get-reserve-by-range-date';
+import { RangeParams } from '@/shared/api/reserve';
 import { ColumnType, Table } from '@/shared/components/Table';
-import { formatMMDDHHMM } from '@/shared/constants/date.constant';
+import { formatFullDay } from '@/shared/constants/date.constant';
 import { cn } from '@/shared/utils/class.util';
 
 import { Box } from '../components/Box';
@@ -17,7 +19,6 @@ import {
   ManageReserveMenuActionType,
 } from '../components/Dropdown/ManageReserveMenu';
 import { CreateReserveModal } from '../components/Modal/CreateReserveModal';
-import { ViewFacilityInGrid } from '../components/Modal/ViewFacilityInGrid';
 import { useCancelReserveMutation } from '../hooks/cancel-reserve';
 import { useAdminAppStore } from '../stores/adminAppStore';
 
@@ -25,7 +26,13 @@ export function AdminReserveManage() {
   const { setTitle } = useAdminAppStore();
   useEffect(() => setTitle('예약 관리'), [setTitle]);
 
-  const [date, setDate] = useState<Date>(new Date());
+  const { watch, setValue } = useForm<RangeParams>({
+    defaultValues: { startDate: new Date(), endDate: new Date() },
+  });
+
+  const startDate = watch('startDate');
+  const endDate = watch('endDate');
+
   const [searchUserName, setSearchUserName] = useState<string>('');
   const [searchId, setSearchId] = useState<string>('');
   const [searchFloorId, setSearchFloorId] = useState<number>();
@@ -38,7 +45,7 @@ export function AdminReserveManage() {
   });
 
   const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
-  const { data: reserveList } = useGetReserveByDate(date);
+  const { data: reserveList } = useGetReserveByRangeDate({ startDate, endDate });
 
   const filteredReserveList = useMemo(
     () =>
@@ -53,6 +60,26 @@ export function AdminReserveManage() {
     [reserveList, searchFloorId, searchId, searchUserName],
   );
 
+  const handleChangeStartDate = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newStartDate = parse(event.target.value, 'yyyy-MM-dd', new Date());
+
+      if (!endDate || endDate.getTime() < newStartDate.getTime()) {
+        setValue('endDate', parse(event.target.value, 'yyyy-MM-dd', new Date()));
+      }
+
+      setValue('startDate', newStartDate);
+    },
+    [endDate, setValue],
+  );
+
+  const handleChangeEndDate = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setValue('endDate', parse(event.target.value, 'yyyy-MM-dd', new Date()));
+    },
+    [setValue],
+  );
+
   const handleReserveAction = useCallback(
     (action: ManageReserveMenuActionType, reserve: Model.ReserveInfo) => {
       if (action.type === 'cancleReserve') cancleReserveMutation(reserve.id);
@@ -61,19 +88,19 @@ export function AdminReserveManage() {
   );
 
   const columns: ColumnType<Model.ReserveInfo>[] = [
-    { dataKey: 'id', headerContent: '예약 번호', flexGrow: 0.5 },
+    { dataKey: 'id', headerContent: '예약 번호', flexGrow: 0.5, align: 'center' },
     { dataKey: 'user.name', headerContent: '사용자명', flexGrow: 1, fullText: true },
     {
       dataKey: 'start',
-      headerContent: '시작 시간',
+      headerContent: '사용 시작 시간',
       flexGrow: 1,
-      renderContent: ({ start }) => formatDate(start, formatMMDDHHMM),
+      renderContent: ({ start }) => formatDate(start, formatFullDay),
     },
     {
       dataKey: 'end',
-      headerContent: '종료 시간',
+      headerContent: '사용 종료 시간',
       flexGrow: 1,
-      renderContent: ({ end }) => (end ? formatDate(end, formatMMDDHHMM) : null),
+      renderContent: ({ end }) => (end ? formatDate(end, formatFullDay) : null),
     },
     {
       dataKey: 'always',
@@ -118,12 +145,22 @@ export function AdminReserveManage() {
         <Box fullWidth className="flex-1" innerClassName={cn('flex gap-4')} title="필터">
           <span>
             <div className="text-xs">날짜</div>
-            <input
-              className="rounded-md border border-neutral-400 p-1 text-sm focus:outline-purple-600"
-              type="date"
-              value={format(date, 'yyyy-MM-dd')}
-              onChange={(e) => setDate(parse(e.target.value, 'yyyy-MM-dd', new Date()))}
-            />
+
+            <div className={cn('flex items-center gap-x-2')}>
+              <input
+                className="rounded-md border border-neutral-400 p-1 text-sm focus:outline-purple-600"
+                type="date"
+                value={format(startDate, 'yyyy-MM-dd')}
+                onChange={handleChangeStartDate}
+              />
+              ~
+              <input
+                className="rounded-md border border-neutral-400 p-1 text-sm focus:outline-purple-600"
+                type="date"
+                value={format(endDate, 'yyyy-MM-dd')}
+                onChange={handleChangeEndDate}
+              />
+            </div>
           </span>
 
           <span>
@@ -178,7 +215,7 @@ export function AdminReserveManage() {
       </div>
       {/* <ScrollArea> */}
       <div className="flex-1">
-        <Table fillHeight columns={columns} data={filteredReserveList} />
+        <Table fillHeight columns={columns} data={filteredReserveList} rowHeight={40} />
       </div>
       {/* </ScrollArea> */}
 
