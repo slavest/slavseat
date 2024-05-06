@@ -8,7 +8,7 @@ RUN turbo prune --scope=frontend --docker
 FROM node:20-alpine AS installer
 
 WORKDIR /app
-RUN npm i -g pnpm
+RUN npm i -g pnpm@9.0.6
 COPY --from=base /app/out/json/ .
 COPY --from=base /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=base /app/turbo.json ./turbo.json
@@ -17,7 +17,7 @@ RUN pnpm install --frozen-lockfile
 
 FROM node:20-alpine AS sourcer
 WORKDIR /app
-RUN npm i -g pnpm
+RUN npm i -g pnpm@9.0.6
 COPY --from=installer /app/ .
 COPY --from=base /app/out/full/ .
 COPY ./apps/frontend/dist ./apps/frontend/dist
