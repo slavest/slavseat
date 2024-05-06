@@ -109,8 +109,11 @@ function FacilityGridViewer({
               'flex items-center justify-center',
               'select-none',
               'rounded-md border border-neutral-200 bg-neutral-50',
-              'cursor-pointer',
-              { 'border-black': selected?.includes(facility.id) },
+
+              {
+                'border-black': selected?.includes(facility.id),
+                'cursor-pointer': facility.type === Model.FacilityType.SEAT,
+              },
             )}
           >
             <div className="flex flex-col items-center justify-center gap-2">
