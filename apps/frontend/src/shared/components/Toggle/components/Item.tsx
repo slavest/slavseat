@@ -23,6 +23,7 @@ export function Item({ value, children, onClick, className, ...rest }: ItemProps
     <div
       className={cn(
         'rounded-md px-2 py-1 text-xs text-neutral-400 transition-colors',
+        'cursor-pointer',
         { 'bg-primary text-white': contextValue === value },
         className,
       )}
