@@ -12,7 +12,6 @@ import { ColumnType, Table } from '@/shared/components/Table';
 import { formatFullDay } from '@/shared/constants/date.constant';
 import { cn } from '@/shared/utils/class.util';
 
-import { Box } from '../components/Box';
 import {
   ManageReserveMenu,
   ManageReserveMenuActionType,
@@ -88,7 +87,7 @@ export function AdminReserveManage() {
   );
 
   const columns: ColumnType<Model.ReserveInfo>[] = [
-    { dataKey: 'id', headerContent: '예약 번호', flexGrow: 0.5, align: 'center' },
+    { dataKey: 'id', headerContent: '예약 번호', flexGrow: 0.35, align: 'center' },
     { dataKey: 'user.name', headerContent: '사용자명', flexGrow: 1, fullText: true },
     {
       dataKey: 'start',
@@ -142,20 +141,28 @@ export function AdminReserveManage() {
   return (
     <div className="flex h-[calc(100vh_-_var(--var-admin-header-height))] flex-col gap-4 overflow-hidden p-4">
       <div className={cn('flex gap-4', 'bg-white', 'rounded-lg', 'shadow-sm')}>
-        <Box fullWidth className="flex-1" innerClassName={cn('flex gap-4')} title="필터">
+        <div className={cn('flex flex-wrap items-center', 'gap-4', 'px-6 py-4')}>
           <span>
             <div className="text-xs">날짜</div>
 
             <div className={cn('flex items-center gap-x-2')}>
               <input
-                className="rounded-md border border-neutral-400 p-1 text-sm focus:outline-purple-600"
+                className={cn(
+                  'h-9',
+                  'px-3',
+                  'rounded-md border border-neutral-400 text-sm focus:outline-purple-600',
+                )}
                 type="date"
                 value={format(startDate, 'yyyy-MM-dd')}
                 onChange={handleChangeStartDate}
               />
               ~
               <input
-                className="rounded-md border border-neutral-400 p-1 text-sm focus:outline-purple-600"
+                className={cn(
+                  'h-9',
+                  'px-3',
+                  'rounded-md border border-neutral-400 text-sm focus:outline-purple-600',
+                )}
                 type="date"
                 value={format(endDate, 'yyyy-MM-dd')}
                 onChange={handleChangeEndDate}
@@ -166,7 +173,11 @@ export function AdminReserveManage() {
           <span>
             <div className="text-xs">층</div>
             <select
-              className="rounded-md border border-neutral-400 p-1 text-sm focus:outline-purple-600"
+              className={cn(
+                'h-9',
+                'px-3',
+                'rounded-md border border-neutral-400 text-sm focus:outline-purple-600',
+              )}
               value={searchFloorId}
               onChange={(e) =>
                 setSearchFloorId(e.target.value ? Number(e.target.value) : undefined)
@@ -186,7 +197,11 @@ export function AdminReserveManage() {
           <span>
             <div className="text-xs">사용자명</div>
             <input
-              className="rounded-md border border-neutral-400 p-1 text-sm focus:outline-purple-600"
+              className={cn(
+                'h-9',
+                'px-3',
+                'rounded-md border border-neutral-400 text-sm focus:outline-purple-600',
+              )}
               type="text"
               value={searchUserName}
               onChange={(e) => setSearchUserName(e.target.value)}
@@ -196,27 +211,35 @@ export function AdminReserveManage() {
           <span>
             <div className="text-xs">예약 번호</div>
             <input
-              className="rounded-md border border-neutral-400 p-1 text-sm focus:outline-purple-600"
+              className={cn(
+                'h-9 w-[5rem]',
+                'px-3',
+                'rounded-md border border-neutral-400 text-sm focus:outline-purple-600',
+              )}
               type="number"
               value={searchId}
               onChange={(e) => setSearchId(e.target.value)}
             />
           </span>
-        </Box>
 
-        <Box title="동작">
-          <div className="flex items-center gap-x-4">
-            <ReserveExcelDownload columns={columns} data={filteredReserveList} />
-
-            <button
-              className="rounded-xl bg-violet-600 px-4 py-2 text-white"
-              onClick={() => setAdminReserveModalOpen(true)}
-            >
-              새 예약
-            </button>
+          <div className={cn('w-fit', 'px-4 py-2', 'bg-white')}>
+            검색된 데이터{' '}
+            <span className="font-semibold text-purple-800">{filteredReserveList?.length}개</span>
           </div>
-        </Box>
+        </div>
+
+        <div className={cn('flex items-center gap-x-4', 'pl-6', 'border-l')}>
+          <ReserveExcelDownload columns={columns} data={filteredReserveList} />
+
+          <button
+            className="rounded-xl bg-violet-600 px-4 py-2 text-white"
+            onClick={() => setAdminReserveModalOpen(true)}
+          >
+            새 예약
+          </button>
+        </div>
       </div>
+
       {/* <ScrollArea> */}
       <div className={cn('flex-1', 'bg-white', 'rounded-lg', 'shadow-sm')}>
         <Table fillHeight columns={columns} data={filteredReserveList} rowHeight={40} />
