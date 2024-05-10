@@ -23,6 +23,7 @@ import { User } from '../user/entity/user.entity';
 import { AddAdminReserveRequestDto } from './dto/request/addAdminReserveRequest.dto';
 import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
 import { GetReserveByDateRequestDto } from './dto/request/getReserveByDateRequest.dto';
+import { GetReserveByRangeDateRequestDto } from './dto/request/getReserveByRangeDateRequest.dto';
 import { RemoveReserveRequestDto } from './dto/request/removeReserveRequest.dto';
 import { GetReserveByDateResponseDto } from './dto/response/getReserveByDateResponse.dto';
 import { GetReserveByUserResponseDto } from './dto/response/getReserveByUserResponse.dto';
@@ -40,18 +41,10 @@ export class ReserveController {
   @ApiBearerAuth()
   @ApiOperation({ summary: '좌석 예약' })
   @ApiCreatedResponse({ type: Reserve })
-  async addReserve(
-    @AuthUser() user: User,
-    @Body() addReserveRequestDto: AddReserveRequestDto,
-  ) {
+  async addReserve(@AuthUser() user: User, @Body() addReserveRequestDto: AddReserveRequestDto) {
     if (addReserveRequestDto.always)
-      throw new ForbiddenException(
-        '고정석 예약은 관리자 페이지에서만 가능합니다.',
-      );
-    return this.reserveService.addReserve(
-      user.id,
-      addReserveRequestDto,
-    );
+      throw new ForbiddenException('고정석 예약은 관리자 페이지에서만 가능합니다.');
+    return this.reserveService.addReserve(user.id, addReserveRequestDto);
   }
 
   @Post('/admin')
@@ -59,9 +52,7 @@ export class ReserveController {
   @ApiBearerAuth()
   @ApiOperation({ summary: '좌석 예약' })
   @ApiCreatedResponse({ type: Reserve })
-  async addAdminReserve(
-    @Body() addAdminReserveRequestDto: AddAdminReserveRequestDto,
-  ) {
+  async addAdminReserve(@Body() addAdminReserveRequestDto: AddAdminReserveRequestDto) {
     return this.reserveService.addReserve(
       addAdminReserveRequestDto.userId,
       addAdminReserveRequestDto,
@@ -74,12 +65,20 @@ export class ReserveController {
     type: GetReserveByDateResponseDto,
     isArray: true,
   })
-  async getReserveByDate(
-    @Query() getReserveByDateRequestDto: GetReserveByDateRequestDto,
+  async getReserveByDate(@Query() getReserveByDateRequestDto: GetReserveByDateRequestDto) {
+    return this.reserveService.getReserveByDate(getReserveByDateRequestDto);
+  }
+
+  @Get('/range')
+  @ApiOperation({ summary: '범위 날짜 기준 좌석 예약 조회' })
+  @ApiOkResponse({
+    type: GetReserveByDateResponseDto,
+    isArray: true,
+  })
+  async getReserveByRangeDate(
+    @Query() getReserveByRangeDateRequestDto: GetReserveByRangeDateRequestDto,
   ) {
-    return this.reserveService.getReserveByDate(
-      getReserveByDateRequestDto,
-    );
+    return this.reserveService.getReserveByRangeDate(getReserveByRangeDateRequestDto);
   }
 
   @Get('/user')
@@ -99,13 +98,7 @@ export class ReserveController {
   @ApiBearerAuth()
   @ApiOperation({ summary: '예약 취소' })
   @ApiOkResponse({ type: RemoveReserveResponseDto })
-  async removeReserve(
-    @AuthUser() user: User,
-    @Param() removeReserveDto: RemoveReserveRequestDto,
-  ) {
-    return this.reserveService.removeReserve(
-      user.id,
-      removeReserveDto,
-    );
+  async removeReserve(@AuthUser() user: User, @Param() removeReserveDto: RemoveReserveRequestDto) {
+    return this.reserveService.removeReserve(user.id, removeReserveDto);
   }
 }

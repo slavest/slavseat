@@ -112,7 +112,7 @@ export function AddReserveForm() {
         >
           <Toggle.Item value="day">종일</Toggle.Item>
           <Toggle.Item value="period">시간차</Toggle.Item>
-          <Toggle.Item value="always">고정석</Toggle.Item>
+          {/* <Toggle.Item value="always">고정석</Toggle.Item> */}
         </Toggle.Root>
       </ReserveDrawerHeader>
 

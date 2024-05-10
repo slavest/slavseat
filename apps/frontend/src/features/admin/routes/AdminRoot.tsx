@@ -7,6 +7,7 @@ import ScrollArea from '@/shared/components/ScrollArea';
 import { Locations } from '@/shared/constants/location.constant';
 import { useInitialize } from '@/shared/hooks/useInitialize';
 import { LogoWithoutNameIcon } from '@/shared/icons/LogoWithoutNameIcon';
+import { cn } from '@/shared/utils/class.util';
 
 import { AdminHeader } from '../components/AdminHeader';
 import { SideBar } from '../components/SideBar';
@@ -51,7 +52,13 @@ export function AdminRoot() {
               </SideBar.ItemGroup>
             </SideBar>
 
-            <div className="flex max-h-screen w-[calc(100%_-_var(--var-admin-sidebar-width))] flex-1 flex-col">
+            <div
+              className={cn(
+                'max-h-screen w-[calc(100%_-_var(--var-admin-sidebar-width))]',
+                'flex flex-1 flex-col',
+                'bg-neutral-100',
+              )}
+            >
               <AdminHeader title={title} />
               <ScrollArea>
                 <Outlet />

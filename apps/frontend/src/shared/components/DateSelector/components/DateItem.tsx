@@ -26,6 +26,7 @@ export function DateItem({
     <div
       className={cn(
         'flex h-10 w-10 flex-col items-center justify-center rounded-[10px] text-center',
+        'cursor-pointer',
         {
           'opacity-50': disabled,
           'text-red-500': day === 0 || day === 6,

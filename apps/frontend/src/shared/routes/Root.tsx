@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
-import { FaBoltLightning } from 'react-icons/fa6';
+import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { Bounce, ToastContainer, toast } from 'react-toastify';
+import { Bounce, ToastContainer } from 'react-toastify';
 
 import { useWindowSize } from 'usehooks-ts';
 
 import { useInitialize } from '@/shared/hooks/useInitialize';
 
 import { AppFooter } from '../components/AppFooter';
-import { Button } from '../components/Button';
-import { FloatingDrawer } from '../components/Drawer';
 import { Loading } from '../components/Loading';
 import { LogoWithNameIcon } from '../icons/LogoWithNameIcon';
 import { useAppStore } from '../stores/appStore';
@@ -124,16 +121,15 @@ function IosGuide() {
 function Root() {
   const { initialized } = useInitialize();
   const { isPWA, deviceOS } = useAppStore();
-  const [isOpenShortcut, setIsOpenShortcut] = useState(false);
+  // const [isOpenShortcut, setIsOpenShortcut] = useState(false);
   const { width } = useWindowSize();
 
-  const openShortcut = () => setIsOpenShortcut(true);
-  const closeShortcut = () => setIsOpenShortcut(false);
+  // const closeShortcut = () => setIsOpenShortcut(false);
 
-  const quickAddReserve = () => {
-    toast.info('구현 예정 기능입니다.');
-    closeShortcut();
-  };
+  // const quickAddReserve = () => {
+  //   toast.info('구현 예정 기능입니다.');
+  //   closeShortcut();
+  // };
 
   return (
     <div
@@ -175,8 +171,8 @@ function Root() {
               <Outlet />
             </main>
 
-            <AppFooter onClickPlusButton={openShortcut} />
-
+            <AppFooter />
+            {/* 
             <FloatingDrawer open={isOpenShortcut} onClose={closeShortcut}>
               <Button
                 className="flex items-center justify-center gap-x-3"
@@ -186,7 +182,7 @@ function Root() {
                 <FaBoltLightning />
                 잔여 좌석 바로 예약하기
               </Button>
-            </FloatingDrawer>
+            </FloatingDrawer> */}
           </>
         ) : (
           <Loading />
