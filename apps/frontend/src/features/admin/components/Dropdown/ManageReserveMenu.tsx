@@ -1,5 +1,5 @@
 import React from 'react';
-import { HiEllipsisHorizontal } from 'react-icons/hi2';
+import { AiFillTool } from 'react-icons/ai';
 
 import { DropdownMenu } from '@/shared/components/DropdownMenu';
 
@@ -22,7 +22,7 @@ export function ManageReserveMenu({ onAction }: ManageReserveMenuProps) {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button>
-          <HiEllipsisHorizontal />
+          <AiFillTool />
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>

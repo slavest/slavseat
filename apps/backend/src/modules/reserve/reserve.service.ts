@@ -18,6 +18,7 @@ import { User } from '../user/entity/user.entity';
 import { UserService } from '../user/user.service';
 import { AddReserveRequestDto } from './dto/request/addReserveRequest.dto';
 import { GetReserveByDateRequestDto } from './dto/request/getReserveByDateRequest.dto';
+import { GetReserveByRangeDateRequestDto } from './dto/request/getReserveByRangeDateRequest.dto';
 import { RemoveReserveRequestDto } from './dto/request/removeReserveRequest.dto';
 import { GetReserveByDateResponseDto } from './dto/response/getReserveByDateResponse.dto';
 import { RemoveReserveResponseDto } from './dto/response/removeReserveResponse.dto';
@@ -198,6 +199,33 @@ export class ReserveService {
         },
         {
           end: Between(startDate, endDate),
+        },
+        {
+          start: LessThanOrEqual(startDate),
+          always: true,
+        },
+      ],
+      relations: { facility: { floor: true }, user: true },
+    });
+
+    return reserves;
+  }
+
+  async getReserveByRangeDate(
+    getReserveByDateRequestDto: GetReserveByRangeDateRequestDto,
+  ): Promise<GetReserveByDateResponseDto[]> {
+    const { startDate: reqStartDate, endDate: reqEndDate } = getReserveByDateRequestDto;
+
+    const startDate = new Date(reqStartDate);
+    startDate.setHours(0, 0, 0, 0);
+    const endDate = new Date(reqEndDate);
+    endDate.setHours(23, 59, 59, 999);
+
+    const reserves = await this.reserveRepository.find({
+      where: [
+        {
+          start: MoreThanOrEqual(startDate),
+          end: LessThanOrEqual(endDate),
         },
         {
           start: LessThanOrEqual(startDate),

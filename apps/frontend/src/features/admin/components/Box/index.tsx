@@ -19,10 +19,10 @@ export function Box({
 }: BoxProps) {
   return (
     <div {...rest}>
-      <div className="text-zinc-500 text-sm">{title}</div>
+      <div className="text-sm text-zinc-500">{title}</div>
       <div
         className={cn(
-          'inline-block border-dashed border-2 rounded-md border-zinc-500 space-x-2',
+          'inline-block space-x-2 rounded-md border-2 border-dashed border-zinc-500',
           { 'p-4': innerPadding, 'w-full': fullWidth },
           innerClassName,
         )}

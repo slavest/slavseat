@@ -20,6 +20,29 @@ export const getReserveListByDate = async (date: Date) => {
     );
 };
 
+export interface RangeParams {
+  startDate: Date;
+  endDate: Date;
+}
+
+export const getReserveListByRangeDate = async (params: RangeParams) => {
+  return axiosInstance
+    .get<Model.ReserveInfo[]>('/api/reserve/range', {
+      params: {
+        startDate: format(params.startDate, 'yyyy-MM-dd'),
+        endDate: format(params.endDate, 'yyyy-MM-dd'),
+      },
+    })
+    .then(
+      (res) =>
+        res.data.map((reserve) => ({
+          ...reserve,
+          start: new Date(reserve.start),
+          end: reserve.end ? new Date(reserve.end) : null,
+        })) as Model.ReserveInfo[],
+    );
+};
+
 export const getReserveListByUser = async () => {
   return axiosInstance.get<Model.ReserveInfo[]>('/api/reserve/user').then(
     (res) =>

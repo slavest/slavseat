@@ -10,9 +10,8 @@ FROM node:20-alpine AS installer
 WORKDIR /app
 RUN corepack enable
 COPY --from=base /app/out/json/ .
-COPY --from=base /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=base /app/turbo.json ./turbo.json
-RUN pnpm install --production --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 
 FROM node:20-alpine AS sourcer

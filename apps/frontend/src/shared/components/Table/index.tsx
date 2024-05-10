@@ -29,7 +29,7 @@ export function Table({ data, columns, className, rowHeight = 36, ...rest }: Tab
     <rt.Table className={cn('text-sm', className)} data={data} rowHeight={rowHeight} {...rest}>
       {columns.map(({ dataKey, headerContent, renderContent, ...rest }) => (
         <rt.Column key={dataKey} {...rest}>
-          <rt.HeaderCell className="[&>.rs-table-cell-first]:rounded-l-lg [&>.rs-table-cell-last]:rounded-r-lg [&>.rs-table-cell]:bg-neutral-700 [&>.rs-table-cell]:text-white">
+          <rt.HeaderCell className="[&>.rs-table-cell-first]:rounded-tl-lg [&>.rs-table-cell-last]:rounded-tr-lg [&>.rs-table-cell]:bg-neutral-700 [&>.rs-table-cell]:text-white">
             {headerContent}
           </rt.HeaderCell>
           <rt.Cell dataKey={dataKey}>{renderContent}</rt.Cell>

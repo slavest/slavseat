@@ -9,9 +9,7 @@ import { useUpdateFacilityMutation } from '@/shared/api/query/facility/update-fa
 import { useGetAllFloorSummaryQuery } from '@/shared/api/query/floor/get-all-floor-summary';
 import { useGetFloorDetailQuery } from '@/shared/api/query/floor/get-floor-detail';
 import { Button } from '@/shared/components/Button';
-import FacilityGridEditor, {
-  FacilityGridEditorMode,
-} from '@/shared/components/FacilityGridEditor';
+import FacilityGridEditor, { FacilityGridEditorMode } from '@/shared/components/FacilityGridEditor';
 import ScrollArea from '@/shared/components/ScrollArea';
 import { cn } from '@/shared/utils/class.util';
 
@@ -23,38 +21,29 @@ export function AdminFacilityEdit() {
   useEffect(() => setTitle('Facility 관리'), [setTitle]);
 
   const [editingFloor, setEditingFloor] = useState<number>();
-  const [editorMode, setEditorMode] =
-    useState<FacilityGridEditorMode>('edit');
-  const [selectedFacility, setSelectedFacility] = useState<
-    Model.FacilitySummary[]
-  >([]);
-  const [facilityType, setFacilityType] =
-    useState<Model.FacilityType>(Model.FacilityType.NONE);
+  const [editorMode, setEditorMode] = useState<FacilityGridEditorMode>('edit');
+  const [selectedFacility, setSelectedFacility] = useState<Model.FacilitySummary[]>([]);
+  const [facilityType, setFacilityType] = useState<Model.FacilityType>(Model.FacilityType.NONE);
   const [facilityName, setFacilityName] = useState('');
-  const [editingFacilities, setEditingFacilities] = useState<
-    Model.FacilitySummary[]
-  >([]);
+  const [editingFacilities, setEditingFacilities] = useState<Model.FacilitySummary[]>([]);
 
   const { mutate: addFacilityMutation } = useAddFacilityMutation({
     onSuccess: () => toast.success('추가를 완료했습니다.'),
     onError: (e) => toast.error(e.response?.data?.message),
   });
-  const { mutate: updateFacilityMutation } =
-    useUpdateFacilityMutation({
-      onSuccess: () => toast.success('저장을 완료했습니다.'),
-      onError: (e) => toast.error(e.response?.data?.message),
-    });
-  const { mutate: removeFacilityMutation } =
-    useRemoveFacilityMutation({
-      onSuccess: () => toast.success('삭제를 완료했습니다.'),
-      onError: (e) => toast.error(e.response?.data?.message),
-    });
+  const { mutate: updateFacilityMutation } = useUpdateFacilityMutation({
+    onSuccess: () => toast.success('저장을 완료했습니다.'),
+    onError: (e) => toast.error(e.response?.data?.message),
+  });
+  const { mutate: removeFacilityMutation } = useRemoveFacilityMutation({
+    onSuccess: () => toast.success('삭제를 완료했습니다.'),
+    onError: (e) => toast.error(e.response?.data?.message),
+  });
 
   const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
-  const { data: floorDetail } = useGetFloorDetailQuery(
-    editingFloor!,
-    { enabled: editingFloor !== undefined },
-  );
+  const { data: floorDetail } = useGetFloorDetailQuery(editingFloor!, {
+    enabled: editingFloor !== undefined,
+  });
   useEffect(() => {
     if (floorDetail) setEditingFacilities(floorDetail.facilities);
   }, [floorDetail]);
@@ -85,12 +74,9 @@ export function AdminFacilityEdit() {
       <div className="flex gap-2">
         <Box title="Floor 선택">
           <select
-            className="border border-neutral-200 rounded text-sm"
+            className="rounded border border-neutral-200 text-sm"
             value={editingFloor}
-            onChange={(e) =>
-              e.target.value &&
-              setEditingFloor(Number(e.target.value))
-            }
+            onChange={(e) => e.target.value && setEditingFloor(Number(e.target.value))}
           >
             <option value="" key="">
               층을 선택해 주세요
@@ -104,33 +90,25 @@ export function AdminFacilityEdit() {
         </Box>
 
         <Box title="Facility 추가 폼">
-          <div className="inline-flex flex-col my-auto">
+          <div className="my-auto inline-flex flex-col">
             <input
               placeholder="Facility 이름"
               onChange={(e) => setFacilityName(e.target.value)}
-              className="px-2 py-1 border border-zinc-500 rounded-md text-sm"
+              className="rounded-md border border-zinc-500 px-2 py-1 text-sm"
             />
             <select
-              className="border border-neutral-200 rounded text-sm"
+              className="rounded border border-neutral-200 text-sm"
               value={facilityType}
               onChange={(e) => {
-                setFacilityType(
-                  Number(e.target.value) as Model.FacilityType,
-                );
+                setFacilityType(Number(e.target.value) as Model.FacilityType);
               }}
             >
-              <option value={Model.FacilityType.MEETING_ROOM}>
-                회의실
-              </option>
+              <option value={Model.FacilityType.MEETING_ROOM}>회의실</option>
               <option value={Model.FacilityType.SEAT}>좌석</option>
               <option value={Model.FacilityType.NONE}>기타</option>
             </select>
           </div>
-          <Button
-            variant="tertiary"
-            className="my-auto"
-            onClick={handleClickAddFacility}
-          >
+          <Button variant="tertiary" className="my-auto" onClick={handleClickAddFacility}>
             Facility 추가
           </Button>
         </Box>
@@ -140,31 +118,21 @@ export function AdminFacilityEdit() {
             <Button
               variant="tertiary"
               className="text-sm"
-              onClick={() =>
-                setEditorMode((prev) =>
-                  prev === 'edit' ? 'select' : 'edit',
-                )
-              }
+              onClick={() => setEditorMode((prev) => (prev === 'edit' ? 'select' : 'edit'))}
             >
               모드 전환 ({editorMode})
             </Button>
             <Button
               variant="tertiary"
               className="text-sm"
-              onClick={() =>
-                updateFacilityMutation(editingFacilities)
-              }
+              onClick={() => updateFacilityMutation(editingFacilities)}
             >
               Facility 저장
             </Button>
             <Button
               variant="tertiary"
               className="text-sm"
-              onClick={() =>
-                removeFacilityMutation(
-                  selectedFacility.map((v) => v.id),
-                )
-              }
+              onClick={() => removeFacilityMutation(selectedFacility.map((v) => v.id))}
             >
               선택된 Facility 삭제
             </Button>
@@ -175,7 +143,7 @@ export function AdminFacilityEdit() {
       {floorDetail && (
         <ScrollArea
           className={cn(
-            'mt-4 border-dashed border-2 rounded-md border-zinc-500 max-w-full',
+            'mt-4 max-w-full rounded-md border-2 border-dashed border-zinc-500 bg-white',
           )}
         >
           <FacilityGridEditor
