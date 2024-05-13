@@ -10,7 +10,8 @@ on:
         required: true
 
 env:
-  DOCKER_IMAGE: ghcr.io/slavest/slavseat-${{ inputs.type }} # ghcr에 업로드될 이미지 이름, format: ghcr.io/깃허브유저이름/이미지이름
+  AZURE_DOCKER_IMAGE: esaksregistry.azurecr.io/booksy-${{ inputs.type }}
+  GHCR_DOCKER_IMAGE: ghcr.io/slavest/slavseat-${{ inputs.type }} # ghcr에 업로드될 이미지 이름, format: ghcr.io/깃허브유저이름/이미지이름
 
 jobs:
   docker-build:
@@ -86,9 +87,9 @@ jobs:
           file: ./apps/${{ inputs.type }}/Dockerfile
           context: .
           push: ${{ inputs.env == 'production' }} # ghcr에 push
-          tags: ${{ env.DOCKER_IMAGE }}:${{ github.run_id }},${{ env.DOCKER_IMAGE }}:latest # 이미지 버전 [이미지 고유 아이디, latest]
+          tags: ${{ env.AZURE_DOCKER_IMAGE }}:${{ github.run_id }},${{ env.AZURE_DOCKER_IMAGE }}:latest,${{ env.GHCR_DOCKER_IMAGE }}:${{ github.run_id }},${{ env.GHCR_DOCKER_IMAGE }}:latest # 이미지 버전 [이미지 고유 아이디, latest]
           build-args: |
             NPM_TOKEN=${{ secrets.NPM_TOKEN }}
-          platforms: linux/arm64
+          platforms: linux/arm64,linux/amd64
           cache-from: type=gha # 여기서 gha 는 Guthub Actions 용 캐시를 의미합니다.
           cache-to: type=gha,mode=max
