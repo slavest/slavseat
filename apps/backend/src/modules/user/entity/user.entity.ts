@@ -2,12 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Model } from '@slavseat/types';
 import { Type } from 'class-transformer';
 import { IsDate, IsNumber, IsString } from 'class-validator';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User implements Model.UserInfo {
@@ -26,10 +21,10 @@ export class User implements Model.UserInfo {
   @ApiProperty({ description: '이메일' })
   email: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   @IsString()
-  @ApiProperty({ description: 'OAuth Provider의 ID' })
-  providerId: string;
+  @ApiProperty({ description: 'OAuth Provider의 ID', nullable: true })
+  providerId?: string;
 
   @CreateDateColumn()
   @IsDate()
