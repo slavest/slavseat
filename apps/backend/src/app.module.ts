@@ -13,6 +13,7 @@ import { JwtModule } from './modules/jwt/jwt.module';
 import { ReserveModule } from './modules/reserve/reserve.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
 import { UserModule } from './modules/user/user.module';
+import { CompanyModule } from './modules/company/company.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserModule } from './modules/user/user.module';
     JwtModule,
     AdminModule,
     StatisticsModule,
+    CompanyModule,
   ],
   providers: [
     {

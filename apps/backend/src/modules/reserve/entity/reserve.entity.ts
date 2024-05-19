@@ -1,22 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Model } from '@slavseat/types';
 import { Type } from 'class-transformer';
-import {
-  IsDate,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsDate, IsNumber, IsOptional } from 'class-validator';
 import { IsBoolean } from 'src/libs/decorator/isBoolean.decorator';
 import { Facility } from 'src/modules/facility/entity/facility.entity';
 import { User } from 'src/modules/user/entity/user.entity';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -61,4 +56,9 @@ export class Reserve implements Model.ReserveInfoBase {
   @IsDate()
   @ApiProperty({ description: '등록 일시' })
   createdAt: Date;
+
+  @DeleteDateColumn()
+  @IsDate()
+  @ApiProperty({ description: '삭제 일시' })
+  deletedAt: Date;
 }

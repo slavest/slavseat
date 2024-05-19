@@ -19,7 +19,7 @@
     "semantic-release-monorepo": "^8.0.2",
     "turbo": "latest"
   },
-  "packageManager": "pnpm@9.0.6",
+  "packageManager": "pnpm@9.1.0",
   "engines": {
     "node": ">=20"
   }
