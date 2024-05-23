@@ -24,6 +24,9 @@ export const options: DataSourceOptions = {
   migrationsRun: false,
   dropSchema: process.env.NODE_ENV === 'test',
   timezone: 'Z',
+  ssl: {
+    ca: process.env.DB_SSL_CERT,
+  },
   // authSource: 'admin',
 };
 
