@@ -2,6 +2,8 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Bounce, ToastContainer } from 'react-toastify';
 
+import { useWindowSize } from 'usehooks-ts';
+
 import { useInitialize } from '@/shared/hooks/useInitialize';
 
 import { AppFooter } from '../components/AppFooter';
@@ -13,14 +15,17 @@ function Root() {
   const { initialized } = useInitialize();
   const { isPWA, deviceOS } = useAppStore();
 
+  const { width } = useWindowSize();
+
   return (
     <div
       className={cn('flex h-[calc(100dvh)] w-screen justify-center', 'bg-slate-100', 'xl:gap-x-32')}
     >
       <div
         className={cn(
-          'flex h-full w-full max-w-[80dvw] flex-col overflow-hidden bg-white',
+          'flex h-full w-full flex-col overflow-hidden bg-white',
           'border-gray-300 xl:border-l xl:border-r xl:shadow-blur-sm',
+          { 'max-w-[85dvw]': width > 1024 },
         )}
       >
         <header className="hidden">Header</header>
