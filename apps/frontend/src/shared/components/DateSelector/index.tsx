@@ -55,7 +55,7 @@ export function DateSelector({
       )}
       {...rest}
     >
-      <HiChevronLeft onClick={() => setWeek((prev) => prev - 1)} />
+      <HiChevronLeft className="cursor-pointer" onClick={() => setWeek((prev) => prev - 1)} />
       <div className="flex">
         {dates.map((date) => (
           <DateItem
@@ -68,7 +68,7 @@ export function DateSelector({
           />
         ))}
       </div>
-      <HiChevronRight onClick={() => setWeek((prev) => prev + 1)} />
+      <HiChevronRight className="cursor-pointer" onClick={() => setWeek((prev) => prev + 1)} />
     </div>
   );
 }
