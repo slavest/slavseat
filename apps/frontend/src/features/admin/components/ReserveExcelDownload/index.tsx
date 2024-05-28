@@ -4,6 +4,7 @@ import { Headers } from 'react-csv/lib/core';
 import { FaFileCsv } from 'react-icons/fa6';
 
 import { Model } from '@slavseat/types';
+import { formatDate } from 'date-fns';
 
 import { ColumnType } from '@/shared/components/Table';
 import { cn } from '@/shared/utils/class.util';
@@ -19,7 +20,17 @@ export function ReserveExcelDownload({ columns, data }: ReserveExcelDownloadProp
     key: column.dataKey,
   }));
 
+  const csvData = data?.map((value) => ({
+    ...value,
+    always: value.always ? '고정석' : '시간차',
+    facility: `${value.facility.floor.name} ${value.facility.name}`,
+  }));
+
   const disabled = !data || data.length <= 0;
+
+  const today = new Date();
+
+  console.log(formatDate(today, 'yyMMdd'));
 
   return (
     <CSVLink
@@ -32,7 +43,8 @@ export function ReserveExcelDownload({ columns, data }: ReserveExcelDownloadProp
         'hover:bg-neutral-50',
         { 'cursor-default opacity-60': disabled },
       )}
-      data={data || []}
+      data={csvData || []}
+      filename={`Booksy_Reserves_${formatDate(today, 'yyMMdd')}`}
       headers={headers}
       onClick={() => {
         if (disabled) return false;
