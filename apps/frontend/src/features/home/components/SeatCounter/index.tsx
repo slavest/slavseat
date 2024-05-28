@@ -30,7 +30,7 @@ export function SeatCounter({ floorInfo, reserveInfos }: SeatCounterProps) {
   return expand ? (
     <div
       className={cn(
-        'h-[2.625rem] w-[calc(100%_-_2rem)]',
+        'h-[2.625rem] w-[calc(100%_-_2rem)] max-w-[50rem]',
         'absolute bottom-4 right-4',
         'flex items-center justify-center gap-x-1',
         'rounded-3xl border',
