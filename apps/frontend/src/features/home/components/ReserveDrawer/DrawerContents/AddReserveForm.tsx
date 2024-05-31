@@ -40,8 +40,8 @@ export function AddReserveForm() {
     },
   });
 
-  const start = watch('start');
-  const end = watch('end');
+  const watchedStart = watch('start');
+  const watchedEnd = watch('end');
   const reserveType = watch('reserveType');
 
   const setRange = useCallback(
@@ -86,11 +86,9 @@ export function AddReserveForm() {
       if (!always && end && start.getTime() >= end.getTime())
         return toast.error('예약 시간이 잘못되었습니다');
 
-      start.setMonth(selectedDate.getMonth());
-      start.setDate(selectedDate.getDate());
+      start.setMonth(selectedDate.getMonth(), selectedDate.getDate());
 
-      end.setMonth(selectedDate.getMonth());
-      end.setDate(selectedDate.getDate());
+      end.setMonth(selectedDate.getMonth(), selectedDate.getDate());
 
       return addReserveMutation({
         start,
@@ -148,7 +146,7 @@ export function AddReserveForm() {
             <>
               <TimePicker
                 className="text-lg"
-                value={format(start, formatHHMM)}
+                value={format(watchedStart, formatHHMM)}
                 onChangeTime={(v) => {
                   setValue('start', parse(v, formatHHMM, new Date()));
                 }}
@@ -157,7 +155,7 @@ export function AddReserveForm() {
               <TimePicker
                 className="text-lg"
                 disabled={reserveType === 'always'}
-                value={format(end, formatHHMM)}
+                value={format(watchedEnd, formatHHMM)}
                 onChangeTime={(v) => setValue('end', parse(v, formatHHMM, new Date()))}
               />
             </>
