@@ -13,6 +13,7 @@ import { ConfigurationModule } from '../config/config.module';
         config: {
           host: configService.getOrThrow('REDIS_HOST'),
           port: configService.getOrThrow('REDIS_PORT'),
+          password: configService.get('REDIS_SECRET'),
         },
       }),
     }),
