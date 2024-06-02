@@ -14,7 +14,7 @@ export function registDragEvent({
   onDragEnd,
   stopPropagation,
 }: {
-  onDragChange?: (deltaX: number, deltaY: number) => void;
+  onDragChange?: (deltaX: number, deltaY: number, startX: number, startY: number) => void;
   onDragEnd?: (deltaX: number, deltaY: number) => void;
   stopPropagation?: boolean;
 }) {
@@ -22,13 +22,17 @@ export function registDragEvent({
     return {
       onTouchStart: (touchEvent: React.TouchEvent<HTMLDivElement>) => {
         if (stopPropagation) touchEvent.stopPropagation();
+        const [startX, startY] = [
+          touchEvent.currentTarget.scrollLeft,
+          touchEvent.currentTarget.scrollTop,
+        ];
 
         const touchMoveHandler = (moveEvent: TouchEvent) => {
           if (moveEvent.cancelable) moveEvent.preventDefault();
 
           const deltaX = moveEvent.touches[0].pageX - touchEvent.touches[0].pageX;
           const deltaY = moveEvent.touches[0].pageY - touchEvent.touches[0].pageY;
-          onDragChange?.(deltaX, deltaY);
+          onDragChange?.(deltaX, deltaY, startX, startY);
         };
 
         const touchEndHandler = (moveEvent: TouchEvent) => {
@@ -51,11 +55,15 @@ export function registDragEvent({
   return {
     onMouseDown: (clickEvent: React.MouseEvent<Element, MouseEvent>) => {
       if (stopPropagation) clickEvent.stopPropagation();
+      const [startX, startY] = [
+        clickEvent.currentTarget.scrollLeft,
+        clickEvent.currentTarget.scrollTop,
+      ];
 
       const mouseMoveHandler = (moveEvent: MouseEvent) => {
         const deltaX = moveEvent.pageX - clickEvent.pageX;
         const deltaY = moveEvent.pageY - clickEvent.pageY;
-        onDragChange?.(deltaX, deltaY);
+        onDragChange?.(deltaX, deltaY, startX, startY);
       };
 
       const mouseUpHandler = (moveEvent: MouseEvent) => {
