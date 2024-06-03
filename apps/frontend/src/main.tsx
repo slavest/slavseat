@@ -17,10 +17,12 @@ import Home from './features/home/routes/Home.tsx';
 import Login from './features/login/routes/Login.tsx';
 import Profile from './features/profile/routes/Profile.tsx';
 import Reserve from './features/reserve/routes/Reserve.tsx';
+import Viewer from './features/viewer/routes/Viewer.tsx';
 import { Locations } from './shared/constants/location.constant.ts';
 import Root from './shared/routes/Root.tsx';
 import './shared/styles/app.css';
 import './shared/styles/global-style.css.ts';
+import { cn } from './shared/utils/class.util.ts';
 
 const queryClient = new QueryClient();
 
@@ -77,6 +79,14 @@ const router = createBrowserRouter([
         element: <AdminReserveStatistics />,
       },
     ],
+  },
+  {
+    path: Locations.VIEWER,
+    element: (
+      <div className={cn('h-[100dvh] w-[100dvw]')}>
+        <Viewer />
+      </div>
+    ),
   },
 ]);
 

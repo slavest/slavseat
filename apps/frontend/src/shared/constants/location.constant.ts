@@ -24,6 +24,7 @@ export const Locations = {
       RESERVE: '/admin/statistics/reserve',
     },
   },
+  VIEWER: '/viewer',
 };
 // eslint-disable-next-line no-redeclare
 export type Locations = (typeof Locations)[keyof typeof Locations];
