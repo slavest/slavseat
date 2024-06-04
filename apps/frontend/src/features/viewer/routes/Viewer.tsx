@@ -33,7 +33,9 @@ function Viewer() {
     },
   );
 
-  const { data: reservesByDate, isLoading: isReserveLoading } = useGetReserveByDate(selectedDate);
+  const { data: reservesByDate, isLoading: isReserveLoading } = useGetReserveByDate(selectedDate, {
+    refetchInterval: 60 * 2 * 1000,
+  });
 
   useEffect(() => {
     if (allFloorSummary) {
