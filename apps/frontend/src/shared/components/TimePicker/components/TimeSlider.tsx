@@ -2,8 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 
 import { useControlled } from '@/shared/hooks/useControlled';
 import { cn } from '@/shared/utils/class.util';
-
-import { inrange, registDragEvent } from '../utils';
+import { inrange, registDragEvent } from '@/shared/utils/drag.util';
 
 interface TimeSliderProps {
   slideCount: number;
@@ -40,7 +39,6 @@ export function TimeSlider({
   return (
     <div
       className={cn('relative select-none overflow-hidden text-center')}
-      data-vaul-no-drag={true}
       style={{
         height: `${elementHeight * viewHeight * 2 + elementHeight}px`,
       }}
@@ -64,16 +62,13 @@ export function TimeSlider({
     >
       <div
         className="absolute top-0 z-10 w-full bg-gradient-to-b from-white from-30%"
-        data-vaul-no-drag={true}
         style={{ height: `${elementHeight * viewHeight}px` }}
       />
       <div
         className="absolute bottom-0 z-10 w-full bg-gradient-to-t from-white from-30%"
-        data-vaul-no-drag={true}
         style={{ height: `${elementHeight * viewHeight}px` }}
       />
       <div
-        data-vaul-no-drag={true}
         style={{
           transform: `translateY(${
             -(elementHeight * currentIndex) + transY + elementHeight * viewHeight
@@ -84,7 +79,6 @@ export function TimeSlider({
         {new Array(slideCount).fill(0).map((_, i) => (
           <div
             key={i}
-            data-vaul-no-drag={true}
             style={{
               height: `${elementHeight}px`,
               ...calculateStyle(i),

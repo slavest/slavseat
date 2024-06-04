@@ -31,7 +31,7 @@ export function ReserveDrawerHeader({ title, children }: ReserveDrawerHeaderProp
   );
 
   return (
-    <div data-vaul-no-drag={true}>
+    <div>
       <Badge
         status={
           currentReserve

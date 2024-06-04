@@ -11,12 +11,14 @@ import { getStartOfWeek } from './utils/date';
 
 interface DatePickerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
   selected?: Date;
+  showDateLength?: number;
   onSelect?: (date: Date) => void;
 }
 
 export function DateSelector({
   className,
   selected: selectedProps,
+  showDateLength = 6,
   onSelect,
   ...rest
 }: DatePickerProps) {
@@ -36,11 +38,11 @@ export function DateSelector({
 
     return [
       startDate,
-      ...new Array(6).fill(0).reduce((acc, _, i) => {
+      ...new Array(showDateLength).fill(0).reduce((acc, _, i) => {
         return [...acc, new Date(getStartOfWeek(week).getTime() + 86400000 * i)];
       }, []),
     ] as Date[];
-  }, [week]);
+  }, [showDateLength, week]);
 
   const isSameDate = (d1: Date, d2: Date) =>
     d1.getFullYear() === d2.getFullYear() &&

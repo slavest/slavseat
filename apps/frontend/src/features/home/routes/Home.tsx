@@ -8,7 +8,8 @@ import { useGetAllFloorSummaryQuery } from '@/shared/api/query/floor/get-all-flo
 import { useGetFloorDetailQuery } from '@/shared/api/query/floor/get-floor-detail';
 import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
 import { DateSelector } from '@/shared/components/DateSelector';
-import { Drawer, FloatingDrawer } from '@/shared/components/Drawer';
+import { Drawer } from '@/shared/components/Drawer';
+import { DrawerLegacy, FloatingDrawer } from '@/shared/components/Drawer_legacy';
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
 import { Loading } from '@/shared/components/Loading';
 import { Tab } from '@/shared/components/Tab';
@@ -106,34 +107,46 @@ function Home() {
       <SeatCounter floorInfo={floorDetail} reserveInfos={reservesByDate} />
 
       <DrawerProvider dispatch={reserveDispatch} material={reserveMaterial}>
-        <Drawer
+        <Drawer.Root
           open={
             !reserveMaterial.exist?.existsReserve &&
             !!reserveMaterial.selectedFacility &&
             !!reservesByDate
           }
-          onClose={() => reserveDispatch({ type: 'CANCEL_ADD_RESERVE' })}
+          onOpen={(open) => open === false && reserveDispatch({ type: 'CANCEL_ADD_RESERVE' })}
         >
-          {
-            {
-              info: <ReserveInfomation />,
-              addReserve: <AddReserveForm />,
-            }[reserveMaterial.drawerStep]
-          }
-        </Drawer>
+          <Drawer.Popover>
+            <Drawer.Backdrop />
+            <Drawer.Body>
+              <Drawer.DragBar />
+              {
+                {
+                  info: <ReserveInfomation />,
+                  addReserve: <AddReserveForm />,
+                }[reserveMaterial.drawerStep]
+              }
+            </Drawer.Body>
+          </Drawer.Popover>
+        </Drawer.Root>
 
-        <FloatingDrawer
+        <Drawer.Root
           open={!!reserveMaterial.exist?.existsReserve}
-          onClose={() => reserveDispatch({ type: 'CANCEL_OVERRIDE_RESERVE' })}
+          onOpen={(open) => open === false && reserveDispatch({ type: 'CANCEL_OVERRIDE_RESERVE' })}
         >
-          {
-            {
-              overrideNotice: <ExistReserveNotice />,
-              overrideReserve: <OverrideReserveConfirm />,
-              alwayUserNotice: <AlwayUserNotice />,
-            }[reserveMaterial.floatingDrawerStep]
-          }
-        </FloatingDrawer>
+          <Drawer.Popover>
+            <Drawer.Backdrop />
+            <Drawer.Body>
+              <Drawer.DragBar />
+              {
+                {
+                  overrideNotice: <ExistReserveNotice />,
+                  overrideReserve: <OverrideReserveConfirm />,
+                  alwayUserNotice: <AlwayUserNotice />,
+                }[reserveMaterial.floatingDrawerStep]
+              }
+            </Drawer.Body>
+          </Drawer.Popover>
+        </Drawer.Root>
       </DrawerProvider>
     </div>
   );
