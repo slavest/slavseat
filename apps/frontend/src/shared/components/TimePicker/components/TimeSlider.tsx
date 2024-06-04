@@ -2,8 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 
 import { useControlled } from '@/shared/hooks/useControlled';
 import { cn } from '@/shared/utils/class.util';
-
-import { inrange, registDragEvent } from '../utils';
+import { inrange, registDragEvent } from '@/shared/utils/drag.util';
 
 interface TimeSliderProps {
   slideCount: number;

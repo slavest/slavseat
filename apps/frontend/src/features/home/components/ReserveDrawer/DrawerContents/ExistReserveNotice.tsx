@@ -17,7 +17,7 @@ export function ExistReserveNotice() {
   }
 
   return (
-    <div className={cn('flex flex-col gap-2')}>
+    <div className={cn('mb-8 flex flex-col gap-2')}>
       <p>
         예약하려고 한 시간대에{' '}
         <span className={cn('text-lg font-semibold')}>이미 예약중인 좌석이 있어요.</span>

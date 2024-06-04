@@ -53,7 +53,7 @@ export function ReserveInfomation() {
       </div>
 
       <Button
-        className="mt-8"
+        className="my-8"
         size="full"
         variant="secondary"
         onClick={() => dispatch({ type: 'READY_ADD_RESERVE' })}

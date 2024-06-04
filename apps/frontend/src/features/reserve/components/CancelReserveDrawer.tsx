@@ -3,7 +3,7 @@ import React from 'react';
 import { Model } from '@slavseat/types';
 
 import { Button } from '@/shared/components/Button';
-import { Drawer } from '@/shared/components/Drawer';
+import { DrawerLegacy } from '@/shared/components/Drawer_legacy';
 import { Loading } from '@/shared/components/Loading';
 import { cn } from '@/shared/utils/class.util';
 import { getHHMM } from '@/shared/utils/date.util';
@@ -25,7 +25,7 @@ export function CancelReserveDrawer({
   onClickCancel,
 }: CancelReserveDrawerProps) {
   return (
-    <Drawer open={!!targetReserve} onClose={onClose}>
+    <DrawerLegacy open={!!targetReserve} onClose={onClose}>
       <div className={cn('h-full w-full', 'flex flex-col')}>
         {targetReserve ? (
           <div className="flex flex-col gap-y-3">
@@ -57,6 +57,6 @@ export function CancelReserveDrawer({
           </div>
         ) : null}
       </div>
-    </Drawer>
+    </DrawerLegacy>
   );
 }
