@@ -21,7 +21,7 @@ export function ReserveInfomation() {
       <ReserveDrawerHeader title={`${selectedFacility?.name || '...'} 예약 현황`} />
       {/* info 스텝일때 표시할 내용 */}
 
-      <div className="my-4 space-y-2" data-vaul-no-drag={true}>
+      <div className="my-4 space-y-2">
         {/* 현재 좌석에 대한 예약들 표시 */}
         {reservesByDate
           ?.filter((reserve) => reserve.facility.id === selectedFacility?.id)

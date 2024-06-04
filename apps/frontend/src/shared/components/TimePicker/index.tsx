@@ -56,7 +56,6 @@ export function TimePicker({
   return (
     <div
       className={cn('flex items-center gap-2', { 'touch-none opacity-50': disabled }, className)}
-      data-vaul-no-drag={true}
       {...rest}
     >
       <TimeSlider

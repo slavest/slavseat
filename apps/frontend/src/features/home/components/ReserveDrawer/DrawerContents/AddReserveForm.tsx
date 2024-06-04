@@ -114,8 +114,8 @@ export function AddReserveForm() {
         </Toggle.Root>
       </ReserveDrawerHeader>
 
-      <form className="mb-8" data-vaul-no-drag={true} onSubmit={handleSubmitForm}>
-        <div className="my-10 flex items-center justify-center gap-4" data-vaul-no-drag={true}>
+      <form className="mb-8" onSubmit={handleSubmitForm}>
+        <div className="my-10 flex items-center justify-center gap-4">
           {reserveType === 'day' ? (
             <>
               <Toggle.Root className="h-[4rem] rounded-xl p-1.5" defaultValue="85">
