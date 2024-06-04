@@ -6,20 +6,25 @@ import { createWrapperAndAppendToBody } from './util';
 export interface ReactPortalProps {
   children: React.ReactNode;
   wrapperId?: string;
+  className?: string;
 }
 
-const ReactPortal = ({ children, wrapperId = 'react-portal-wrapper' }: ReactPortalProps) => {
+const ReactPortal = ({
+  children,
+  wrapperId = 'react-portal-wrapper',
+  className,
+}: ReactPortalProps) => {
   const [element, setElement] = useState<HTMLElement>();
 
   useEffect(() => {
     const elem = document.getElementById(wrapperId);
 
     if (!elem) {
-      setElement(createWrapperAndAppendToBody(wrapperId));
+      setElement(createWrapperAndAppendToBody(wrapperId, className));
     } else {
       setElement(elem);
     }
-  }, [wrapperId]);
+  }, [className, wrapperId]);
 
   if (element) return createPortal(children, element);
   return null;

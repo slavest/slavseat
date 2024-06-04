@@ -16,7 +16,7 @@ export function AlwayUserNotice() {
   if (!exist) return <Loading />;
 
   return (
-    <div className={cn('flex flex-col gap-y-6')}>
+    <div className={cn('mb-8 flex flex-col gap-y-6')}>
       <div className="flex justify-center">
         <BiSolidErrorCircle className="opacity-65" size="50%" />
       </div>

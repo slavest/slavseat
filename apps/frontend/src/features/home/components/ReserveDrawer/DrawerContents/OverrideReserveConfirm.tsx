@@ -80,7 +80,7 @@ export function OverrideReserveConfirm() {
   }, [cancelReserve, exist]);
 
   return (
-    <div className={cn('flex flex-col gap-2')}>
+    <div className={cn('mb-8 flex flex-col gap-2')}>
       <div
         className={cn(
           'mb-4 w-full',

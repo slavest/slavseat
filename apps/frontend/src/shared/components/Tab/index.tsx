@@ -3,8 +3,7 @@ import React, { useCallback, useRef } from 'react';
 import { useControlled } from '@/shared/hooks/useControlled';
 import { hideScrollBar } from '@/shared/styles/global-style.css';
 import { cn } from '@/shared/utils/class.util';
-
-import { registDragEvent } from '../TimePicker/utils';
+import { registDragEvent } from '@/shared/utils/drag.util';
 
 // FIXME: 대충 구현한 탭 UI, 제대로 컴포넌트로 다시 구현 필요
 interface TabItem {
