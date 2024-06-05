@@ -90,7 +90,7 @@ function Home() {
         >
           <TransformComponent wrapperStyle={{ width: '100%', height: '100%' }}>
             <FacilityGridViewer
-              className="m-4"
+              className="m-16"
               facilities={floorDetail.facilities}
               reserves={reservesByDate ?? []}
               onClickFacility={(d) =>
