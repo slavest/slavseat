@@ -35,6 +35,7 @@ export function AdminReserveManage() {
   const [searchUserName, setSearchUserName] = useState<string>('');
   const [searchId, setSearchId] = useState<string>('');
   const [searchFloorId, setSearchFloorId] = useState<number>();
+  const [searchSeatName, setSearchSeatName] = useState<string>('');
   const [adminReserveModalOpen, setAdminReserveModalOpen] = useState(false);
   // const [viewFacilityInGrid, setViewFacilityInGrid] = useState<Model.FacilitySummary>();
 
@@ -46,18 +47,20 @@ export function AdminReserveManage() {
   const { data: allFloorSummary } = useGetAllFloorSummaryQuery();
   const { data: reserveList } = useGetReserveByRangeDate({ startDate, endDate });
 
-  const filteredReserveList = useMemo(
-    () =>
-      reserveList
-        ?.filter((reserve) =>
-          searchUserName === '' ? true : reserve.user.name.includes(searchUserName),
-        )
-        .filter((reserve) => (searchId === '' ? true : reserve.id.toString() === searchId))
-        .filter((reserve) =>
-          searchFloorId === undefined ? true : reserve.facility.floor.id === searchFloorId,
-        ),
-    [reserveList, searchFloorId, searchId, searchUserName],
-  );
+  const filteredReserveList = useMemo(() => {
+    if (!reserveList) return [];
+
+    return reserveList.filter((reserve) => {
+      const matchesUserName = searchUserName === '' || reserve.user.name.includes(searchUserName);
+      const matchesId = searchId === '' || reserve.id.toString() === searchId;
+      const matchesSeatName =
+        searchSeatName === '' || reserve.facility.name.includes(searchSeatName);
+      const matchesFloorId =
+        searchFloorId === undefined || reserve.facility.floor.id === searchFloorId;
+
+      return matchesUserName && matchesId && matchesSeatName && matchesFloorId;
+    });
+  }, [reserveList, searchFloorId, searchId, searchSeatName, searchUserName]);
 
   const handleChangeStartDate = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -205,6 +208,20 @@ export function AdminReserveManage() {
               type="text"
               value={searchUserName}
               onChange={(e) => setSearchUserName(e.target.value)}
+            />
+          </span>
+
+          <span>
+            <div className="text-xs">좌석 이름</div>
+            <input
+              className={cn(
+                'h-9 w-[5rem]',
+                'px-3',
+                'rounded-md border border-neutral-400 text-sm focus:outline-purple-600',
+              )}
+              type="text"
+              value={searchSeatName}
+              onChange={(e) => setSearchSeatName(e.target.value)}
             />
           </span>
 
