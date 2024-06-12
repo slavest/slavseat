@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { useInitializeStyle } from '@slavseat/ui-hooks';
+
 import { getAuthedUser } from '@/shared/api/auth';
 import { useUserStore } from '@/shared/stores/userStore';
 
 import { useAppStore } from '../stores/appStore';
-import { useInitializeStyle } from './useInitializeStyle';
 
 export const useInitialize = () => {
   const [initialized, setInitialized] = useState(false);

@@ -1,7 +1,4 @@
-import {
-  createTheme,
-  createThemeContract,
-} from '@vanilla-extract/css';
+import { createTheme, createThemeContract } from '@vanilla-extract/css';
 
 import { DARK_COLOR_TOKEN } from './themes/dark.css';
 import { LIGHT_COLOR_TOKEN } from './themes/light.css';
@@ -26,11 +23,5 @@ export const [baseTokenClass, baseToken] = createTheme({
 });
 export const colorToken = createThemeContract(DARK_COLOR_TOKEN);
 
-export const darkThemeClass = createTheme(
-  colorToken,
-  DARK_COLOR_TOKEN,
-);
-export const lightThemeClass = createTheme(
-  colorToken,
-  LIGHT_COLOR_TOKEN,
-);
+export const darkThemeClass = createTheme(colorToken, DARK_COLOR_TOKEN);
+export const lightThemeClass = createTheme(colorToken, LIGHT_COLOR_TOKEN);

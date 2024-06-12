@@ -5,11 +5,11 @@ import 'react-resizable/css/styles.css';
 
 import { Model } from '@slavseat/types';
 import { FacilitySummary } from '@slavseat/types/src/model';
+import { Text } from '@slavseat/ui-core';
 
 import { useControlled } from '@/shared/hooks/useControlled';
 import { cn } from '@/shared/utils/class.util';
 
-import { Text } from '../Text';
 import './index.css';
 
 export type FacilityGridEditorMode = 'select' | 'edit';

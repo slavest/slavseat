@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "extends": "@repo/typescript-config/base.json",
+  "include": ["src", "**/*.ts", "**/*.tsx"]
+}

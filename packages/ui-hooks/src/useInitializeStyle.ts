@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { baseTokenClass, lightThemeClass } from '@/themes/theme.css';
+import { baseTokenClass, lightThemeClass } from '@slavseat/ui-themes';
 
 export const useInitializeStyle = () => {
   const [initialized, setInitialized] = useState(false);

@@ -1,0 +1,22 @@
+{
+  "name": "@slavseat/ui-themes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vanilla-extract/css": "^1.14.1",
+    "@vanilla-extract/sprinkles": "^1.6.1"
+  },
+  "devDependencies": {
+    "eslint-config-slavseat": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@slavseat/prettier-config": "workspace:*"
+  }
+}

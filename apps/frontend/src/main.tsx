@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { registerSW } from 'virtual:pwa-register';
 
+import { App } from './app/index.tsx';
 import { AdminFacilityEdit } from './features/admin/routes/AdminFacilityEdit.tsx';
 import { AdminFacilityView } from './features/admin/routes/AdminFacilityView.tsx';
 import { AdminFloorManage } from './features/admin/routes/AdminFloorManage.tsx';
@@ -93,7 +94,8 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode> // https://github.com/atlassian/react-beautiful-dnd/issues/2399#issuecomment-1111169234
   <QueryClientProvider client={queryClient}>
-    <RouterProvider router={router} />
+    {/* <RouterProvider router={router} /> */}
+    <App />
   </QueryClientProvider>,
   // </React.StrictMode>,
 );

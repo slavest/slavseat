@@ -1,6 +1,5 @@
+import { baseToken, colorToken } from '@slavseat/ui-themes';
 import { globalStyle, style } from '@vanilla-extract/css';
-
-import { baseToken, colorToken } from '@/themes/theme.css';
 
 globalStyle('body', {
   color: colorToken['text.primary'],
