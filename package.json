@@ -17,9 +17,9 @@
     "prettier": "^3.1.1",
     "semantic-release": "^23.0.8",
     "semantic-release-monorepo": "^8.0.2",
-    "turbo": "latest"
+    "turbo": "^2.0.3"
   },
-  "packageManager": "pnpm@9.0.6",
+  "packageManager": "pnpm@9.3.0",
   "engines": {
     "node": ">=20"
   }
