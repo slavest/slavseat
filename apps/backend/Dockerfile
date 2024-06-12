@@ -2,7 +2,7 @@ FROM node:20-alpine AS base
 WORKDIR /app
 RUN npm i -g turbo
 COPY . .
-RUN turbo prune --scope=backend --docker
+RUN turbo prune backend --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM node:20-alpine AS installer
