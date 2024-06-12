@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { useSprinkleProps } from '@/shared/hooks/useSprinkleProps';
-import { cn } from '@/shared/utils/class.util';
+import { useSprinkleProps } from '@slavseat/ui-hooks';
+import { cn } from '@slavseat/ui-utils';
 
 import { TextSprinkles, textSprinkles, textStyles } from './text.css';
 

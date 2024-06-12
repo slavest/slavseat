@@ -1,10 +1,11 @@
+import {
+  colorProperties,
+  colorToken,
+  responseProperties,
+  typoProperties,
+} from '@slavseat/ui-themes';
 import { style } from '@vanilla-extract/css';
 import { createSprinkles } from '@vanilla-extract/sprinkles';
-
-import { colorProperties } from '@/themes/properties/color-properties.css';
-import { responseProperties } from '@/themes/properties/responsive-properties.css';
-import { typoProperties } from '@/themes/properties/typo-properties.css';
-import { colorToken } from '@/themes/theme.css';
 
 export const textStyles = style({
   color: colorToken['text.primary'],

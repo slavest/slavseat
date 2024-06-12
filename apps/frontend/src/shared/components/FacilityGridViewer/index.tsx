@@ -4,9 +4,9 @@ import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
 import { Model } from '@slavseat/types';
+import { Text } from '@slavseat/ui-core';
 
 import { Badge, Status } from '@/shared/components/Badge';
-import { Text } from '@/shared/components/Text';
 import { cn } from '@/shared/utils/class.util';
 
 import './index.css';
