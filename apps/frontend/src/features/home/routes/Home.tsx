@@ -9,7 +9,6 @@ import { useGetFloorDetailQuery } from '@/shared/api/query/floor/get-floor-detai
 import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
 import { DateSelector } from '@/shared/components/DateSelector';
 import { Drawer } from '@/shared/components/Drawer';
-import { DrawerLegacy, FloatingDrawer } from '@/shared/components/Drawer_legacy';
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
 import { Loading } from '@/shared/components/Loading';
 import { Tab } from '@/shared/components/Tab';
@@ -44,13 +43,6 @@ function Home() {
       setSelectedFloor(allFloorSummary.filter((floor) => !floor.disabled).at(0)?.id ?? null);
     }
   }, [allFloorSummary]);
-
-  useEffect(() => {
-    const week = Date.now() + 1000 * 60 * 60 * 24 * 7;
-    if (reserveMaterial.selectedDate.getTime() > week) {
-      toast.info('1주일 뒤 날짜는 미리 예약되지 않습니다!', { autoClose: 700 });
-    }
-  }, [reserveMaterial.selectedDate]);
 
   return (
     <div className="relative flex h-full flex-col">
