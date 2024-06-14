@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 
 import { FacilityType } from '@slavseat/types/src/model';
