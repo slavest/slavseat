@@ -9,7 +9,7 @@ import { useGetFloorDetailQuery } from '@/shared/api/query/floor/get-floor-detai
 import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
 import { DateSelector } from '@/shared/components/DateSelector';
 import { Drawer } from '@/shared/components/Drawer';
-import { DrawerLegacy, FloatingDrawer } from '@/shared/components/Drawer_legacy';
+
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
 import { Loading } from '@/shared/components/Loading';
 import { Tab } from '@/shared/components/Tab';
