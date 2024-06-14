@@ -10,14 +10,13 @@
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
     "@stylistic/eslint-plugin": "^1.5.4",
     "@stylistic/eslint-plugin-jsx": "^1.5.4",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "prettier": "^3.1.1",
     "semantic-release": "^23.0.8",
     "semantic-release-monorepo": "^8.0.2",
-    "turbo": "latest"
+    "semantic-release-replace-plugin": "^1.2.7",
   },
   "packageManager": "pnpm@9.0.6",
   "engines": {
