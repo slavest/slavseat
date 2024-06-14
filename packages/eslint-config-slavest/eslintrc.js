@@ -10,6 +10,7 @@ module.exports = {
     'dist/',
     'withTwin.js',
     '.eslintrc.js',
+    'release.config.js'
   ],
   rules: {
     'prettier/prettier': 'error',
