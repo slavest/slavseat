@@ -413,11 +413,7 @@ importers:
 
   packages/prettier-config: {}
 
-  packages/semantic-release-config:
-    devDependencies:
-      semantic-release-monorepo:
-        specifier: ^8.0.2
-        version: 8.0.2(semantic-release@23.0.8(typescript@5.3.3))
+  packages/semantic-release-config: {}
 
   packages/types:
     devDependencies:
