@@ -8,6 +8,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Model } from '@slavseat/types';
+import { addDays, subDays, subHours } from 'date-fns';
 import { Redis } from 'ioredis';
 import { sleep } from 'src/libs/utils/common';
 import { Between, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
@@ -51,12 +52,29 @@ export class ReserveService {
     if (dateSearch && start.getTime() >= end.getTime())
       throw new BadRequestException(`시작 날짜는 종료 날짜보다 같거나 클 수 없습니다.`);
 
-    const oneWeek = Date.now() + 1000 * 60 * 60 * 24 * 8;
-    if (start.getTime() > oneWeek || (end && end.getTime() > oneWeek))
-      throw new BadRequestException('최대 일주일 후 까지만 예약이 가능합니다.');
+    const today = new Date();
 
-    // if (start.getTime() < Date.now())
-    //   throw new BadRequestException('지난 시간은 예약할 수 없습니다.');
+    /* 예약 주간: 금주 금요일 오전 11시 ~ 차주 금요일 23시 59분 */
+
+    // 예약 시도한 날짜 기준 이번 주간 (금주)
+    const startWeek = subDays(today, today.getDay() + 2).setHours(11, 0, 0, 0); // 금주 금요일 날짜 구하기.
+    const endWeek = addDays(startWeek, 7).setHours(23, 59, 59, 999); // 차주 금요일.
+
+    // 예약 시도한 날짜 기준 다음 주간 (차주)
+    const startNextWeek = addDays(startWeek, 7);
+    const endNextWeek = addDays(endWeek, 7);
+
+    // 예약 하려는 날짜가 다음주 중이라면 && 예약 시도한 날짜가 금요일 오전 11시 이전이라면
+    if (
+      start >= startNextWeek &&
+      start < endNextWeek &&
+      (today.getDay() < 5 || today.getHours() < 11)
+    )
+      throw new BadRequestException('금주 금요일 오전 11시 이후 예약이 가능합니다.');
+
+    // 예약 하려는 날짜가 다음주보다 뒤라면
+    if (start >= endNextWeek)
+      throw new BadRequestException('해당 주차는 아직 예약을 할 수 없습니다.');
 
     if (!always && end === null)
       throw new BadRequestException('시간차 예약은 종료 시간이 포함되어야 합니다.');
