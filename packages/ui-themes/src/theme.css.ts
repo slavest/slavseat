@@ -1,6 +1,5 @@
 import { createTheme, createThemeContract } from '@vanilla-extract/css';
 
-import { DARK_COLOR_TOKEN } from './themes/dark.css';
 import { LIGHT_COLOR_TOKEN } from './themes/light.css';
 import { fontSize } from './tokens/font-size';
 import { fontWeight } from './tokens/font-weight';
@@ -21,7 +20,6 @@ export const [baseTokenClass, baseToken] = createTheme({
   transition,
   opacity,
 });
-export const colorToken = createThemeContract(DARK_COLOR_TOKEN);
+export const colorToken = createThemeContract(LIGHT_COLOR_TOKEN);
 
-export const darkThemeClass = createTheme(colorToken, DARK_COLOR_TOKEN);
 export const lightThemeClass = createTheme(colorToken, LIGHT_COLOR_TOKEN);

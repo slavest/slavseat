@@ -6,7 +6,6 @@ export * from './properties/responsive-properties.css';
 export * from './properties/typo-properties.css';
 
 export * from './themes/light.css';
-export * from './themes/dark.css';
 
 export * from './tokens/color-palette';
 export * from './tokens/font-size';

@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 
 const getDeviceType = () => {
   const ua = navigator.userAgent;
-  if (/Mobile|Android|iP(hone|od|ad)/.test(ua)) {
-    return 'mobile';
-  }
+  // if (/Mobile|Android|iP(hone|od|ad)/.test(ua)) {
+  //   return 'mobile';
+  // }
   return 'desktop';
 };
 

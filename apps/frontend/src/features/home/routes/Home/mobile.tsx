@@ -9,19 +9,18 @@ import { useGetFloorDetailQuery } from '@/shared/api/query/floor/get-floor-detai
 import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
 import { DateSelector } from '@/shared/components/DateSelector';
 import { Drawer } from '@/shared/components/Drawer';
-import { DrawerLegacy, FloatingDrawer } from '@/shared/components/Drawer_legacy';
 import FacilityGridViewer from '@/shared/components/FacilityGridViewer';
 import { Loading } from '@/shared/components/Loading';
 import { Tab } from '@/shared/components/Tab';
 
-import { AddReserveForm } from '../components/ReserveDrawer/DrawerContents/AddReserveForm';
-import { AlwayUserNotice } from '../components/ReserveDrawer/DrawerContents/AlwayUserNotice';
-import { ExistReserveNotice } from '../components/ReserveDrawer/DrawerContents/ExistReserveNotice';
-import { OverrideReserveConfirm } from '../components/ReserveDrawer/DrawerContents/OverrideReserveConfirm';
-import { ReserveInfomation } from '../components/ReserveDrawer/DrawerContents/ReserveInfomation';
-import { SeatCounter } from '../components/SeatCounter';
-import { useReserveReducer } from '../hooks/useReserveReducer';
-import { DrawerProvider } from '../providers/DrawerProvider';
+import { AddReserveForm } from '../../components/ReserveDrawer/DrawerContents/AddReserveForm';
+import { AlwayUserNotice } from '../../components/ReserveDrawer/DrawerContents/AlwayUserNotice';
+import { ExistReserveNotice } from '../../components/ReserveDrawer/DrawerContents/ExistReserveNotice';
+import { OverrideReserveConfirm } from '../../components/ReserveDrawer/DrawerContents/OverrideReserveConfirm';
+import { ReserveInfomation } from '../../components/ReserveDrawer/DrawerContents/ReserveInfomation';
+import { SeatCounter } from '../../components/SeatCounter';
+import { useReserveReducer } from '../../hooks/useReserveReducer';
+import { DrawerProvider } from '../../providers/DrawerProvider';
 
 function Home() {
   const [reserveMaterial, reserveDispatch] = useReserveReducer();

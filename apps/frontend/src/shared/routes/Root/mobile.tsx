@@ -4,12 +4,12 @@ import { Bounce, ToastContainer } from 'react-toastify';
 
 import { useWindowSize } from 'usehooks-ts';
 
+import { AppFooter } from '@/shared/components/AppFooter';
+import { Loading } from '@/shared/components/Loading';
 import { useInitialize } from '@/shared/hooks/useInitialize';
+import { useAppStore } from '@/shared/stores/appStore';
 
-import { AppFooter } from '../components/AppFooter';
-import { Loading } from '../components/Loading';
-import { useAppStore } from '../stores/appStore';
-import { cn } from '../utils/class.util';
+import { cn } from '../../../../../../packages/ui-utils/src';
 
 function Root() {
   const { initialized } = useInitialize();

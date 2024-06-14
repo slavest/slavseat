@@ -8,13 +8,13 @@ import { AdminHome } from '@/features/admin/routes/AdminHome';
 import { AdminReserveManage } from '@/features/admin/routes/AdminReserveManage';
 import { AdminReserveStatistics } from '@/features/admin/routes/AdminReserveStatistics';
 import { AdminRoot } from '@/features/admin/routes/AdminRoot';
-import Home from '@/features/home/routes/Home';
+import Home from '@/features/home/routes/Home/desktop';
 import Login from '@/features/login/routes/Login';
 import Profile from '@/features/profile/routes/Profile';
 import Reserve from '@/features/reserve/routes/Reserve';
 import Viewer from '@/features/viewer/routes/Viewer';
 import { Locations } from '@/shared/constants/location.constant';
-import Root from '@/shared/routes/Root';
+import Root from '@/shared/routes/Root/desktop';
 import { cn } from '@/shared/utils/class.util';
 
 const router = createBrowserRouter([

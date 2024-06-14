@@ -1,20 +1,23 @@
 import { COLOR_PALETTE } from '../tokens/color-palette';
-import { DARK_COLOR_TOKEN } from './dark.css';
 
-export const LIGHT_COLOR_TOKEN: typeof DARK_COLOR_TOKEN = {
-  // background
-  'background.surface': COLOR_PALETTE.white,
-  'background.primary': COLOR_PALETTE.zinc600,
-  'background.primary.hover': COLOR_PALETTE.zinc700,
-  'background.container': COLOR_PALETTE.zinc200,
+const COMMON_COLOR_TOKEN = {
+  // common
+  'common.hover': COLOR_PALETTE.neutral100,
+  'common.base': COLOR_PALETTE.transparent,
+  'common.primary.base': COLOR_PALETTE.green500,
+  'common.primary.press': COLOR_PALETTE.green700,
+  'common.primary.hover': COLOR_PALETTE.green600,
+  'common.text.base': COLOR_PALETTE.black,
+  'common.text.sub': COLOR_PALETTE.neutral400,
+};
 
-  // text
-  'text.primary': COLOR_PALETTE.zinc950,
-  'text.primary.wrong': COLOR_PALETTE.red500,
+export const LIGHT_COLOR_TOKEN = {
+  ...COMMON_COLOR_TOKEN,
 
-  // button text
-  'text.button.primary': COLOR_PALETTE.white,
-  'text.button.contained': COLOR_PALETTE.white,
-  'text.button.outlined': COLOR_PALETTE.zinc800,
-  'text.popover': COLOR_PALETTE.white,
+  // sidebar
+  'sidebar.background.base': COLOR_PALETTE.neutral50,
+  'sidebar.profile.background.base': COMMON_COLOR_TOKEN['common.base'],
+  'sidebar.profile.background.hover': COMMON_COLOR_TOKEN['common.hover'],
+  'sidebar.profile.image.background.base': COLOR_PALETTE.neutral400,
+  'sidebar.profile.image.border': COLOR_PALETTE.neutral200,
 };
