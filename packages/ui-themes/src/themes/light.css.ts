@@ -20,4 +20,10 @@ export const LIGHT_COLOR_TOKEN = {
   'sidebar.profile.background.hover': COMMON_COLOR_TOKEN['common.hover'],
   'sidebar.profile.image.background.base': COLOR_PALETTE.neutral400,
   'sidebar.profile.image.border': COLOR_PALETTE.neutral200,
+  'sidebar.item.active.background.base': COLOR_PALETTE.white,
+  'sidebar.item.active.background.hover': COLOR_PALETTE.white,
+  'sidebar.item.inactive.background.base': COMMON_COLOR_TOKEN['common.base'],
+  'sidebar.item.inactive.background.hover': COMMON_COLOR_TOKEN['common.hover'],
+  'sidebar.item.icon.section.bold': COLOR_PALETTE.black,
+  'sidebar.item.icon.section.linear': COLOR_PALETTE.neutral400,
 };

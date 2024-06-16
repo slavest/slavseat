@@ -530,6 +530,15 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config-slavest
 
+  packages/ui-icons:
+    dependencies:
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+
   packages/ui-themes:
     dependencies:
       '@vanilla-extract/css':
