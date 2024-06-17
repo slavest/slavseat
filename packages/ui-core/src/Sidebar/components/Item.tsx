@@ -14,12 +14,12 @@ interface ItemProps extends React.HTMLAttributes<HTMLDivElement> {
 export function Item({ path, activeIcon, inactiveIcon, children, className, ...rest }: ItemProps) {
   const { location } = useSidebarContext();
 
-  const isActive = useMemo(() => location === path, [location, path]);
+  const active = useMemo(() => location === path, [location, path]);
 
   return (
-    <div className={cn(itemStyle(), className)} {...rest}>
-      {activeIcon && isActive ? activeIcon : null}
-      {inactiveIcon && isActive ? inactiveIcon : null}
+    <div className={cn(itemStyle({ active }), className)} {...rest}>
+      {activeIcon && active ? activeIcon : null}
+      {inactiveIcon && active ? inactiveIcon : null}
       {children}
     </div>
   );
