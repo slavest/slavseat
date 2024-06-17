@@ -1,15 +1,14 @@
 import React from 'react';
 
-import { Box } from '@/Box';
-
 import { SidebarContextProvider, SidebarContextProviderProps } from '../context';
+import { rootStyle } from '../sidebar.css';
 
 interface RootProps extends SidebarContextProviderProps {}
 
 export function Root({ ...rest }: RootProps) {
   return (
-    <Box>
+    <div className={rootStyle}>
       <SidebarContextProvider {...rest} />
-    </Box>
+    </div>
   );
 }
