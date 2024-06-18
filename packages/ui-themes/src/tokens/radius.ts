@@ -5,7 +5,7 @@ export const radius = {
   md: '8px',
   lg: '12px',
   xl: '16px',
-  '2xl': '24px',
-  '3xl': '32px',
+  '2xl': '20px',
+  '3xl': '28px',
   full: '99999px',
 } as const;

@@ -13,4 +13,7 @@ export const colorProperties = defineProperties({
     backgroundColor: colorToken,
     opacity,
   },
+  shorthands: {
+    textColor: ['color'],
+  },
 });

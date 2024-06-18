@@ -4,14 +4,7 @@ interface LinearMapIconProps extends React.SVGProps<SVGSVGElement> {}
 
 export function LinearMapIcon(props: LinearMapIconProps) {
   return (
-    <svg
-      fill="none"
-      height="14"
-      viewBox="0 0 14 14"
-      width="14"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
+    <svg height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg" {...props}>
       <g clipPath="url(#clip0_520_2152)">
         <path
           d="M4.83 12.5L1.72502 13.2171C1.09836 13.3618 0.5 12.8859 0.5 12.2427V2.29538C0.5 1.82978 0.821324 1.42579 1.27498 1.32102L4.83 0.5V12.5Z"

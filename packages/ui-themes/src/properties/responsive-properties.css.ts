@@ -53,6 +53,7 @@ export const responseProperties = defineProperties({
     borderBottomLeftRadius: radius,
     borderBottomRightRadius: radius,
     cursor: ['pointer', 'auto', 'default'],
+    outline: ['none'],
     // etc.
   },
   shorthands: {

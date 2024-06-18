@@ -1,9 +1,9 @@
 {
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  },
+  "compilerOptions": {},
   "extends": "@repo/typescript-config/react-library.json",
-  "include": ["src", "**/*.ts", "**/*.tsx"]
+  "include": [
+    "src",
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }

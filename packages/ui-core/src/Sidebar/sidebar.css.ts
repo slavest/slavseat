@@ -19,14 +19,15 @@ export const itemStyle = recipe({
     paddingBlock: baseToken.spacing['2'],
     borderRadius: baseToken.radius.md,
     cursor: 'pointer',
-    fontWeight: baseToken.fontWeight.medium,
-    ...baseToken.fontSize['12'],
+    fontWeight: baseToken.fontWeight.bold,
+    ...baseToken.fontSize['14'],
   },
   variants: {
     active: {
       true: {
         boxShadow: '0 0 4px rgba(0, 0, 0, 0.05)',
         color: colorToken['common.text.base'],
+        fill: colorToken['sidebar.item.icon.section.bold'],
         background: colorToken['sidebar.item.active.background.base'],
         selectors: {
           '&:hover': {
@@ -36,6 +37,8 @@ export const itemStyle = recipe({
       },
       false: {
         color: colorToken['common.text.sub'],
+        fill: 'none',
+        stroke: colorToken['sidebar.item.icon.section.linear'],
         background: colorToken['sidebar.item.inactive.background.base'],
         selectors: {
           '&:hover': {
@@ -48,4 +51,9 @@ export const itemStyle = recipe({
   defaultVariants: {
     active: false,
   },
+});
+
+export const sidebarIconStyle = style({
+  width: baseToken.width['4'],
+  height: baseToken.height['4'],
 });

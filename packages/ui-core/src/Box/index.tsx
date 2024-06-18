@@ -20,5 +20,5 @@ export const Box = <T extends React.ElementType = 'div'>({
   const Element = as || 'div';
   const { sprinkleProps, nativeProps } = useSprinkleProps(rest, boxSprinkles.properties);
 
-  return <Element className={cn(boxSprinkles(sprinkleProps), className)} {...nativeProps} />;
+  return <Element className={cn(className, boxSprinkles(sprinkleProps))} {...nativeProps} />;
 };

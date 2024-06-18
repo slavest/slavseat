@@ -20,15 +20,21 @@ const Content = React.forwardRef<
 });
 Content.displayName = 'Dropdown.Content';
 
-// const Item = React.forwardRef<
-//   ElementRef<typeof RadixDropdown.Item>,
-//   ComponentPropsWithoutRef<typeof RadixDropdown.Item>
-// >(({ className, ...rest }, ref) => {
-//   return <RadixDropdown.Item ref={ref} className={cn(itemStyle, className)} {...rest} />;
-// });
-// Item.displayName = 'Dropdown.Item';
-const Item = ({ className, ...rest }: BoxProps<'button'>) => (
-  <Box className={cn(className, itemStyle)} {...rest} />
+const Item = ({ backgroundColor, ...rest }: BoxProps<'button'>) => (
+  <Box
+    backgroundColor={
+      backgroundColor || {
+        all: 'dropdown.item.background.base',
+        hover: 'dropdown.item.background.hover',
+      }
+    }
+    borderRadius="md"
+    cursor="pointer"
+    outline="none"
+    paddingX="2"
+    paddingY="1.5"
+    {...rest}
+  />
 );
 
 export const Dropdown = {
