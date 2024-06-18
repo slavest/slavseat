@@ -15,6 +15,7 @@
     "@slavseat/types": "workspace:*",
     "@slavseat/ui-core": "workspace:^",
     "@slavseat/ui-hooks": "workspace:*",
+    "@slavseat/ui-icons": "workspace:^",
     "@slavseat/ui-themes": "workspace:*",
     "@tanstack/react-query": "^5.25.0",
     "@types/react-csv": "^1.1.10",

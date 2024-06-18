@@ -12,3 +12,7 @@ export const hideScrollBar = style({
     '&::-webkit-scrollbar': { display: 'none' },
   },
 });
+
+export const hideOutline = style({
+  outline: 'none',
+});

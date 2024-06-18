@@ -2,21 +2,13 @@ import React from 'react';
 
 import { useSprinkleProps } from '@slavseat/ui-hooks';
 import { cn } from '@slavseat/ui-utils';
-import { RecipeVariants } from '@vanilla-extract/recipes';
 
-import { TextSprinkles, textSprinkles, textVariants } from './text.css';
+import { TextSprinkles, textSprinkles } from './text.css';
 
-export type TextProps = React.HTMLAttributes<HTMLSpanElement> &
-  Omit<TextSprinkles, 'color'> &
-  RecipeVariants<typeof textVariants>;
+export type TextProps = TextSprinkles & React.HTMLAttributes<HTMLSpanElement>;
 
-export const Text: React.FC<TextProps> = ({ className, color, ...rest }) => {
+export const Text: React.FC<TextProps> = ({ className, ...rest }) => {
   const { sprinkleProps, nativeProps } = useSprinkleProps(rest, textSprinkles.properties);
 
-  return (
-    <span
-      className={cn(textSprinkles(sprinkleProps), textVariants({ color }), className)}
-      {...nativeProps}
-    />
-  );
+  return <span className={cn(textSprinkles(sprinkleProps), className)} {...nativeProps} />;
 };

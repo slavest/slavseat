@@ -19,7 +19,7 @@ export function Item({ path, activeIcon, inactiveIcon, children, className, ...r
   return (
     <div className={cn(itemStyle({ active }), className)} {...rest}>
       {activeIcon && active ? activeIcon : null}
-      {inactiveIcon && active ? inactiveIcon : null}
+      {inactiveIcon && !active ? inactiveIcon : null}
       {children}
     </div>
   );

@@ -8,6 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@slavseat/ui-hooks": "workspace:*",
     "@slavseat/ui-themes": "workspace:^",
     "@slavseat/ui-utils": "workspace:*",
