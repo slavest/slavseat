@@ -12,19 +12,36 @@ export function getYYYYMMDD(date: Date) {
 }
 
 export function groupDataByDate(data: Model.ReserveInfo[]) {
-  const groupedData: GroupedData = {};
+  const beforeTodayData: GroupedData = {};
+  const todayData: Model.ReserveInfo[] = [];
+  const afterTodayData: GroupedData = {};
+
+  const today = new Date();
+  const todayString = getYYYYMMDD(today);
 
   data.sort(sortReserveByDate).forEach((item) => {
+    let groupedData: GroupedData;
+
     const dateString = getYYYYMMDD(item.start);
 
-    if (!groupedData[dateString]) {
-      groupedData[dateString] = [];
-    }
+    if (todayString === dateString) {
+      todayData.push(item);
+    } else {
+      if (item.start > today) {
+        groupedData = afterTodayData;
+      } else {
+        groupedData = beforeTodayData;
+      }
 
-    groupedData[dateString].push(item);
+      if (!groupedData[dateString]) {
+        groupedData[dateString] = [];
+      }
+
+      groupedData[dateString].push(item);
+    }
   });
 
-  return groupedData;
+  return { beforeTodayData, todayData, afterTodayData };
 }
 
 export function checkUsing(data: Model.ReserveInfo) {
