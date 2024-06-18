@@ -4,7 +4,6 @@ import { Model } from '@slavseat/types';
 
 import { Button } from '@/shared/components/Button';
 import { Drawer } from '@/shared/components/Drawer';
-import { DrawerLegacy } from '@/shared/components/Drawer_legacy';
 import { Loading } from '@/shared/components/Loading';
 import { cn } from '@/shared/utils/class.util';
 import { getHHMM } from '@/shared/utils/date.util';
@@ -35,9 +34,11 @@ export function CancelReserveDrawer({
           <div className={cn('h-full w-full', 'flex flex-col', 'mb-8')}>
             {targetReserve ? (
               <div className="flex flex-col gap-y-8">
-                <div className="flex items-center justify-between gap-x-2">
+                <div className="flex flex-col items-start gap-y-2">
+                  <h4 className="text-xl font-bold">{getSeatName(targetReserve)}</h4>
+
                   <div>
-                    <p className="text-xl font-semibold">{getYYYYMMDD(targetReserve.start)}</p>
+                    <p className="text-lg font-semibold">{getYYYYMMDD(targetReserve.start)}</p>
 
                     <p>
                       {targetReserve.always
@@ -48,8 +49,6 @@ export function CancelReserveDrawer({
                           )} ~ ${getHHMM(targetReserve.end, (hh, mm) => `${hh}시 ${mm}분`)}`}
                     </p>
                   </div>
-
-                  <h4 className="text-xl font-semibold">{getSeatName(targetReserve)}</h4>
                 </div>
 
                 <Button
