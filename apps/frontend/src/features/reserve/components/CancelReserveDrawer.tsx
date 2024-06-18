@@ -4,7 +4,6 @@ import { Model } from '@slavseat/types';
 
 import { Button } from '@/shared/components/Button';
 import { Drawer } from '@/shared/components/Drawer';
-import { DrawerLegacy } from '@/shared/components/Drawer_legacy';
 import { Loading } from '@/shared/components/Loading';
 import { cn } from '@/shared/utils/class.util';
 import { getHHMM } from '@/shared/utils/date.util';
