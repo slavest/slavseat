@@ -2,13 +2,15 @@ import React from 'react';
 import { HiOutlineLogout } from 'react-icons/hi';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { Box, Dropdown, Profile, Sidebar, Text } from '@slavseat/ui-core';
+import { Box, Dropdown, Sidebar, Text } from '@slavseat/ui-core';
 import { sidebarIconStyle } from '@slavseat/ui-core/src/Sidebar/sidebar.css';
 import { BoldMapIcon, BoldTicketIcon, LinearMapIcon, LinearTicketIcon } from '@slavseat/ui-icons';
 
 import { useAppStore } from '@/shared/stores/appStore';
 import { useUserStore } from '@/shared/stores/userStore';
 import { hideOutline } from '@/shared/styles/global-style.css';
+
+import { Profile } from './components/Profile';
 
 export function AppSidebar() {
   const { user } = useUserStore();
@@ -43,7 +45,7 @@ export function AppSidebar() {
           </Dropdown.Root>
         )}
       </Box>
-      <Box paddingX="5">
+      <Box paddingX="5" paddingY="4">
         <Sidebar.Root location={location.pathname}>
           <Sidebar.Item
             activeIcon={<BoldMapIcon className={sidebarIconStyle} />}
