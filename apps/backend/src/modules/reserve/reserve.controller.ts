@@ -55,10 +55,9 @@ export class ReserveController {
   @ApiOperation({ summary: '좌석 예약' })
   @ApiCreatedResponse({ type: Reserve })
   async addAdminReserve(@Body() addAdminReserveRequestDto: AddAdminReserveRequestDto) {
-    return this.reserveService.addReserve(
+    return this.reserveService.forceAddReserve(
       addAdminReserveRequestDto.userId,
       addAdminReserveRequestDto,
-      true,
     );
   }
 
