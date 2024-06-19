@@ -6,19 +6,26 @@ import { cn } from '@slavseat/ui-utils';
 import { BoxSprinkles, boxSprinkles } from './box.css';
 
 // type BoxProps = BoxSprinkles & React.HTMLAttributes<HTMLDivElement>;
-export interface BoxProps<T extends React.ElementType = 'div'> extends BoxSprinkles {
+export type BoxProps<T extends React.ElementType> = BoxSprinkles & {
   as?: T;
-  className?: string;
-  children?: React.ReactNode;
-}
+} & Omit<React.ComponentPropsWithoutRef<T>, keyof BoxSprinkles>;
 
-export const Box = <T extends React.ElementType = 'div'>({
-  as,
-  className,
-  ...rest
-}: BoxProps<T>) => {
+export type PolymorphicRef<C extends React.ElementType> = React.ComponentPropsWithRef<C>['ref'];
+
+type BoxComponent = <C extends React.ElementType = 'div'>(
+  props: BoxProps<C> & {
+    ref?: PolymorphicRef<C>;
+  },
+) => React.ReactNode | null;
+
+export const Box: BoxComponent = React.forwardRef(function Box<T extends React.ElementType = 'div'>(
+  { as, className, ...rest }: BoxProps<T>,
+  ref: PolymorphicRef<T>,
+) {
   const Element = as || 'div';
   const { sprinkleProps, nativeProps } = useSprinkleProps(rest, boxSprinkles.properties);
 
-  return <Element className={cn(className, boxSprinkles(sprinkleProps))} {...nativeProps} />;
-};
+  return (
+    <Element ref={ref} className={cn(className, boxSprinkles(sprinkleProps))} {...nativeProps} />
+  );
+});

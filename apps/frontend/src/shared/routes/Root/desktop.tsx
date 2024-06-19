@@ -3,9 +3,10 @@ import { Outlet } from 'react-router-dom';
 
 import { Box } from '@slavseat/ui-core';
 
-import { AppSidebar } from '@/shared/components/AppSidebar';
 import { Loading } from '@/shared/components/Loading';
 import { useInitialize } from '@/shared/hooks/useInitialize';
+
+import { AppSidebar } from '../../../../widget/AppSidebar';
 
 function Root() {
   const { initialized } = useInitialize();

@@ -19,7 +19,7 @@ export const itemStyle = recipe({
     paddingBlock: baseToken.spacing['2'],
     borderRadius: baseToken.radius.md,
     cursor: 'pointer',
-    fontWeight: baseToken.fontWeight.bold,
+    fontWeight: baseToken.fontWeight.medium,
     ...baseToken.fontSize['14'],
   },
   variants: {
