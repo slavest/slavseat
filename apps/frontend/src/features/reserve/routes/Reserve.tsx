@@ -1,5 +1,5 @@
 import React, { ComponentProps, PropsWithChildren, useState } from 'react';
-import { FaArrowDown, FaArrowUp, FaChevronDown } from 'react-icons/fa6';
+import { FaChevronDown } from 'react-icons/fa6';
 import { toast } from 'react-toastify';
 
 import { Model } from '@slavseat/types';
@@ -121,7 +121,7 @@ function Reserve() {
 
             {alwayReserve ? (
               <>
-                <ReserveList reserves={[alwayReserve]} onClickItem={setSelectedReserve} />
+                <ReserveList reserves={alwayReserve} onClickItem={setSelectedReserve} />
               </>
             ) : (
               <ReserveListItem className={cn('bg-neutral-50', 'cursor-default', 'rounded-lg')}>
