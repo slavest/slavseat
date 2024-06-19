@@ -1,3 +1,10 @@
+# [backend-v1.3.4](https://github.com/slavest/slavseat/compare/backend@1.3.3...backend@1.3.4) (2024-06-19)
+
+
+### Bug Fixes
+
+* **backend:** 8일 예약 이슈 수정 ([277fa1d](https://github.com/slavest/slavseat/commit/277fa1da917f2504214499b250d89170e13c8101))
+
 # [backend-v1.3.3](https://github.com/slavest/slavseat/compare/backend@1.3.2...backend@1.3.3) (2024-06-19)
 
 
