@@ -53,7 +53,7 @@ export function useReserve({ onCancelSuccess, onCancelError }: UseReserveArgs) {
 
   // 고정 좌석 예약 정보
   const alwayReserve = useMemo(() => {
-    return data?.find((reserve) => reserve.always);
+    return data?.filter((reserve) => reserve.always) || [];
   }, [data]);
 
   // 날짜별 예약 정보
