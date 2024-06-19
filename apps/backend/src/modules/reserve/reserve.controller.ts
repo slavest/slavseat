@@ -17,6 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
+import { AdminGuard } from '../admin/guard/admin.guard';
 import { AuthUser } from '../auth/decorator/auth-user.decorator';
 import { AuthUserGuard } from '../auth/guard/auth-user.guard';
 import { User } from '../user/entity/user.entity';
@@ -49,6 +50,7 @@ export class ReserveController {
 
   @Post('/admin')
   @UseGuards(AuthUserGuard)
+  @UseGuards(AdminGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: '좌석 예약' })
   @ApiCreatedResponse({ type: Reserve })
@@ -56,6 +58,7 @@ export class ReserveController {
     return this.reserveService.addReserve(
       addAdminReserveRequestDto.userId,
       addAdminReserveRequestDto,
+      true,
     );
   }
 
