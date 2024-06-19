@@ -1,8 +1,10 @@
 import React, { ComponentProps, PropsWithChildren, useState } from 'react';
+import { FaChevronDown } from 'react-icons/fa6';
 import { toast } from 'react-toastify';
 
 import { Model } from '@slavseat/types';
 
+import { Button } from '@/shared/components/Button';
 import { Loading } from '@/shared/components/Loading';
 import ScrollArea from '@/shared/components/ScrollArea';
 import { useUserStore } from '@/shared/stores/userStore';
@@ -11,9 +13,10 @@ import { cn } from '@/shared/utils/class.util';
 import { CancelReserveDrawer } from '../components/CancelReserveDrawer';
 import { ErrorNotice } from '../components/ErrorNotice';
 import { NotData } from '../components/NotData';
-import { ReserveList } from '../components/ReserveList';
+import { ReserveList, ReserveListItem } from '../components/ReserveList';
 import { useReserve } from '../hooks/useReserve';
-import { getSeatName } from '../utils/reserve.util';
+import { GroupedData } from '../types';
+import { getSeatName, getYYYYMMDD } from '../utils/reserve.util';
 
 function Container({ children, className, ...attr }: ComponentProps<'div'>) {
   return (
@@ -31,18 +34,26 @@ interface ContentProps {
 function Content({ children, loading = false, notData = false }: PropsWithChildren<ContentProps>) {
   if (loading) return <Loading />;
 
-  if (notData)
-    return (
-      <div className="pt-12">
-        <NotData notDataPrefix="좌석 정보가" />
-      </div>
-    );
+  if (notData) return <NotData notDataPrefix="좌석 정보가" />;
 
   return children;
 }
 
+function Divide({ children }: PropsWithChildren) {
+  return (
+    <div className={cn('w-full', 'grid grid-cols-[1fr_max-content_1fr] items-center', 'px-1')}>
+      <div className={cn('h-px', 'bg-neutral-200')} />
+      <span className={cn('flex items-center gap-x-1', 'text-xs text-neutral-500', 'px-3')}>
+        {children}
+      </span>
+      <div className={cn('h-px', 'bg-neutral-200')} />
+    </div>
+  );
+}
+
 function Reserve() {
   const [selectedReserve, setSelectedReserve] = useState<Model.ReserveInfo | null>(null);
+  const [showReserveHistory, setShowReserveHistory] = useState(false);
 
   const { user } = useUserStore();
 
@@ -64,7 +75,20 @@ function Reserve() {
     },
   });
 
-  const dateKeys = groupReserves ? Object.keys(groupReserves) : [];
+  const renderList = (groupedData?: GroupedData) => {
+    return groupedData
+      ? Object.entries(groupedData).map(([date, reserves]) => {
+          return (
+            <ReserveList
+              key={date}
+              reserves={reserves}
+              title={date}
+              onClickItem={setSelectedReserve}
+            />
+          );
+        })
+      : null;
+  };
 
   if (isError) {
     return (
@@ -91,27 +115,77 @@ function Reserve() {
       </header>
 
       <ScrollArea className="">
-        <section className="flex flex-col gap-y-8">
-          <Content loading={isLoading} notData={!alwayReserve && dateKeys.length < 1}>
-            {alwayReserve && (
-              <ReserveList
-                reserves={[alwayReserve]}
-                title="고정 좌석"
-                onClickItem={setSelectedReserve}
-              />
-            )}
+        <section className="flex flex-col gap-y-6 px-1.5">
+          <div className="flex flex-col gap-y-2">
+            <span className={cn('text-xs font-semibold')}>고정석</span>
 
-            {dateKeys.map((date) =>
-              groupReserves?.[date] ? (
-                <ReserveList
-                  key={date}
-                  reserves={groupReserves[date]}
-                  title={date}
-                  onClickItem={setSelectedReserve}
-                />
-              ) : null,
+            {alwayReserve ? (
+              <>
+                <ReserveList reserves={alwayReserve} onClickItem={setSelectedReserve} />
+              </>
+            ) : (
+              <ReserveListItem className={cn('bg-neutral-50', 'cursor-default', 'rounded-lg')}>
+                사용가능한 고정 좌석이 존재하지 않습니다.
+              </ReserveListItem>
             )}
+          </div>
+
+          <div className="flex flex-col gap-y-2">
+            <span className={cn('text-xs font-semibold')}>
+              당일 예약 ({getYYYYMMDD(new Date())})
+            </span>
+
+            {groupReserves?.todayData && groupReserves.todayData.length > 0 ? (
+              <ReserveList reserves={groupReserves.todayData} onClickItem={setSelectedReserve} />
+            ) : (
+              <ReserveListItem className={cn('bg-neutral-50', 'cursor-default', 'rounded-lg')}>
+                오늘 예약된 좌석이 존재하지 않습니다.
+              </ReserveListItem>
+            )}
+          </div>
+
+          <Divide>
+            <FaChevronDown /> 예정
+          </Divide>
+
+          <Content
+            loading={isLoading}
+            notData={
+              !groupReserves?.afterTodayData ||
+              Object.keys(groupReserves?.afterTodayData).length < 1
+            }
+          >
+            <div className="flex flex-col gap-y-3">{renderList(groupReserves?.afterTodayData)}</div>
           </Content>
+
+          <Divide>
+            <Button
+              className={cn(
+                'flex items-center gap-x-2',
+                'bg-neutral-50',
+                'text-black',
+                'border border-neutral-200',
+              )}
+              onClick={() => setShowReserveHistory((prev) => !prev)}
+            >
+              <FaChevronDown
+                className={cn('transition-transform', { 'rotate-180': showReserveHistory })}
+              />
+              지난 예약 {showReserveHistory ? '숨기기' : '보기'}
+            </Button>
+          </Divide>
+
+          {showReserveHistory ? (
+            <Content
+              loading={isLoading}
+              notData={
+                !groupReserves?.beforeTodayData ||
+                Object.keys(groupReserves?.beforeTodayData).length < 1
+              }
+            >
+              {renderList(groupReserves?.beforeTodayData)}
+            </Content>
+          ) : null}
         </section>
       </ScrollArea>
 
