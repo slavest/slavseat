@@ -1,4 +1,4 @@
-import { baseToken, colorToken, responseProperties } from '@slavseat/ui-themes';
+import { baseToken, colorToken } from '@slavseat/ui-themes';
 import { style } from '@vanilla-extract/css';
 
 export const contentStyle = style({
@@ -6,7 +6,6 @@ export const contentStyle = style({
   borderRadius: baseToken.radius.lg,
   padding: baseToken.spacing['1.5'],
   boxShadow: '0 4px 24px 0px rgba(0,0,0,0.15)',
-  ...baseToken.fontSize[12],
 });
 
 export const itemStyle = style({
@@ -16,6 +15,7 @@ export const itemStyle = style({
   paddingInline: baseToken.spacing['2'],
   paddingBlock: baseToken.spacing['1.5'],
   cursor: 'pointer',
+  ...baseToken.transition.colors,
   selectors: {
     [`&:hover`]: {
       backgroundColor: colorToken['dropdown.item.background.hover'],

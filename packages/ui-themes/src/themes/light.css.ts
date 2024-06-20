@@ -25,6 +25,8 @@ export const LIGHT_COLOR_TOKEN = {
   'dropdown.background.base': COLOR_PALETTE.white,
   'dropdown.item.background.base': COLOR_PALETTE.white,
   'dropdown.item.background.hover': COLOR_PALETTE.neutral100,
+  'dropdown.item.background.failure.base': COLOR_PALETTE.white,
+  'dropdown.item.background.failure.hover': COMMON_COLOR_TOKEN['common.error.base'],
 
   // sidebar
   'sidebar.background.base': COLOR_PALETTE.neutral50,

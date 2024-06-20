@@ -3,13 +3,18 @@ import { style } from '@vanilla-extract/css';
 
 export const profileRootStyle = style({
   display: 'flex',
+  width: baseToken.width.full,
   gap: baseToken.spacing['2.5'],
   alignItems: 'center',
-  paddingInline: baseToken.spacing['4'],
-  paddingBlock: baseToken.spacing['2'],
+  paddingInline: baseToken.spacing['2.5'],
+  paddingBlock: baseToken.spacing['3'],
   borderRadius: baseToken.radius.xl,
+  outline: 'none',
   selectors: {
     '&:hover': {
+      background: colorToken['sidebar.profile.background.hover'],
+    },
+    '&:focus': {
       background: colorToken['sidebar.profile.background.hover'],
     },
   },
@@ -17,9 +22,9 @@ export const profileRootStyle = style({
 
 export const profileImageStyle = style({
   background: colorToken['sidebar.profile.image.background.base'],
-  width: baseToken.width['14'],
-  height: baseToken.height['14'],
-  borderRadius: baseToken.radius['2xl'],
+  width: baseToken.width['12'],
+  height: baseToken.height['12'],
+  borderRadius: baseToken.radius.xl,
   border: `solid ${baseToken.spacing['0.25']}`,
   borderColor: colorToken['sidebar.profile.image.border'],
 });
@@ -27,7 +32,7 @@ export const profileImageStyle = style({
 export const profileNameStyle = style({
   textAlign: 'start',
   fontWeight: baseToken.fontWeight.bold,
-  ...baseToken.fontSize['16'],
+  ...baseToken.fontSize['14'],
 });
 export const profileSubtextStyle = style({
   textAlign: 'start',

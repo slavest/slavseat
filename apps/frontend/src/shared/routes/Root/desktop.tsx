@@ -5,8 +5,7 @@ import { Box } from '@slavseat/ui-core';
 
 import { Loading } from '@/shared/components/Loading';
 import { useInitialize } from '@/shared/hooks/useInitialize';
-
-import { AppSidebar } from '../../../../widget/AppSidebar';
+import { AppSidebar } from '@/widget/AppSidebar';
 
 function Root() {
   const { initialized } = useInitialize();

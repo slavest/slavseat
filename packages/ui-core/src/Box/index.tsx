@@ -3,7 +3,7 @@ import React from 'react';
 import { useSprinkleProps } from '@slavseat/ui-hooks';
 import { cn } from '@slavseat/ui-utils';
 
-import { BoxSprinkles, boxSprinkles } from './box.css';
+import { BoxSprinkles, boxSprinkles, boxStyle } from './box.css';
 
 // type BoxProps = BoxSprinkles & React.HTMLAttributes<HTMLDivElement>;
 export type BoxProps<T extends React.ElementType> = BoxSprinkles & {
@@ -26,6 +26,10 @@ export const Box: BoxComponent = React.forwardRef(function Box<T extends React.E
   const { sprinkleProps, nativeProps } = useSprinkleProps(rest, boxSprinkles.properties);
 
   return (
-    <Element ref={ref} className={cn(className, boxSprinkles(sprinkleProps))} {...nativeProps} />
+    <Element
+      ref={ref}
+      className={cn(className, boxStyle, boxSprinkles(sprinkleProps))}
+      {...nativeProps}
+    />
   );
 });

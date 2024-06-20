@@ -21,6 +21,7 @@ export const itemStyle = recipe({
     cursor: 'pointer',
     fontWeight: baseToken.fontWeight.medium,
     ...baseToken.fontSize['14'],
+    ...baseToken.transition.colors,
   },
   variants: {
     active: {

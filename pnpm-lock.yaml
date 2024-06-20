@@ -491,6 +491,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      react-icons:
+        specifier: ^5.0.1
+        version: 5.0.1(react@18.2.0)
     devDependencies:
       '@repo/typescript-config':
         specifier: workspace:*

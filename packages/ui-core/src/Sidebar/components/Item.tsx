@@ -17,7 +17,7 @@ export function Item({ path, activeIcon, inactiveIcon, children, className, ...r
   const active = useMemo(() => location === path, [location, path]);
 
   return (
-    <div className={cn(itemStyle({ active }), className)} {...rest}>
+    <div className={cn(itemStyle({ active }), className)} role="button" tabIndex={0} {...rest}>
       {activeIcon && active ? activeIcon : null}
       {inactiveIcon && !active ? inactiveIcon : null}
       {children}

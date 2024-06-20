@@ -3,7 +3,6 @@ import React, { ComponentPropsWithoutRef, ElementRef } from 'react';
 
 import { cn } from '@slavseat/ui-utils';
 
-import { Box, BoxProps } from '../Box';
 import { contentStyle, itemStyle } from './dropdown.css';
 
 const Root = RadixDropdown.Root;
@@ -20,22 +19,17 @@ const Content = React.forwardRef<
 });
 Content.displayName = 'Dropdown.Content';
 
-const Item = ({ backgroundColor, ...rest }: BoxProps<'button'>) => (
-  <Box
-    backgroundColor={
-      backgroundColor || {
-        all: 'dropdown.item.background.base',
-        hover: 'dropdown.item.background.hover',
-      }
-    }
-    borderRadius="md"
-    cursor="pointer"
-    outline="none"
-    paddingX="2"
-    paddingY="1.5"
-    {...rest}
-  />
-);
+const Item = React.forwardRef<
+  ElementRef<typeof RadixDropdown.Item>,
+  ComponentPropsWithoutRef<typeof RadixDropdown.Item>
+>(({ className, ...rest }, ref) => (
+  <RadixDropdown.Item ref={ref} className={cn(className, itemStyle)} {...rest} />
+));
+Item.displayName = 'Dropdown.Item';
+
+// const Item = ({ className, ...rest }: ) => (
+//   <RadixDropdown.Item className={cn()} />
+// );
 
 export const Dropdown = {
   Root,
