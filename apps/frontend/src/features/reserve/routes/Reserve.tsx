@@ -20,7 +20,7 @@ import { getSeatName, getYYYYMMDD } from '../utils/reserve.util';
 
 function Container({ children, className, ...attr }: ComponentProps<'div'>) {
   return (
-    <div className={cn('h-full w-full bg-neutral-100 py-12', className)} {...attr}>
+    <div className={cn('h-full w-full bg-neutral-100 py-10', className)} {...attr}>
       {children}
     </div>
   );
@@ -100,8 +100,8 @@ function Reserve() {
 
   return (
     <Container className="flex h-full flex-col overflow-hidden">
-      <header className="mb-8 px-10">
-        <h1 className="flex w-full flex-wrap items-center text-2xl font-bold">
+      <header className="mb-8 px-8">
+        <h1 className="flex w-full flex-wrap items-center text-xl font-bold">
           <p>{user?.name || <Loading />}</p>
           <p>님의 좌석 예약 현황</p>
         </h1>
@@ -115,7 +115,7 @@ function Reserve() {
       </header>
 
       <ScrollArea>
-        <section className="flex flex-col gap-y-6 px-10">
+        <section className="flex flex-col gap-y-6 px-8">
           <div className="flex flex-col gap-y-2">
             <span className={cn('text-xs font-semibold')}>고정석</span>
 
@@ -144,9 +144,7 @@ function Reserve() {
             )}
           </div>
 
-          <Divide>
-            <FaChevronDown /> 예정
-          </Divide>
+          <Divide>예정</Divide>
 
           <Content
             loading={isLoading}
