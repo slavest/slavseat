@@ -5,7 +5,7 @@ import { cn } from '@slavseat/ui-utils';
 
 import { TextSprinkles, textSprinkles } from './text.css';
 
-export type TextProps = TextSprinkles & Omit<React.HTMLAttributes<HTMLSpanElement>, 'color'>;
+export type TextProps = TextSprinkles & Omit<React.ComponentProps<'span'>, 'color'>;
 
 export const Text: React.FC<TextProps> = ({ className, ...rest }) => {
   const { sprinkleProps, nativeProps } = useSprinkleProps(rest, textSprinkles.properties);

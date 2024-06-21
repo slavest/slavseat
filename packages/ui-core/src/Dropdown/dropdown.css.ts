@@ -1,4 +1,4 @@
-import { baseToken, colorToken } from '@slavseat/ui-themes';
+import { baseToken, colorToken, componentLayer } from '@slavseat/ui-themes';
 import { style } from '@vanilla-extract/css';
 
 export const contentStyle = style({
@@ -9,16 +9,20 @@ export const contentStyle = style({
 });
 
 export const itemStyle = style({
-  backgroundColor: colorToken['dropdown.item.background.base'],
-  borderRadius: baseToken.radius.md,
-  outline: 'none',
-  paddingInline: baseToken.spacing['2'],
-  paddingBlock: baseToken.spacing['1.5'],
-  cursor: 'pointer',
-  ...baseToken.transition.colors,
-  selectors: {
-    [`&:hover`]: {
-      backgroundColor: colorToken['dropdown.item.background.hover'],
+  '@layer': {
+    [componentLayer]: {
+      backgroundColor: colorToken['dropdown.item.background.base'],
+      borderRadius: baseToken.radius.md,
+      outline: 'none',
+      paddingInline: baseToken.spacing['2'],
+      paddingBlock: baseToken.spacing['1.5'],
+      cursor: 'pointer',
+      ...baseToken.transition.colors,
+      selectors: {
+        [`&:hover`]: {
+          backgroundColor: colorToken['dropdown.item.background.hover'],
+        },
+      },
     },
   },
 });

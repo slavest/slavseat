@@ -21,6 +21,12 @@ export const dropdownItemStyle = recipe({
     color: {
       red: {
         color: colorToken['common.text.error'],
+        selectors: {
+          '&:hover': {
+            backgroundColor: colorToken['dropdown.item.background.failure.hover'],
+            color: colorToken['dropdown.item.text.failure.hover'],
+          },
+        },
       },
     },
   },

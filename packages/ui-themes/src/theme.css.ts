@@ -1,4 +1,4 @@
-import { createTheme, createThemeContract } from '@vanilla-extract/css';
+import { createTheme, createThemeContract, layer } from '@vanilla-extract/css';
 
 import { LIGHT_COLOR_TOKEN } from './themes/light.css';
 import { fontSize } from './tokens/font-size';
@@ -23,3 +23,6 @@ export const [baseTokenClass, baseToken] = createTheme({
 export const colorToken = createThemeContract(LIGHT_COLOR_TOKEN);
 
 export const lightThemeClass = createTheme(colorToken, LIGHT_COLOR_TOKEN);
+
+export const componentLayer = layer('components');
+export const resetLayer = layer({ parent: componentLayer }, 'reset');
