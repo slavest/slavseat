@@ -80,7 +80,6 @@ function Viewer() {
         <TransformWrapper
           centerOnInit
           disablePadding
-          initialScale={0.6}
           maxScale={1}
           minScale={0.5}
           panning={{ velocityDisabled: true }}
