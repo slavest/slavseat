@@ -119,7 +119,7 @@ function Reserve() {
           <div className="flex flex-col gap-y-2">
             <span className={cn('text-xs font-semibold')}>고정석</span>
 
-            {alwayReserve ? (
+            {alwayReserve && alwayReserve.length > 0 ? (
               <>
                 <ReserveList reserves={alwayReserve} onClickItem={setSelectedReserve} />
               </>
