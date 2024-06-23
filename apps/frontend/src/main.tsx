@@ -6,10 +6,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { registerSW } from 'virtual:pwa-register';
 
 import { App } from './app/index.tsx';
+import { queryClient } from './shared/query/queryClient.ts';
 import './shared/styles/app.css';
 import './shared/styles/global-style.css.ts';
-
-const queryClient = new QueryClient();
 
 const intervalMS = 60 * 1000;
 

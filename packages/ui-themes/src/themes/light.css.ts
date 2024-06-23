@@ -41,4 +41,9 @@ export const LIGHT_COLOR_TOKEN = {
   'sidebar.item.inactive.background.hover': COMMON_COLOR_TOKEN['common.hover'],
   'sidebar.item.icon.section.bold': COLOR_PALETTE.black,
   'sidebar.item.icon.section.linear': COLOR_PALETTE.neutral400,
+
+  // tab
+  'tab.border.active': COLOR_PALETTE.black,
+  'tab.border.inactive': COLOR_PALETTE.transparent,
+  'tab.border.base': COLOR_PALETTE.neutral100,
 } as const;

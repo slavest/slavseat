@@ -52,6 +52,10 @@ export const responseProperties = defineProperties({
     borderTopRightRadius: radius,
     borderBottomLeftRadius: radius,
     borderBottomRightRadius: radius,
+    borderBottomWidth: spacing,
+    borderLeftWidth: spacing,
+    borderRightWidth: spacing,
+    borderTopWidth: spacing,
     cursor: ['pointer', 'auto', 'default'],
     outline: ['none'],
     // etc.
