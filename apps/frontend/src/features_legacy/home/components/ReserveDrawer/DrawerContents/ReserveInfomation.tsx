@@ -3,7 +3,7 @@ import React from 'react';
 import {
   useReserveDispatchContext,
   useReserveMaterialContext,
-} from '@/features/home/hooks/useReserveContext';
+} from '@/features_legacy/home/hooks/useReserveContext';
 import { useGetReserveByDate } from '@/shared/api/query/reserve/get-reserve-by-date';
 import { Button } from '@/shared/components/Button';
 import { cn } from '@/shared/utils/class.util';

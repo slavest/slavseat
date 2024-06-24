@@ -4,11 +4,11 @@ import { GoDash } from 'react-icons/go';
 import { IoMdClose } from 'react-icons/io';
 import { toast } from 'react-toastify';
 
-import { useCancelReserve } from '@/features/home/hooks/useCancelReserve';
+import { useCancelReserve } from '@/features_legacy/home/hooks/useCancelReserve';
 import {
   useReserveDispatchContext,
   useReserveMaterialContext,
-} from '@/features/home/hooks/useReserveContext';
+} from '@/features_legacy/home/hooks/useReserveContext';
 import { useAddReserveMutation } from '@/shared/api/query/reserve/add-reserve';
 import { Button } from '@/shared/components/Button';
 import { Loading } from '@/shared/components/Loading';
