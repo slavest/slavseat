@@ -327,7 +327,7 @@ export class ReserveService {
           end: LessThanOrEqual(endDate),
         },
         {
-          start: LessThanOrEqual(startDate),
+          start: LessThanOrEqual(endDate),
           always: true,
         },
       ],
